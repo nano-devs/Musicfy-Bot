@@ -3,6 +3,7 @@ package listener;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -59,14 +60,16 @@ public class MusicMessageListener extends ListenerAdapter {
         if (".play".equals(command[0]) && command.length == 2) {
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
 
-            musicService.joinUserVoiceChannel(event);
-            musicService.loadAndPlay(playerManager, musicManager, event.getChannel(), command[1]);
+            if (musicService.joinUserVoiceChannel(event)) {
+                // Set default volume value
+                musicManager.player.setVolume(15);
+                musicService.loadAndPlay(playerManager, musicManager, event.getChannel(), command[1]);
+            }
         } else if (".skip".equals(command[0])) {
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
             musicService.skipTrack(musicManager, event.getChannel());
         } else if (".join".equals(command[0])) {
             VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
-            System.out.println(event.getMember().getGuild().getName() + event.getMember().getUser().getName());
             if (voiceChannel == null) {
                 event.getChannel().sendMessage("Are you sure you're in voice channel ?").queue();
                 return;
@@ -74,8 +77,34 @@ public class MusicMessageListener extends ListenerAdapter {
             musicService.joinVoiceChannel(event.getGuild(), voiceChannel);
             event.getChannel().sendMessage("Connected").queue();
         } else if (".leave".equals(command[0])) {
-            musicService.leaveVoiceChannel(event.getGuild());
+            GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
+
+            musicService.leaveVoiceChannel(event.getGuild(), musicManager);
             event.getChannel().sendMessage("Leave Voice Channel").queue();
+
+            musicManagers.remove(Long.parseLong(event.getGuild().getId()));
+        } else if (".volume".equals((command[0]))) {
+            GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
+            int volume = 10;
+            try {
+                volume = Integer.parseInt(command[1]);
+                musicManager.player.setVolume(volume);
+            } catch (Exception e) {
+                event.getChannel().sendMessage(
+                        "Invalid volume number, example usage `.volume 25` to change volume to 25%").queue();
+                return;
+            }
+            event.getChannel().sendMessage("Volume " + command[1] + "%").queue();
+        } else if (".pause".equals(command[0])) {
+            GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
+            musicManager.player.setPaused(true);
+            event.getMessage().addReaction("\uD83D\uDC4C").queue();
+        } else if (".resume".equals(command[0])) {
+            GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
+            musicManager.player.setPaused(false);
+            event.getMessage().addReaction("\uD83D\uDC4C").queue();
+        } else if (".queue".equals(command[0])) {
+
         }
 
         super.onGuildMessageReceived(event);
