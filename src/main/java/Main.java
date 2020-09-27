@@ -18,13 +18,8 @@ public class Main {
 
         JDABuilder builder = JDABuilder.createDefault(botToken);
 
-        // Disable parts of the cache
-//        builder.disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE);
-        // Enable the bulk delete event
-//        builder.setBulkDeleteSplittingEnabled(false);
-        // Disable compression (not recommended)
-//        builder.setCompression(Compression.NONE);
-        
+        configureMemoryUsage(builder);
+
         // Set activity (like "playing Something")
         builder.setActivity(Activity.watching("TV"));
 
@@ -37,7 +32,7 @@ public class Main {
         }
     }
 
-    public void configureMemoryUsage(JDABuilder builder) {
+    public static void configureMemoryUsage(JDABuilder builder) {
         // Disable cache for member activities (streaming/games/spotify)
         builder.disableCache(CacheFlag.ACTIVITY);
 
