@@ -22,20 +22,16 @@ public class MusicService {
             public void trackLoaded(AudioTrack track) {
                 channel.sendMessage("Adding to queue " + track.getInfo().title).queue();
 
-                play(channel.getGuild(), musicManager, track);
+                play(musicManager, track);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                AudioTrack firstTrack = playlist.getSelectedTrack();
-
-                if (firstTrack == null) {
-                    firstTrack = playlist.getTracks().get(0);
+                for (AudioTrack track : playlist.getTracks()) {
+                    musicManager.scheduler.queue(track);
                 }
-
-                channel.sendMessage("Adding to queue " + firstTrack.getInfo().title + " (first track of playlist " + playlist.getName() + ")").queue();
-
-                play(channel.getGuild(), musicManager, firstTrack);
+                channel.sendMessage(
+                        String.valueOf(playlist.getTracks().size()) + " entries has been added to queue").queue();
             }
 
             @Override
@@ -50,9 +46,7 @@ public class MusicService {
         });
     }
 
-    public void play(Guild guild, GuildMusicManager musicManager, AudioTrack track) {
-        connectToFirstVoiceChannel(guild.getAudioManager());
-
+    public void play(GuildMusicManager musicManager, AudioTrack track) {
         musicManager.scheduler.queue(track);
     }
 
@@ -60,6 +54,10 @@ public class MusicService {
         musicManager.scheduler.nextTrack();
 
         channel.sendMessage("Skipped to next track.").queue();
+    }
+
+    public void adjustVolume(GuildMusicManager musicManager, int volume) {
+        musicManager.player.setVolume(volume);
     }
 
     public void connectToFirstVoiceChannel(AudioManager audioManager) {
@@ -89,8 +87,11 @@ public class MusicService {
         audioManager.openAudioConnection(voiceChannel);
     }
 
-    public void leaveVoiceChannel(Guild guild){
+    public void leaveVoiceChannel(Guild guild, GuildMusicManager musicManager){
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
+
+        musicManager.player.stopTrack();
+        musicManager.scheduler.getQueue().clear();
     }
 }
