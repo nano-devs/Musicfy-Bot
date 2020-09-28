@@ -1,6 +1,4 @@
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import net.dv8tion.jda.api.JDA;
+import listener.MusicMessageListener;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -8,10 +6,9 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import service.Music.GuildMusicManager;
+import service.Music.MusicService;
 
 import javax.security.auth.login.LoginException;
-import java.util.Map;
 
 public class Main {
 
@@ -21,14 +18,12 @@ public class Main {
 
         JDABuilder builder = JDABuilder.createDefault(botToken);
 
-        // Disable parts of the cache
-        builder.disableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE);
-        // Enable the bulk delete event
-        builder.setBulkDeleteSplittingEnabled(false);
-        // Disable compression (not recommended)
-        builder.setCompression(Compression.NONE);
+        configureMemoryUsage(builder);
+
         // Set activity (like "playing Something")
         builder.setActivity(Activity.watching("TV"));
+
+        builder.addEventListeners(new MusicMessageListener(new MusicService()));
 
         try {
             builder.build();
@@ -37,7 +32,7 @@ public class Main {
         }
     }
 
-    public void configureMemoryUsage(JDABuilder builder) {
+    public static void configureMemoryUsage(JDABuilder builder) {
         // Disable cache for member activities (streaming/games/spotify)
         builder.disableCache(CacheFlag.ACTIVITY);
 
