@@ -3,10 +3,7 @@ package listener;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.WidgetUtil;
@@ -59,15 +56,35 @@ public class MusicMessageListener extends ListenerAdapter {
 
         if (".play".equals(command[0]) && command.length == 2) {
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
-
             if (musicService.joinUserVoiceChannel(event)) {
                 // Set default volume value
                 musicManager.player.setVolume(15);
-                musicService.loadAndPlay(playerManager, musicManager, event.getChannel(), command[1]);
+                musicService.loadAndPlay(playerManager, musicManager, event.getChannel(),
+                        command[1], event.getAuthor());
             }
         } else if (".skip".equals(command[0])) {
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
-            musicService.skipTrack(musicManager, event.getChannel());
+
+            // Check if player is currently playing audio
+            if (musicManager.player.getPlayingTrack() == null) {
+                event.getChannel().sendMessage("Not playing anything").queue();
+                return;
+            }
+            User requester = event.getAuthor();
+            User nowPlayRequester = musicManager.player.getPlayingTrack().getUserData(User.class);
+            if (requester.getId().equals(nowPlayRequester.getId())) {
+                musicService.skipTrack(musicManager, event.getChannel());
+                return;
+            }
+            musicManager.skipVoteSet.add(requester.getId());
+
+            int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size();
+            if (musicManager.skipVoteSet.size() > (connectedMembers - 1) / 2) {
+                musicService.skipTrack(musicManager, event.getChannel());
+                return;
+            }
+            event.getChannel().sendMessage(
+                    "Vote: " + musicManager.skipVoteSet.size() + "/" + connectedMembers).queue();
         } else if (".join".equals(command[0])) {
             VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
             if (voiceChannel == null) {
@@ -81,7 +98,6 @@ public class MusicMessageListener extends ListenerAdapter {
 
             musicService.leaveVoiceChannel(event.getGuild(), musicManager);
             event.getChannel().sendMessage("Leave Voice Channel").queue();
-
             musicManagers.remove(Long.parseLong(event.getGuild().getId()));
         } else if (".volume".equals((command[0]))) {
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
@@ -104,6 +120,8 @@ public class MusicMessageListener extends ListenerAdapter {
             musicManager.player.setPaused(false);
             event.getMessage().addReaction("\uD83D\uDC4C").queue();
         } else if (".queue".equals(command[0])) {
+
+        } else if (".np".equals(command[0])) {
 
         }
 

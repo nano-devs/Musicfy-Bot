@@ -5,22 +5,20 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
 public class MusicService {
-
     public void loadAndPlay(AudioPlayerManager playerManager, GuildMusicManager musicManager,
-                            final TextChannel channel, final String trackUrl) {
+                            final TextChannel channel, final String trackUrl, User requester) {
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
                 channel.sendMessage("Adding to queue " + track.getInfo().title).queue();
+
+                track.setUserData(requester);
 
                 play(musicManager, track);
             }
@@ -28,15 +26,50 @@ public class MusicService {
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
                 for (AudioTrack track : playlist.getTracks()) {
+                    track.setUserData(requester);
                     musicManager.scheduler.queue(track);
                 }
-                channel.sendMessage(
-                        String.valueOf(playlist.getTracks().size()) + " entries has been added to queue").queue();
+                channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
+                        " entries has been added to queue from " + playlist.getName()).queue();
             }
 
             @Override
             public void noMatches() {
                 channel.sendMessage("Nothing found by " + trackUrl).queue();
+            }
+
+            @Override
+            public void loadFailed(FriendlyException exception) {
+                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+            }
+        });
+    }
+
+    public void loadAndPlayYoutubeKeywords(AudioPlayerManager playerManager, GuildMusicManager musicManager,
+                            final TextChannel channel, final String keywords, User requester) {
+        playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack track) {
+                channel.sendMessage("Adding to queue " + track.getInfo().title).queue();
+
+                track.setUserData(requester);
+
+                play(musicManager, track);
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist playlist) {
+                for (AudioTrack track : playlist.getTracks()) {
+                    track.setUserData(requester);
+                    musicManager.scheduler.queue(track);
+                }
+                channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
+                        " entries has been added to queue from " + playlist.getName()).queue();
+            }
+
+            @Override
+            public void noMatches() {
+                channel.sendMessage("Nothing found by " + keywords).queue();
             }
 
             @Override

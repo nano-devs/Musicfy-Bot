@@ -74,13 +74,17 @@ public class TrackScheduler extends AudioEventAdapter {
         super.onTrackStart(player, track);
 
         System.out.println("Start playing " + track.getInfo().title);
+        System.out.println("Start playing " + track.getInfo().uri);
+        System.out.println("Start playing " + track.getIdentifier());
+
     }
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         super.onTrackException(player, track, exception);
 
-        System.out.println(exception.getMessage());
+        System.out.println("TrackException: " + exception.getMessage());
+        player.playTrack(track.makeClone());
     }
 
     @Override
