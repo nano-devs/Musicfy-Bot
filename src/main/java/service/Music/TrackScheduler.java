@@ -2,6 +2,7 @@ package service.Music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 
@@ -46,11 +47,52 @@ public class TrackScheduler extends AudioEventAdapter {
         player.startTrack(queue.poll(), false);
     }
 
+    public AudioPlayer getPlayer() {
+        return player;
+    }
+
+    public BlockingQueue<AudioTrack> getQueue() {
+        return queue;
+    }
+
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        // If repeat true, then enqueue url.
+        // ...
+
         // Only start the next track if the end reason is suitable for it (FINISHED or LOAD_FAILED)
         if (endReason.mayStartNext) {
             nextTrack();
+        } else {
+            System.out.println(endReason.name());
+            System.out.println("May not start next!");
         }
+    }
+
+    @Override
+    public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        super.onTrackStart(player, track);
+
+        System.out.println("Start playing " + track.getInfo().title);
+        System.out.println("Start playing " + track.getInfo().uri);
+        System.out.println("Start playing " + track.getIdentifier());
+
+    }
+
+    @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+        super.onTrackException(player, track, exception);
+
+        System.out.println("TrackException: " + exception.getMessage());
+        player.playTrack(track.makeClone());
+    }
+
+    @Override
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
+        super.onTrackStuck(player, track, thresholdMs);
+
+        System.out.println(thresholdMs);
+        System.out.println("Stuck " + track.getInfo().title);
+        
     }
 }
