@@ -3,6 +3,9 @@ package service.Music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Holder for both the player and a track scheduler for one guild.
  */
@@ -15,6 +18,10 @@ public class GuildMusicManager {
      * Track scheduler for the player.
      */
     public final TrackScheduler scheduler;
+    /**
+     * Set of user id for the skip vote.
+     */
+    public Set<String> skipVoteSet;
 
     /**
      * Creates a player and a track scheduler.
@@ -24,6 +31,7 @@ public class GuildMusicManager {
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player);
         player.addListener(scheduler);
+        skipVoteSet = new HashSet<String>();
     }
 
     /**
