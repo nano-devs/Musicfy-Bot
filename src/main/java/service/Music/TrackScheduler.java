@@ -76,7 +76,6 @@ public class TrackScheduler extends AudioEventAdapter {
         System.out.println("Start playing " + track.getInfo().title);
         System.out.println("Start playing " + track.getInfo().uri);
         System.out.println("Start playing " + track.getIdentifier());
-
     }
 
     @Override
@@ -84,7 +83,7 @@ public class TrackScheduler extends AudioEventAdapter {
         super.onTrackException(player, track, exception);
 
         System.out.println("TrackException: " + exception.getMessage());
-        player.playTrack(track.makeClone());
+        exception.printStackTrace();
     }
 
     @Override
