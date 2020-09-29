@@ -1,5 +1,6 @@
 package service.Music;
 
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -20,7 +21,7 @@ public class MusicService {
 
                 track.setUserData(requester);
 
-                play(musicManager, track);
+                musicManager.scheduler.queue(track);
             }
 
             @Override
@@ -107,6 +108,19 @@ public class MusicService {
         VoiceChannel voiceChannel = member.getVoiceState().getChannel();
         if (voiceChannel == null){
             event.getChannel().sendMessage("Are you sure you're in voice channel ?").queue();
+            return false;
+        }
+        Guild guild = event.getGuild();
+        AudioManager audioManager = guild.getAudioManager();
+        audioManager.openAudioConnection(voiceChannel);
+        return true;
+    }
+
+    public boolean joinUserVoiceChannel(CommandEvent event) {
+        Member member = event.getMember();
+        VoiceChannel voiceChannel = member.getVoiceState().getChannel();
+        if (voiceChannel == null){
+            event.reply("Are you sure you're in voice channel ?");
             return false;
         }
         Guild guild = event.getGuild();

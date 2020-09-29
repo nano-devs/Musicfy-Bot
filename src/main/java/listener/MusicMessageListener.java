@@ -3,6 +3,7 @@ package listener;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -122,7 +123,12 @@ public class MusicMessageListener extends ListenerAdapter {
         } else if (".queue".equals(command[0])) {
 
         } else if (".np".equals(command[0])) {
-
+            GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
+            AudioTrack nowPlayingTrack = musicManager.player.getPlayingTrack();
+            String title = nowPlayingTrack.getInfo().title;
+            long duration = nowPlayingTrack.getDuration();
+            event.getChannel().sendMessage("Now playing: " + title + " by " +
+                    nowPlayingTrack.getInfo().author).queue();
         }
 
         super.onGuildMessageReceived(event);
