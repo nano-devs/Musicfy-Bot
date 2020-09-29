@@ -1,4 +1,10 @@
+import client.NanoClient;
+import com.jagrosh.jdautilities.command.CommandClient;
+import com.jagrosh.jdautilities.command.CommandClientBuilder;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import command.*;
 import listener.MusicMessageListener;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -12,21 +18,46 @@ import javax.security.auth.login.LoginException;
 
 public class Main {
 
+    public final static String PLAY_EMOJI  = "\u25B6"; // Play Button
+    public final static String PAUSE_EMOJI = "\u23F8"; // Pause Button
+    public final static String STOP_EMOJI  = "\u23F9"; // Stop Button
+
     public static void main(String[] args) {
 
         String botToken = System.getenv("SAN_TOKEN");
 
+        NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
+
+        // Configure CommandClient
+        CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
+        commandClientBuilder.setPrefix("..");
+        commandClientBuilder.setEmojis("\uD83D\uDE03", "\uD83D\uDE2E", "\uD83D\uDE26");
+        commandClientBuilder.setHelpWord("help");
+        commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
+        commandClientBuilder.setActivity(Activity.listening("JOMAMA"));
+
+        commandClientBuilder.addCommand(new JoinCommand(nano));
+        commandClientBuilder.addCommand(new LeaveCommand(nano));
+        commandClientBuilder.addCommand(new PlayUrlCommand(nano));
+        commandClientBuilder.addCommand(new VolumeCommand(nano));
+        commandClientBuilder.addCommand(new SkipCommand(nano));
+        commandClientBuilder.addCommand(new PauseCommand(nano));
+        commandClientBuilder.addCommand(new ResumeCommand(nano));
+
+        CommandClient commandClient = commandClientBuilder.build();
+
+        // JDA Builder
         JDABuilder builder = JDABuilder.createDefault(botToken);
 
+        // Configure caching.
         configureMemoryUsage(builder);
 
-        // Set activity (like "playing Something")
-        builder.setActivity(Activity.watching("TV"));
-
-        builder.addEventListeners(new MusicMessageListener(new MusicService()));
+        // Add JDA-Utilities command client.
+        builder.addEventListeners(commandClient);
 
         try {
-            builder.build();
+            JDA jda = builder.build();
+            nano.setJda(jda);
         } catch (LoginException e) {
             e.printStackTrace();
         }
