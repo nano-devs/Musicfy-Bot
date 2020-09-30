@@ -72,10 +72,6 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         super.onTrackStart(player, track);
-
-        System.out.println("Start playing " + track.getInfo().title);
-        System.out.println("Start playing " + track.getInfo().uri);
-        System.out.println("Start playing " + track.getIdentifier());
     }
 
     @Override
