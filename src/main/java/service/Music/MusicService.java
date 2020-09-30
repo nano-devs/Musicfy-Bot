@@ -46,7 +46,7 @@ public class MusicService {
         });
     }
 
-    public void loadAndPlayYoutubeKeywords(AudioPlayerManager playerManager, GuildMusicManager musicManager,
+    public void loadAndPlayKeywords(AudioPlayerManager playerManager, GuildMusicManager musicManager,
                             final TextChannel channel, final String keywords, User requester) {
         playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
             @Override
