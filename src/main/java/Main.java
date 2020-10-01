@@ -24,7 +24,7 @@ public class Main {
     public final static String PAUSE_EMOJI = "\u23F8"; // Pause Button
     public final static String STOP_EMOJI  = "\u23F9"; // Stop Button
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         String botToken = System.getenv("SAN_TOKEN");
 
