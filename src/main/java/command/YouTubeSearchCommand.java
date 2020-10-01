@@ -5,12 +5,15 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.Music.GuildMusicManager;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Search video from youtube based on keyword.
@@ -34,7 +37,7 @@ public class YouTubeSearchCommand extends Command
         this.arguments = "<keyword>";
     }
 
-    private boolean PlayVideo(String video, int entry, CommandEvent event)
+    private boolean PlayVideo(String[] url, int entry, CommandEvent event)
     {
         // check entry number
         if ((entry > this._MaxVideoResult) ||
@@ -44,16 +47,9 @@ public class YouTubeSearchCommand extends Command
         }
 
         // get selected video detail
-        String url = video.split("\n")[entry];
-
-        int first = url.indexOf("(");
-        int last = url.indexOf(")");
-
-        url = url.substring(first + 1, last);
-
         GuildMusicManager musicManager = this._Nano.getGuildAudioPlayer(event.getGuild());
         musicManager.player.setVolume(15);
-        this._Nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url, event.getAuthor());
+        this._Nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry - 1], event.getAuthor());
         return true;
     }
 
@@ -89,6 +85,7 @@ public class YouTubeSearchCommand extends Command
         JSONArray item = obj.getJSONArray("items");
 
         // create video list
+        String[] url = new String[this._MaxVideoResult];
         for (int i = 0; i < this._MaxVideoResult; i++)
         {
             // get video id
@@ -112,10 +109,16 @@ public class YouTubeSearchCommand extends Command
                             videoTitle + "](" +
                             "https://www.youtube.com/watch?v=" + videoId + ")";
 
+            url[i] = "https://www.youtube.com/watch?v=" + videoId;
+
             // add video data to embed
             embed.appendDescription(output + "\n");
         }
-        event.reply(embed.build());
+
+        //event.reply(embed.build());
+        AtomicReference<Message> msg = new AtomicReference<>();
+        event.getChannel().sendMessage(embed.build()).queue((message) ->
+                msg.set(message));
 
         // wait user response for playing video
         this._Nano.getWaiter().waitForEvent(
@@ -129,13 +132,14 @@ public class YouTubeSearchCommand extends Command
                     if (!this._Nano.getMusicService().joinUserVoiceChannel(event)) {
 
                     }
-                    else if (!this.PlayVideo(embed.getDescriptionBuilder().toString(), entry, event))
+                    else if (!this.PlayVideo(url, entry, event))
                     {
                         event.reply("Incorrect entry number.");
                     }
                 },
                 10, TimeUnit.SECONDS, () ->
-                        event.getMessage().delete()
-                );
+//                        event.getChannel().deleteMessageById(msg.get().getId()).queue()
+                        msg.get().delete().queue()
+        );
     }
 }
