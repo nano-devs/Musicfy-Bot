@@ -1,33 +1,21 @@
-import YouTubeSearchApi.YouTubeSearchClient;
 import client.NanoClient;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
-import listener.MusicMessageListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
-import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import service.Music.MusicService;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
 
 public class Main {
 
@@ -57,7 +45,7 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
-        commandClientBuilder.addCommand(new YouTubeSearch());
+        commandClientBuilder.addCommand(new YouTubeSearchCommand());
 
         CommandClient commandClient = commandClientBuilder.build();
 
