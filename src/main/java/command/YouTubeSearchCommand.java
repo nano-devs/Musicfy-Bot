@@ -52,7 +52,7 @@ public class YouTubeSearchCommand extends Command
         url = url.substring(first + 1, last);
 
         GuildMusicManager musicManager = this._Nano.getGuildAudioPlayer(event.getGuild());
-        musicManager.player.setVolume(50);
+        musicManager.player.setVolume(15);
         this._Nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url, event.getAuthor());
         return true;
     }
@@ -135,7 +135,7 @@ public class YouTubeSearchCommand extends Command
                     }
                 },
                 10, TimeUnit.SECONDS, () ->
-                        event.reply("Take to long for choosing, cancel command")
+                        event.getMessage().delete()
                 );
     }
 }
