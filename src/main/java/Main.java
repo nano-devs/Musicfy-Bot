@@ -1,3 +1,4 @@
+import YouTubeSearchApi.YouTubeSearchClient;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
@@ -26,9 +27,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 //        String botToken = System.getenv("SAN_TOKEN");
-        String botToken = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda\\api.txt")).get(1);
+        String botToken = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda.Temp\\api.txt")).get(1);
+        String youtubeApi = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda.Temp\\api.txt")).get(4);
 
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
+        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(youtubeApi);
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -45,7 +48,7 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
-        commandClientBuilder.addCommand(new YouTubeSearchCommand());
+        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
 
         CommandClient commandClient = commandClientBuilder.build();
 
@@ -57,6 +60,7 @@ public class Main {
 
         // Add JDA-Utilities command client.
         builder.addEventListeners(commandClient);
+        builder.addEventListeners(nano.getWaiter());
 
         try {
             JDA jda = builder.build();
