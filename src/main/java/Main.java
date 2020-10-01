@@ -25,7 +25,6 @@ public class Main {
     public static void main(String[] args) {
 
         String botToken = System.getenv("SAN_TOKEN");
-
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
 
         // Configure CommandClient
@@ -55,6 +54,7 @@ public class Main {
 
         // Add JDA-Utilities command client.
         builder.addEventListeners(commandClient);
+        builder.addEventListeners(nano.getWaiter());
 
         try {
             JDA jda = builder.build();
