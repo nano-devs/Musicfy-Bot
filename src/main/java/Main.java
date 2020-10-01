@@ -26,9 +26,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-//        String botToken = System.getenv("SAN_TOKEN");
-        String botToken = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda.Temp\\api.txt")).get(1);
-        String youtubeApi = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda.Temp\\api.txt")).get(4);
+        String botToken = System.getenv("SAN_TOKEN");
 
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
         YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(youtubeApi);
