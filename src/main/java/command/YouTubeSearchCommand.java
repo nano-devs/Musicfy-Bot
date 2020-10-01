@@ -14,12 +14,12 @@ import java.nio.file.Paths;
 /**
  * Search video from youtube based on keyword.
  */
-public class YouTubeSearch extends Command
+public class YouTubeSearchCommand extends Command
 {
     private final String _ApiKey;
     private final int _VideoNumber = 5;
 
-    public YouTubeSearch() throws IOException
+    public YouTubeSearchCommand() throws IOException
     {
         this._ApiKey = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda\\api.txt")).get(4);
 
