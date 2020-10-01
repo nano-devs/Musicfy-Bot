@@ -1,27 +1,30 @@
 package command;
 
 import YouTubeSearchApi.YouTubeSearchClient;
+import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import service.Music.GuildMusicManager;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Search video from youtube based on keyword.
  */
 public class YouTubeSearchCommand extends Command
 {
-    private final String _ApiKey;
-    private final int _VideoNumber = 5;
+    private final int _MaxVideoResult = 5;
+    private final YouTubeSearchClient _Youtube;
+    private final NanoClient _Nano;
 
-    public YouTubeSearchCommand() throws IOException
+    public YouTubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube)
     {
-        this._ApiKey = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda\\api.txt")).get(4);
+        this._Nano = nano;
+        this._Youtube = youtube;
 
         this.name = "youtube search";
         this.aliases = new String[]{"yts", "yt s"};
@@ -29,6 +32,29 @@ public class YouTubeSearchCommand extends Command
         this.cooldown = 2;
         this.help = "Search youtube video with specific keyword.";
         this.arguments = "<keyword>";
+    }
+
+    private boolean PlayVideo(String video, int entry, CommandEvent event)
+    {
+        // check entry number
+        if ((entry > this._MaxVideoResult) ||
+                (entry <= 0))
+        {
+            return false;
+        }
+
+        // get selected video detail
+        String url = video.split("\n")[entry];
+
+        int first = url.indexOf("(");
+        int last = url.indexOf(")");
+
+        url = url.substring(first + 1, last);
+
+        GuildMusicManager musicManager = this._Nano.getGuildAudioPlayer(event.getGuild());
+        musicManager.player.setVolume(50);
+        this._Nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url, event.getAuthor());
+        return true;
     }
 
     @Override
@@ -41,12 +67,11 @@ public class YouTubeSearchCommand extends Command
             args = args.replace(",", " ");
         }
 
-        YouTubeSearchClient client = new YouTubeSearchClient(this._ApiKey);
-        String response = client.Search(
+        String response = this._Youtube.Search(
                 args,
                 "snippet",
                 "video",
-                this._VideoNumber);
+                this._MaxVideoResult);
 
         // create embed message
         EmbedBuilder embed = new EmbedBuilder();
@@ -64,7 +89,7 @@ public class YouTubeSearchCommand extends Command
         JSONArray item = obj.getJSONArray("items");
 
         // create video list
-        for (int i = 0; i < this._VideoNumber; i++)
+        for (int i = 0; i < this._MaxVideoResult; i++)
         {
             // get video id
             JSONObject id = item.getJSONObject(i).getJSONObject("id");
@@ -91,5 +116,26 @@ public class YouTubeSearchCommand extends Command
             embed.appendDescription(output + "\n");
         }
         event.reply(embed.build());
+
+        // wait user response for playing video
+        this._Nano.getWaiter().waitForEvent(
+                GuildMessageReceivedEvent.class,
+                e -> e.getChannel().equals(event.getChannel())
+                        && e.getAuthor().getId().equals(event.getAuthor().getId())
+                        ,
+                e -> {
+                    int entry = Integer.parseInt(e.getMessage().getContentRaw());
+
+                    if (!this._Nano.getMusicService().joinUserVoiceChannel(event)) {
+
+                    }
+                    else if (!this.PlayVideo(embed.getDescriptionBuilder().toString(), entry, event))
+                    {
+                        event.reply("Incorrect entry number.");
+                    }
+                },
+                10, TimeUnit.SECONDS, () ->
+                        event.reply("Take to long for choosing, cancel command")
+                );
     }
 }
