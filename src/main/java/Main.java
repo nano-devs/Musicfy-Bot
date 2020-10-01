@@ -1,20 +1,22 @@
+import YouTubeSearchApi.YouTubeSearchClient;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
-import listener.MusicMessageListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
-import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import service.Music.MusicService;
 
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Main {
 
@@ -26,6 +28,7 @@ public class Main {
 
         String botToken = System.getenv("SAN_TOKEN");
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
+        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(youtubeApi);
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -42,6 +45,7 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
+        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
