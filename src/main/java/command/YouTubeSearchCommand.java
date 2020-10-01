@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -116,7 +117,8 @@ public class YouTubeSearchCommand extends Command
 
         //event.reply(embed.build());
         AtomicReference<Message> msg = new AtomicReference<>();
-        event.getChannel().sendMessage(embed.build()).queue(msg::set);
+        event.getChannel().sendMessage(embed.build()).queue((message) ->
+                msg.set(message));
 
         // wait user response for playing video
         this._Nano.getWaiter().waitForEvent(
