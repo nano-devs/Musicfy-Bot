@@ -1,4 +1,7 @@
+import YouTubeSearchApi.YouTubeSearchClient;
 import client.NanoClient;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -12,9 +15,19 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.Compression;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import service.Music.MusicService;
 
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 
 public class Main {
 
@@ -22,9 +35,10 @@ public class Main {
     public final static String PAUSE_EMOJI = "\u23F8"; // Pause Button
     public final static String STOP_EMOJI  = "\u23F9"; // Stop Button
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        String botToken = System.getenv("SAN_TOKEN");
+//        String botToken = System.getenv("SAN_TOKEN");
+        String botToken = Files.readAllLines(Paths.get("D:\\Project\\Java\\Nano.Jda\\api.txt")).get(1);
 
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
 
@@ -43,6 +57,7 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
+        commandClientBuilder.addCommand(new YouTubeSearch());
 
         CommandClient commandClient = commandClientBuilder.build();
 
