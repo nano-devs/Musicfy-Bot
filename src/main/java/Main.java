@@ -14,9 +14,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import service.Music.MusicService;
 
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class Main {
 
@@ -28,7 +25,7 @@ public class Main {
 
         String botToken = System.getenv("SAN_TOKEN");
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
-        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(youtubeApi);
+        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(System.getenv("DEVELOPER_KEY"));
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
