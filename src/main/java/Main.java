@@ -34,7 +34,7 @@ public class Main {
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
         commandClientBuilder.setPrefix("..");
-        commandClientBuilder.setEmojis("\uD83D\uDE03", "\uD83D\uDE2E", "\uD83D\uDE26");
+        commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
         commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
         commandClientBuilder.setActivity(Activity.listening("JOMAMA"));
@@ -47,6 +47,7 @@ public class Main {
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
         commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
+        commandClientBuilder.addCommand(new NowPlayCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
 
