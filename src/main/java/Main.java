@@ -14,9 +14,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import service.Music.MusicService;
 
 import javax.security.auth.login.LoginException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class Main {
 
@@ -27,9 +24,10 @@ public class Main {
     public static void main(String[] args) {
 
         String botToken = System.getenv("SAN_TOKEN");
+        String youTubeToken = System.getenv("YT_TOKEN");
 
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
-        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(youtubeApi);
+        YouTubeSearchClient youTubeSearchClient = new YouTubeSearchClient(youTubeToken);
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -46,7 +44,7 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
-        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
+        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, youTubeSearchClient));
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
