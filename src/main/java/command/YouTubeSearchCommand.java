@@ -19,14 +19,14 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class YouTubeSearchCommand extends Command
 {
-    private final int _MaxVideoResult = 5;
-    private final YouTubeSearchClient _Youtube;
-    private final NanoClient _Nano;
+    private final int _maxVideoResult = 5;
+    private final YouTubeSearchClient _youtube;
+    private final NanoClient _nano;
 
     public YouTubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube)
     {
-        this._Nano = nano;
-        this._Youtube = youtube;
+        this._nano = nano;
+        this._youtube = youtube;
 
         this.name = "youtube search";
         this.aliases = new String[]{"yts", "yt s"};
@@ -36,19 +36,19 @@ public class YouTubeSearchCommand extends Command
         this.arguments = "<keyword>";
     }
 
-    private boolean PlayVideo(String[] url, int entry, CommandEvent event)
+    private boolean playVideo(String[] url, int entry, CommandEvent event)
     {
         // check entry number
-        if ((entry > this._MaxVideoResult) ||
+        if ((entry > this._maxVideoResult) ||
                 (entry <= 0))
         {
             return false;
         }
 
         // get selected video detail
-        GuildMusicManager musicManager = this._Nano.getGuildAudioPlayer(event.getGuild());
+        GuildMusicManager musicManager = this._nano.getGuildAudioPlayer(event.getGuild());
         musicManager.player.setVolume(15);
-        this._Nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry - 1], event.getAuthor());
+        this._nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry - 1], event.getAuthor());
         return true;
     }
 
@@ -62,11 +62,11 @@ public class YouTubeSearchCommand extends Command
             args = args.replace(",", " ");
         }
 
-        String response = this._Youtube.Search(
+        String response = this._youtube.Search(
                 args,
                 "snippet",
                 "video",
-                this._MaxVideoResult);
+                this._maxVideoResult);
 
         // create embed message
         EmbedBuilder embed = new EmbedBuilder();
@@ -84,8 +84,8 @@ public class YouTubeSearchCommand extends Command
         JSONArray item = obj.getJSONArray("items");
 
         // create video list
-        String[] url = new String[this._MaxVideoResult];
-        for (int i = 0; i < this._MaxVideoResult; i++)
+        String[] url = new String[this._maxVideoResult];
+        for (int i = 0; i < this._maxVideoResult; i++)
         {
             // get video id
             JSONObject id = item.getJSONObject(i).getJSONObject("id");
@@ -119,7 +119,7 @@ public class YouTubeSearchCommand extends Command
         event.getChannel().sendMessage(embed.build()).queue(msg::set);
 
         // wait user response for playing video
-        this._Nano.getWaiter().waitForEvent(
+        this._nano.getWaiter().waitForEvent(
                 GuildMessageReceivedEvent.class,
                 e -> e.getChannel().equals(event.getChannel())
                         && e.getAuthor().getId().equals(event.getAuthor().getId())
@@ -127,10 +127,10 @@ public class YouTubeSearchCommand extends Command
                 e -> {
                     int entry = Integer.parseInt(e.getMessage().getContentRaw());
 
-                    if (!this._Nano.getMusicService().joinUserVoiceChannel(event)) {
+                    if (!this._nano.getMusicService().joinUserVoiceChannel(event)) {
 
                     }
-                    else if (!this.PlayVideo(url, entry, event))
+                    else if (!this.playVideo(url, entry, event))
                     {
                         event.reply("Incorrect entry number.");
                     }
