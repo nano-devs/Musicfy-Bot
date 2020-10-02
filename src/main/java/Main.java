@@ -24,10 +24,8 @@ public class Main {
     public static void main(String[] args) {
 
         String botToken = System.getenv("SAN_TOKEN");
-        String youTubeToken = System.getenv("YT_TOKEN");
-
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
-        YouTubeSearchClient youTubeSearchClient = new YouTubeSearchClient(youTubeToken);
+        YouTubeSearchClient youTubeSearchClient = new YouTubeSearchClient(System.getenv("DEVELOPER_KEY"));
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
