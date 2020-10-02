@@ -117,4 +117,4 @@ output.json
 obj/
 .externalNativeBuild
 
-*/META-INF/*
+**META-INF**
