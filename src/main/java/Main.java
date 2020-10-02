@@ -25,7 +25,7 @@ public class Main {
 
         String botToken = System.getenv("SAN_TOKEN");
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
-        YouTubeSearchClient youTubeSearchClient = new YouTubeSearchClient(System.getenv("DEVELOPER_KEY"));
+        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(System.getenv("DEVELOPER_KEY"));
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -42,7 +42,7 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
-        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, youTubeSearchClient));
+        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
