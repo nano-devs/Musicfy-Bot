@@ -1,4 +1,4 @@
-package service.Music;
+package service.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
@@ -7,7 +7,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
 
@@ -140,5 +139,13 @@ public class MusicService {
 
         musicManager.player.stopTrack();
         musicManager.scheduler.getQueue().clear();
+    }
+
+    public boolean isMemberInVoiceState(Member member) {
+        VoiceChannel voiceChannel = member.getVoiceState().getChannel();
+        if (voiceChannel == null){
+            return false;
+        }
+        return true;
     }
 }

@@ -1,12 +1,10 @@
-package service.Music;
+package service.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import org.json.JSONObject;
 import org.jsoup.internal.StringUtil;
 
 import java.awt.*;
@@ -54,10 +52,10 @@ public class GuildMusicManager {
      */
     public void announceNowPlaying(CommandEvent event) {
         String voiceChannelName = event.getGuild().getAudioManager().getConnectedChannel().getName();
-        String announcement = "\uD83D\uDCE2 Now Playing in " + voiceChannelName + " \uD83C\uDFB6";
+        String announcement = "\uD83D\uDCE2 Now Playing in " + voiceChannelName + " \uD83C\uDFB5";
         String description = "[" + player.getPlayingTrack().getInfo().title + "]("
                 + player.getPlayingTrack().getInfo().uri + ")\n\n";
-        description += getProgressBar();
+        description += getProgressBar() + "\n";
         User requester = player.getPlayingTrack().getUserData(User.class);
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -71,6 +69,17 @@ public class GuildMusicManager {
         event.getChannel().sendMessage(embedBuilder.build()).queue();
     }
 
+    /**
+     * Get now playing description string.
+     * @return String of now playing description
+     */
+    public String getNowPlayingDescription() {
+        String description = "**[" + player.getPlayingTrack().getInfo().title + "]("
+                + player.getPlayingTrack().getInfo().uri + ")**\n\n";
+        description += getProgressBar() + "\n\n";
+        return description;
+    }
+
     private String getProgressBar() {
         long duration = player.getPlayingTrack().getDuration();
         long position = player.getPlayingTrack().getPosition();
@@ -80,7 +89,7 @@ public class GuildMusicManager {
 
         String[] progressBar = "\u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC".split(" ");
         progressBar[currentPostIndex] = "\uD83D\uDD18";
-        return "\u25B6 " + StringUtil.join(progressBar, "") + "`["
+        return "\u25B6" + StringUtil.join(progressBar, "") + "`["
                 + Utils.getDurationFormat(position) + "/" + Utils.getDurationFormat(duration)
                 + "]` \uD83D\uDD0A \n";
     }
