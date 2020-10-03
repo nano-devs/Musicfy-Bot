@@ -6,12 +6,12 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import service.Music.GuildMusicManager;
+import service.music.GuildMusicManager;
 
+import java.awt.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,7 +30,7 @@ public class YouTubeSearchCommand extends Command
         this._youtube = youtube;
 
         this.name = "youtube search";
-        this.aliases = new String[]{"yts", "yt s"};
+        this.aliases = new String[]{"yts", "yt s", "search", "s"};
         this.guildOnly = true;
         this.cooldown = 2;
         this.help = "Search youtube video with specific keyword.";
@@ -71,6 +71,7 @@ public class YouTubeSearchCommand extends Command
 
         // create embed message
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(Color.MAGENTA);
         embed.setTitle("Song selection | Reply the song number to continue");
         embed.setFooter("Song selection | Type the number to continue");
         embed.setDescription("");

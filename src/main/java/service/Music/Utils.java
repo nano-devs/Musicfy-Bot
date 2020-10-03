@@ -1,4 +1,4 @@
-package service.Music;
+package service.music;
 
 public class Utils {
     /**

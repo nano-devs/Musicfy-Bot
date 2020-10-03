@@ -4,7 +4,7 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.User;
-import service.Music.GuildMusicManager;
+import service.music.GuildMusicManager;
 
 public class SkipCommand extends Command {
 
@@ -17,6 +17,7 @@ public class SkipCommand extends Command {
         this.aliases = new String[]{"next", "next_track", "play_next", "skip_next"};
         this.guildOnly = true;
         this.help = "Vote skip for current playing song";
+        this.cooldown = 2;
     }
 
     @Override

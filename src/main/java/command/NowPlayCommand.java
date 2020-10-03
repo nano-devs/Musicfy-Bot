@@ -3,7 +3,7 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import service.Music.GuildMusicManager;
+import service.music.GuildMusicManager;
 
 public class NowPlayCommand extends Command {
 
@@ -15,6 +15,7 @@ public class NowPlayCommand extends Command {
         this.aliases = new String[]{"nowplay", "now_play", "now_playing", "nowplaying"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;
+        this.cooldown = 2;
     }
 
     @Override

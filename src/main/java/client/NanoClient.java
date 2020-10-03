@@ -12,8 +12,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import service.Music.GuildMusicManager;
-import service.Music.MusicService;
+import service.music.GuildMusicManager;
+import service.music.MusicService;
 
 import java.util.HashMap;
 import java.util.Map;
