@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import service.Music.MusicService;
+import service.music.MusicService;
 
 import javax.security.auth.login.LoginException;
 
@@ -24,8 +24,11 @@ public class Main {
     public static void main(String[] args) {
 
         String botToken = System.getenv("SAN_TOKEN");
+        String ytToken = System.getenv("DEVELOPER_KEY");
+
+        // Initialize Dependencies
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
-        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(System.getenv("DEVELOPER_KEY"));
+        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -44,6 +47,8 @@ public class Main {
         commandClientBuilder.addCommand(new ResumeCommand(nano));
         commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
+        commandClientBuilder.addCommand(new RepeatCommand(nano));
+        commandClientBuilder.addCommand(new ShowQueueCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
 
@@ -65,7 +70,7 @@ public class Main {
         }
     }
 
-    public static void configureMemoryUsage(JDABuilder builder) {
+    private static void configureMemoryUsage(JDABuilder builder) {
         // Disable cache for member activities (streaming/games/spotify)
         builder.disableCache(CacheFlag.ACTIVITY);
 
