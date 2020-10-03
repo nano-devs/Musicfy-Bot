@@ -3,7 +3,7 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import service.Music.GuildMusicManager;
+import service.music.GuildMusicManager;
 
 public class VolumeCommand extends Command {
 

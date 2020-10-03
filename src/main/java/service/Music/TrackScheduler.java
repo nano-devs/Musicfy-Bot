@@ -1,4 +1,4 @@
-package service.Music;
+package service.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
@@ -15,6 +15,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue;
+    private boolean inLoopState;
 
     /**
      * @param player The audio player this scheduler uses
@@ -22,6 +23,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingQueue<>();
+        this.inLoopState = false;
     }
 
     /**
@@ -55,10 +57,20 @@ public class TrackScheduler extends AudioEventAdapter {
         return queue;
     }
 
+    public boolean isInLoopState() {
+        return inLoopState;
+    }
+
+    public void setInLoopState(boolean inLoopState) {
+        this.inLoopState = inLoopState;
+    }
+
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        // If repeat true, then enqueue url.
-        // ...
+        // If repeat true, then re-enqueue url.
+        if (inLoopState) {
+            queue(track);
+        }
 
         // Only start the next track if the end reason is suitable for it (FINISHED or LOAD_FAILED)
         if (endReason.mayStartNext) {
@@ -88,6 +100,5 @@ public class TrackScheduler extends AudioEventAdapter {
 
         System.out.println(thresholdMs);
         System.out.println("Stuck " + track.getInfo().title);
-        
     }
 }
