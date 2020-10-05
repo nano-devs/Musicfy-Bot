@@ -29,8 +29,8 @@ public class YouTubeSearchCommand extends Command
         this._nano = nano;
         this._youtube = youtube;
 
-        this.name = "youtube search";
-        this.aliases = new String[]{"yts", "yt s", "search", "s"};
+        this.name = "search";
+        this.aliases = new String[]{"yts", "yt s", "youtube search", "s"};
         this.guildOnly = true;
         this.cooldown = 2;
         this.help = "Search youtube video with specific keyword.";
@@ -48,7 +48,6 @@ public class YouTubeSearchCommand extends Command
 
         // get selected video detail
         GuildMusicManager musicManager = this._nano.getGuildAudioPlayer(event.getGuild());
-        musicManager.player.setVolume(15);
         this._nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry - 1], event.getAuthor());
         return true;
     }
