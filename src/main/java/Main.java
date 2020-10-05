@@ -40,6 +40,7 @@ public class Main {
 
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
+        commandClientBuilder.addCommand(new PlayCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));
         commandClientBuilder.addCommand(new VolumeCommand(nano));
         commandClientBuilder.addCommand(new SkipCommand(nano));
