@@ -3,6 +3,7 @@ package service.music;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import org.jsoup.internal.StringUtil;
@@ -27,6 +28,8 @@ public class GuildMusicManager {
      * Set of user id for the skip vote.
      */
     public Set<String> skipVoteSet;
+
+    private int volume;
 
     /**
      * Creates a player and a track scheduler.
@@ -92,5 +95,26 @@ public class GuildMusicManager {
         return "\u25B6" + StringUtil.join(progressBar, "") + "`["
                 + Utils.getDurationFormat(position) + "/" + Utils.getDurationFormat(duration)
                 + "]` \uD83D\uDD0A \n";
+    }
+
+    public String getEstimatedTimeUntilPlaying(int entryNumber) {
+        long totalDuration = 0;
+        int counter = 0;
+        for (AudioTrack queuedTrack : scheduler.getQueue()) {
+            counter += 1;
+            if (counter >= entryNumber)
+                break;
+            totalDuration += queuedTrack.getDuration();
+        }
+        totalDuration += player.getPlayingTrack().getDuration() - player.getPlayingTrack().getPosition();
+        return Utils.getDurationFormat(totalDuration);
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
     }
 }
