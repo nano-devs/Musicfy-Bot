@@ -8,12 +8,14 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import service.music.GuildMusicManager;
 import service.music.MusicService;
+import service.music.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,18 +59,32 @@ public class NanoClient {
      * @param musicManager Music manager to load & play the url
      * @param channel Current text channel
      * @param trackUrl Given url. Supported URL: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo
-     * @param requester User, requester.
+     * @param requester User who request the song.
      */
     public void loadAndPlayUrl(GuildMusicManager musicManager, final TextChannel channel,
                                final String trackUrl, User requester) {
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                channel.sendMessage("Adding to queue " + track.getInfo().title).queue();
-
                 track.setUserData(requester);
-
                 musicManager.scheduler.queue(track);
+
+                int positionInQueue = musicManager.scheduler.getQueue().size();
+
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
+
+                embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
+                        requester.getEffectiveAvatarUrl());
+
+                embedBuilder.addField("Channel", track.getInfo().author, true);
+                embedBuilder.addField("Song Duration", Utils.getDurationFormat(track.getDuration()), true);
+                embedBuilder.addField("Position in queue", "" + positionInQueue, true);
+                embedBuilder.addField("Estimated time until playing",
+                        musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
+
+//                channel.sendMessage("Added to queue " + track.getInfo().title).queue();
+                channel.sendMessage(embedBuilder.build()).queue();
             }
 
             @Override
@@ -84,6 +100,81 @@ public class NanoClient {
             @Override
             public void noMatches() {
                 channel.sendMessage("Nothing found by " + trackUrl).queue();
+            }
+
+            @Override
+            public void loadFailed(FriendlyException exception) {
+                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+            }
+        });
+    }
+
+    /**
+     *
+     * @param musicManager Music manager to load & play the url
+     * @param channel Current text channel
+     * @param keywords Given keywords.
+     * @param requester User, requester.
+     */
+    public void loadAndPlayKeywords(GuildMusicManager musicManager, final TextChannel channel,
+                               final String keywords, User requester) {
+        playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack track) {
+
+                track.setUserData(requester);
+
+                musicManager.scheduler.queue(track);
+
+                int positionInQueue = musicManager.scheduler.getQueue().size();
+
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
+
+                embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
+                        requester.getEffectiveAvatarUrl());
+
+                embedBuilder.addField("Channel", track.getInfo().author, true);
+                embedBuilder.addField("Song Duration", Utils.getDurationFormat(track.getDuration()), true);
+                embedBuilder.addField("Position in queue", "" + positionInQueue, true);
+                embedBuilder.addField("Estimated time until playing",
+                        musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
+
+//                channel.sendMessage("Added to queue " + track.getInfo().title).queue();
+                channel.sendMessage(embedBuilder.build()).queue();
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist playlist) {
+                AudioTrack track = playlist.getSelectedTrack();
+                if (track == null) {
+                    track = playlist.getTracks().get(0);
+                }
+                track.setUserData(requester);
+
+                musicManager.scheduler.queue(track);
+
+                int positionInQueue = musicManager.scheduler.getQueue().size();
+
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
+
+                embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
+                        requester.getEffectiveAvatarUrl());
+
+                embedBuilder.addField("Channel", track.getInfo().author, true);
+                embedBuilder.addField("Song Duration", Utils.getDurationFormat(track.getDuration()), true);
+                embedBuilder.addField("Position in queue", "" + positionInQueue, true);
+                embedBuilder.addField("Estimated time until playing",
+                        musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
+
+
+                channel.sendMessage(embedBuilder.build()).queue();
+            }
+
+            @Override
+            public void noMatches() {
+                channel.sendMessage("Nothing found by " + keywords).queue();
             }
 
             @Override
