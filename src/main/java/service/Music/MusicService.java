@@ -119,7 +119,6 @@ public class MusicService {
         Member member = event.getMember();
         VoiceChannel voiceChannel = member.getVoiceState().getChannel();
         if (voiceChannel == null){
-            event.reply("Are you sure you're in voice channel ?");
             return false;
         }
         Guild guild = event.getGuild();
@@ -132,7 +131,7 @@ public class MusicService {
         AudioManager audioManager = guild.getAudioManager();
         audioManager.openAudioConnection(voiceChannel);
     }
-
+    
     public void leaveVoiceChannel(Guild guild, GuildMusicManager musicManager){
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();

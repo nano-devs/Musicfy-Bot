@@ -8,18 +8,18 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
 import service.music.GuildMusicManager;
 
-public class PlayUrlCommand extends Command {
+public class PlayCommand extends Command {
 
     private NanoClient nanoClient;
 
-    public PlayUrlCommand(NanoClient nanoClient) {
+    public PlayCommand(NanoClient nanoClient) {
         this.nanoClient = nanoClient;
 
-        this.name = "purl";
-        this.help = "Stands for `play_url`, play song from a given url. Supported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.";
-        this.aliases = new String[] {"url", "play_url", "playurl"};
+        this.name = "play";
+        this.help = "play song from a given url or keywords. Supported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.";
+        this.aliases = new String[] {"p"};
         this.cooldown = 2;
-        this.arguments = "<url>";
+        this.arguments = "<url/keywords>";
         this.guildOnly = true;
     }
 
@@ -39,8 +39,17 @@ public class PlayUrlCommand extends Command {
             // if not connected to any voice channel, try to join user voice channel.
             nanoClient.getMusicService().joinUserVoiceChannel(event);
         }
-
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
-        nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), event.getArgs(), event.getAuthor());
+
+        String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
+        String args = event.getArgs();
+        UrlValidator urlValidator = new UrlValidator(schemes);
+
+        if (urlValidator.isValid(args)) {
+            nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), args, event.getAuthor());
+        }
+        else {
+            nanoClient.loadAndPlayKeywords(musicManager, event.getTextChannel(), args, event.getAuthor());
+        }
     }
 }
