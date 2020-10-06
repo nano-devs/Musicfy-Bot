@@ -36,7 +36,7 @@ public class Main {
         commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
         commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
-        commandClientBuilder.setActivity(Activity.listening("JOMAMA"));
+        commandClientBuilder.setActivity(Activity.listening("..help"));
 
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
