@@ -83,7 +83,6 @@ public class NanoClient {
                 embedBuilder.addField("Estimated time until playing",
                         musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
 
-//                channel.sendMessage("Added to queue " + track.getInfo().title).queue();
                 channel.sendMessage(embedBuilder.build()).queue();
             }
 
@@ -94,7 +93,7 @@ public class NanoClient {
                     musicManager.scheduler.queue(track);
                 }
                 channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
-                        " entries has been added to queue from " + playlist.getName()).queue();
+                        " entries from **"+ playlist.getName() + "** has been added to queue").queue();
             }
 
             @Override
