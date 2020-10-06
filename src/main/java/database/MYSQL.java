@@ -110,13 +110,8 @@ public class MYSQL
         catch (Exception e)
         {
             e.printStackTrace();
-<<<<<<< Updated upstream
         }
         return -1;
-=======
-            return -1;
-        }
->>>>>>> Stashed changes
     }
 
     public boolean addPremiumUser(long id)
@@ -124,13 +119,9 @@ public class MYSQL
         DateTime start = new DateTime(Calendar.getInstance().getTime());
         DateTime end = start.plus(Months.ONE);
 
-<<<<<<< Updated upstream
-        String startSql = "STR_TO_DATE('" + start.toString("yyyy-MM-dd hh-mm-ss") + "','%Y-%m-%d %H-%i-%s')";
-        String endSql = "STR_TO_DATE('" + end.toString("yyyy-MM-dd hh-mm-ss") + "','%Y-%m-%d %H-%i-%s')";
-=======
         String startSql = "STR_TO_DATE('" + start.toString("yyyy-MM-dd hh:mm:ss") + "', '%Y-%m-%d %H:%i:%s')";
         String endSql = "STR_TO_DATE('" + end.toString("yyyy-MM-dd hh:mm:ss") + "', '%Y-%m-%d %H:%i:%s')";
->>>>>>> Stashed changes
+
 
         String query = "INSERT INTO PREMIUM_USER " +
                         "VALUES (" + id + ", " + startSql + ", " + endSql + ")";
