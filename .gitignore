@@ -117,4 +117,13 @@ output.json
 obj/
 .externalNativeBuild
 
+# HEROKU 
 **META-INF**
+build
+.gradle
+.idea
+out
+*.iml
+*.ipr
+*.iws
+.DS_Store
