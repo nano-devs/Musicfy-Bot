@@ -25,17 +25,6 @@ public class PremiumUserCommand extends Command
         this.help = "Become a premium user for one month.";
     }
 
-    public PremiumUserCommand(Connection connection)
-    {
-        this.db = new PremiumUserModel(connection);
-
-        this.name = "premium";
-        this.aliases = new String[]{"prm"};
-        this.guildOnly = false;
-        this.cooldown = 2;
-        this.help = "Become a premium user for one month.";
-    }
-
     @Override
     protected void execute(CommandEvent event)
     {
