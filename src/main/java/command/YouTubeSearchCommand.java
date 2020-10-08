@@ -4,7 +4,7 @@ import YouTubeSearchApi.YouTubeSearchClient;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.MYSQL;
+import database.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -24,15 +24,13 @@ public class YouTubeSearchCommand extends Command
     private final int maxVideoResult = 5;
     private final YouTubeSearchClient youtube;
     private final NanoClient nano;
-    private final MYSQL db;
 
-    public YouTubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube, MYSQL db)
+    public YouTubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube)
     {
         this.nano = nano;
         this.youtube = youtube;
-        this.db = db;
 
-        this.name = "youtube search";
+        this.name = "search";
         this.aliases = new String[]{"yts", "yt s", "search", "s"};
         this.guildOnly = true;
         this.cooldown = 2;
@@ -48,25 +46,36 @@ public class YouTubeSearchCommand extends Command
         {
             return false;
         }
+        entry -= 1;
 
-        // insert track to database
-        this.db.addTrack(title[entry], url[entry]);
-        long trackId = this.db.getTrackId(url[entry]);
-
-        if (this.db.isPremium(event.getGuild().getIdLong(), "GUILD"))
-        {
-            this.db.addGuildHistory(event.getGuild().getIdLong(), trackId);
-        }
-        else if (this.db.isPremium(event.getAuthor().getIdLong(), "USER"))
-        {
-            this.db.addUserHistory(event.getAuthor().getIdLong(), trackId);
-        }
+        // process premium access
+        this.premiumMember(title[entry], url[entry], event);
 
         // get selected video detail
         GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
         musicManager.player.setVolume(15);
-        this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry - 1], event.getAuthor());
+        this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry], event.getAuthor());
         return true;
+    }
+
+    protected void premiumMember(String title, String url, CommandEvent event)
+    {
+        // insert track to database
+        TrackModel trackModel = new TrackModel();
+        trackModel.addTrack(title, url);
+        long trackId = trackModel.getTrackId(url);
+
+        // check premium membership
+        if (trackModel.isPremium(event.getGuild().getIdLong(), "GUILD"))
+        {
+            GuildHistoryModel guild = new GuildHistoryModel();
+            guild.addGuildHistory(event.getGuild().getIdLong(), trackId);
+        }
+        else if (trackModel.isPremium(event.getAuthor().getIdLong(), "USER"))
+        {
+            UserHistoryModel user = new UserHistoryModel();
+            user.addUserHistory(event.getAuthor().getIdLong(), trackId);
+        }
     }
 
     @Override
@@ -150,7 +159,7 @@ public class YouTubeSearchCommand extends Command
                     int entry = Integer.parseInt(e.getMessage().getContentRaw());
 
                     if (!this.nano.getMusicService().joinUserVoiceChannel(event)) {
-
+                        event.reply("not joined int voice channel");
                     }
                     else if (!this.playVideo(title, url, entry, event))
                     {
