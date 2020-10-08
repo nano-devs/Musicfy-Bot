@@ -13,10 +13,10 @@ public class GuildHistoryModel extends BaseModel
      * @param trackId Track id that the user play
      * @return
      */
-    public boolean addGuildHistory(long guidId, long trackId)
+    public boolean addGuildHistory(long guidId, long userId, long trackId)
     {
-        String query = "INSERT INTO GUILD_HISTORY (GUILD_ID, TRACK_ID) " +
-                "VALUES (" + guidId + ", " + trackId + ")";
+        String query = "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, TRACK_ID) " +
+                "VALUES (" + guidId + ", " + userId + ", " + trackId + ")";
         return this.executeUpdateQuery(query) > 0;
     }
 }
