@@ -86,52 +86,6 @@ public abstract  class BaseModel
     }
 
     /**
-     * Check user id is administrator or nor
-     * @param id user id.
-     * @return true is user id administrator.
-     */
-    public boolean isAdministrator(long id)
-    {
-        String query = "SELECT COUNT(USER_ID) " +
-                "FROM ADMIN " +
-                "WHERE USER_ID = " + id;
-
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
-        {
-            try (PreparedStatement statement = connection.prepareStatement(query))
-            {
-                try (ResultSet result = statement.executeQuery())
-                {
-                    if (result.next())
-                    {
-                        int counter = result.getInt(1);
-                        System.out.println("Counter " + counter);
-                        return counter > 0;
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
      * Check user/guild is premium or not
      * @param id USER ID or GUILD ID
      * @param type "USER" or "GUILD"
