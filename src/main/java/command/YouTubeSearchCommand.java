@@ -65,13 +65,13 @@ public class YouTubeSearchCommand extends Command
         trackModel.addTrack(title, url);
         long trackId = trackModel.getTrackId(url);
 
-        // check premium membership
         if (trackModel.isPremium(event.getGuild().getIdLong(), "GUILD"))
         {
             GuildHistoryModel guild = new GuildHistoryModel();
             guild.addGuildHistory(event.getGuild().getIdLong(), trackId);
         }
-        else if (trackModel.isPremium(event.getAuthor().getIdLong(), "USER"))
+
+        if (trackModel.isPremium(event.getAuthor().getIdLong(), "USER"))
         {
             UserHistoryModel user = new UserHistoryModel();
             user.addUserHistory(event.getAuthor().getIdLong(), trackId);
