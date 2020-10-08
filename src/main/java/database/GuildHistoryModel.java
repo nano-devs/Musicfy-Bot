@@ -74,10 +74,11 @@ public class GuildHistoryModel extends BaseModel
                         StringBuilder output = new StringBuilder();
                         output.append(counter + ". ");
                         output.append("`" + format.format(result.getTime(4)) + "` ");
-                        output.append(client.getUserById(result.getLong(1)).getName() + "");
+//                        output.append(client.getUserById(result.getLong(1)).getName() + "");
 //                        output.append((result.getLong(1)));
                         output.append(" [" + result.getString(2) + "]");
                         output.append("(" + result.getString(3) +")\n");
+                        counter++;
 
                         if (history.length() + output.length() < 2048)
                         {

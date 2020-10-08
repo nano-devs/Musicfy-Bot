@@ -28,11 +28,12 @@ public class GuildHistoryCommand extends Command
     protected void execute(CommandEvent event)
     {
         GuildHistoryModel db = new GuildHistoryModel();
-        String message = db.GetGuildHistory(event.getGuild().getIdLong(), this.client.getJda());
+        String message = db.GetGuildHistory(event.getGuild().getIdLong(), event.getJDA());
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(Color.MAGENTA);
         embed.setTitle("Your " + event.getGuild().getName() + " guild history");
+        embed.setThumbnail(event.getGuild().getIconUrl());
         embed.setDescription(message);
 
         event.replyInDm(embed.build());
