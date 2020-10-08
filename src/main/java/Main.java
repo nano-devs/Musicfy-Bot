@@ -23,9 +23,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String botToken = System.getenv("SAN_TOKEN");
-        String ytToken = System.getenv("DEVELOPER_KEY");
-    
+//        String botToken = System.getenv("SAN_TOKEN");
+//        String ytToken = System.getenv("DEVELOPER_KEY");
+
+        String botToken = "NTM2ODkyMTgzNDA0NDc4NDgz.XEXBzw.4_9TPeczrrDp6YwxhF4vhONPzmo";
+        String ytToken = "AIzaSyAqr8FMMCH6sMAvJqFSX3RR7ws9FfODw5s";
+
         // Initialize Dependencies
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
         YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
@@ -36,6 +39,7 @@ public class Main {
         commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
         commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
+        commandClientBuilder.setCoOwnerIds("456130311365984267");
         commandClientBuilder.setActivity(Activity.listening("JOMAMA"));
 
         commandClientBuilder.addCommand(new JoinCommand(nano));
@@ -50,6 +54,7 @@ public class Main {
         commandClientBuilder.addCommand(new RepeatCommand(nano));
         commandClientBuilder.addCommand(new ShowQueueCommand(nano));
         commandClientBuilder.addCommand(new PremiumUserCommand());
+        commandClientBuilder.addCommand(new PremiumGuildCommand());
 
         CommandClient commandClient = commandClientBuilder.build();
 
