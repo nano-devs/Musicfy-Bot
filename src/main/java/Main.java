@@ -37,11 +37,11 @@ public class Main {
         commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
         commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
+        commandClientBuilder.setCoOwnerIds("456130311365984267");
         commandClientBuilder.setActivity(Activity.listening("..help"));
 
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
-        commandClientBuilder.addCommand(new PlayCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));
         commandClientBuilder.addCommand(new VolumeCommand(nano));
         commandClientBuilder.addCommand(new SkipCommand(nano));
@@ -51,6 +51,10 @@ public class Main {
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
         commandClientBuilder.addCommand(new RepeatCommand(nano));
         commandClientBuilder.addCommand(new ShowQueueCommand(nano));
+        commandClientBuilder.addCommand(new PremiumUserCommand());
+        commandClientBuilder.addCommand(new PremiumGuildCommand());
+        commandClientBuilder.addCommand(new UserHistoryCommand());
+        commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
 
@@ -90,5 +94,4 @@ public class Main {
         // Large guilds will only provide online members in their setup and thus reduce bandwidth if chunking is disabled.
         builder.setLargeThreshold(50);
     }
-
 }
