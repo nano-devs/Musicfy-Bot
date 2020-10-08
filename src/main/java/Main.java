@@ -37,7 +37,7 @@ public class Main {
         commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
         commandClientBuilder.setCoOwnerIds("456130311365984267");
-        commandClientBuilder.setActivity(Activity.listening("JOMAMA"));
+        commandClientBuilder.setActivity(Activity.listening("..help"));
 
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
