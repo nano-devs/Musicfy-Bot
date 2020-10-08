@@ -11,6 +11,7 @@ import org.jsoup.internal.StringUtil;
 import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Holder for both the player and a track scheduler for one guild.
@@ -30,6 +31,10 @@ public class GuildMusicManager {
     public Set<String> skipVoteSet;
 
     private int volume;
+
+    private boolean waitingForUser = false;
+
+    private ScheduledFuture<?> waitingFuture;
 
     /**
      * Creates a player and a track scheduler.
@@ -90,7 +95,7 @@ public class GuildMusicManager {
         int playedPercentage = (int) (((double) position / (double) duration) * 100);
         int currentPostIndex = playedPercentage / 10;
 
-        String[] progressBar = "\u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC \u25AC".split(" ");
+        String[] progressBar = "\u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501".split(" ");
         progressBar[currentPostIndex] = "\uD83D\uDD18";
         return "\u25B6" + StringUtil.join(progressBar, "") + "`["
                 + Utils.getDurationFormat(position) + "/" + Utils.getDurationFormat(duration)
@@ -98,6 +103,9 @@ public class GuildMusicManager {
     }
 
     public String getEstimatedTimeUntilPlaying(int entryNumber) {
+        if (entryNumber == 0) {
+            return "00:00";
+        }
         long totalDuration = 0;
         int counter = 0;
         for (AudioTrack queuedTrack : scheduler.getQueue()) {
@@ -116,5 +124,21 @@ public class GuildMusicManager {
 
     public void setVolume(int volume) {
         this.volume = volume;
+    }
+
+    public boolean isWaitingForUser() {
+        return waitingForUser;
+    }
+
+    public void setWaitingForUser(boolean waitingForUser) {
+        this.waitingForUser = waitingForUser;
+    }
+
+    public ScheduledFuture<?> getWaitingFuture() {
+        return waitingFuture;
+    }
+
+    public void setWaitingFuture(ScheduledFuture<?> waitingFuture) {
+        this.waitingFuture = waitingFuture;
     }
 }
