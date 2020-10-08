@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
 import service.music.GuildMusicManager;
+import service.music.PremiumService;
 
 public class PlayCommand extends Command {
 
@@ -45,7 +46,9 @@ public class PlayCommand extends Command {
         String args = event.getArgs();
         UrlValidator urlValidator = new UrlValidator(schemes);
 
+
         if (urlValidator.isValid(args)) {
+            PremiumService.addHistory("", args, event);
             nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), args, event.getAuthor());
         }
         else {
