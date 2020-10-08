@@ -56,7 +56,7 @@ public class Main {
         commandClientBuilder.addCommand(new PremiumUserCommand());
         commandClientBuilder.addCommand(new PremiumGuildCommand());
         commandClientBuilder.addCommand(new UserHistoryCommand());
-        commandClientBuilder.addCommand(new GuildHistoryCommand(nano.getJda()));
+        commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
 

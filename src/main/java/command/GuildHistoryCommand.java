@@ -11,9 +11,9 @@ import java.awt.*;
 
 public class GuildHistoryCommand extends Command
 {
-    private final JDA client;
+    private final NanoClient client;
 
-    public GuildHistoryCommand(JDA client)
+    public GuildHistoryCommand(NanoClient client)
     {
         this.client = client;
 
@@ -28,7 +28,7 @@ public class GuildHistoryCommand extends Command
     protected void execute(CommandEvent event)
     {
         GuildHistoryModel db = new GuildHistoryModel();
-        String message = db.GetGuildHistory(event.getGuild().getIdLong(), this.client);
+        String message = db.GetGuildHistory(event.getGuild().getIdLong(), this.client.getJda());
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(Color.MAGENTA);
