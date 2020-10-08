@@ -3,9 +3,7 @@ package command;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PremiumUserModel;
-import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 
 import java.util.List;
 
@@ -34,12 +32,18 @@ public class PremiumUserCommand extends Command
         }
 
         String user = "";
+        String failed = "";
+
         PremiumUserModel db = new PremiumUserModel();
-        for (int i = 0; i < mention.size(); i++)
+        for (Member member : mention)
         {
-            if (db.addPremiumUser(mention.get(i).getIdLong()))
+            if (db.addPremiumUser(member.getIdLong()))
             {
-                user += mention.get(i).getAsMention() + " ";
+                user += member.getAsMention() + " ";
+            }
+            else
+            {
+                failed += member.getAsMention() + " ";
             }
         }
 
@@ -49,7 +53,7 @@ public class PremiumUserCommand extends Command
         }
         else
         {
-            event.getChannel().sendMessage("User is already premium").queue();
+            event.getChannel().sendMessage(failed + " is already premium").queue();
         }
     }
 }
