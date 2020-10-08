@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
 import service.music.GuildMusicManager;
+import service.music.PremiumService;
 
 public class PlayUrlCommand extends Command {
 
@@ -39,6 +40,8 @@ public class PlayUrlCommand extends Command {
             // if not connected to any voice channel, try to join user voice channel.
             nanoClient.getMusicService().joinUserVoiceChannel(event);
         }
+
+        PremiumService.addHistory("", event.getArgs(), event);
 
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
         nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), event.getArgs(), event.getAuthor());
