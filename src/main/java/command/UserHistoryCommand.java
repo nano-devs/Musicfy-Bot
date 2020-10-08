@@ -26,9 +26,9 @@ public class UserHistoryCommand extends Command
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(Color.MAGENTA);
-        embed.setTitle("Your history ");
+        embed.setTitle("Your history");
         embed.setThumbnail(event.getAuthor().getAvatarUrl());
-        embed.setDescription("\uFE0F" + message);
+        embed.setDescription(message);
 
         event.replyInDm(embed.build());
     }

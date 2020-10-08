@@ -23,11 +23,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        String botToken = System.getenv("SAN_TOKEN");
-//        String ytToken = System.getenv("DEVELOPER_KEY");
-
-        String botToken = "NTM2ODkyMTgzNDA0NDc4NDgz.XEXBzw.4_9TPeczrrDp6YwxhF4vhONPzmo";
-        String ytToken = "AIzaSyAqr8FMMCH6sMAvJqFSX3RR7ws9FfODw5s";
+        String botToken = System.getenv("SAN_TOKEN");
+        String ytToken = System.getenv("DEVELOPER_KEY");
 
         // Initialize Dependencies
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
