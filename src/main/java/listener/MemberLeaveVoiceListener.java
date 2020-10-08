@@ -106,9 +106,9 @@ public class MemberLeaveVoiceListener extends ListenerAdapter {
         }
         // When a member joined voice channel.
         else {
-            System.out.println("RESUME & SET WAITING FALSE");
             GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
             if (musicManager.isWaitingForUser()) {
+                System.out.println("RESUME & SET WAITING FALSE");
                 musicManager.setWaitingForUser(false);
                 musicManager.player.setPaused(false);
                 musicManager.getWaitingFuture().cancel(true);
