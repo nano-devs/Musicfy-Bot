@@ -11,12 +11,8 @@ import java.util.List;
 
 public class PremiumUserCommand extends Command
 {
-    private final PremiumUserModel db;
-
     public PremiumUserCommand()
     {
-        this.db = new PremiumUserModel();
-
         this.name = "premium user";
         this.aliases = new String[]{"premu", "prem u", "prem user"};
         this.ownerCommand = true;
@@ -38,10 +34,10 @@ public class PremiumUserCommand extends Command
         }
 
         String user = "";
+        PremiumUserModel db = new PremiumUserModel();
         for (int i = 0; i < mention.size(); i++)
         {
-            boolean result = this.db.addPremiumUser(mention.get(i).getIdLong());
-            if (result == true)
+            if (db.addPremiumUser(mention.get(i).getIdLong()))
             {
                 user += mention.get(i).getAsMention() + " ";
             }
