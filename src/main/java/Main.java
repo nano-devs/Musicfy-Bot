@@ -4,7 +4,6 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
-import database.MYSQL;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -30,7 +29,6 @@ public class Main {
         // Initialize Dependencies
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
         YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
-        MYSQL database = new MYSQL();
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -47,11 +45,11 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
-        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient, database));
+        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
         commandClientBuilder.addCommand(new RepeatCommand(nano));
         commandClientBuilder.addCommand(new ShowQueueCommand(nano));
-        commandClientBuilder.addCommand(new PremiumCommand(database));
+        commandClientBuilder.addCommand(new PremiumUserCommand());
 
         CommandClient commandClient = commandClientBuilder.build();
 
@@ -90,5 +88,4 @@ public class Main {
         // Large guilds will only provide online members in their setup and thus reduce bandwidth if chunking is disabled.
         builder.setLargeThreshold(50);
     }
-
 }
