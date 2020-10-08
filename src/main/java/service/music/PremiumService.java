@@ -16,7 +16,7 @@ public class PremiumService
      * Add played music to history database
      * @param title track/song/video title
      * @param url track/song/video url
-     * @param event
+     * @param event command even listener
      */
     public static void addHistory(String title, String url, CommandEvent event)
     {
@@ -28,7 +28,7 @@ public class PremiumService
         if (trackModel.isPremium(event.getGuild().getIdLong(), "GUILD"))
         {
             GuildHistoryModel guild = new GuildHistoryModel();
-            guild.addGuildHistory(event.getGuild().getIdLong(), trackId);
+            guild.addGuildHistory(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
         }
 
         if (trackModel.isPremium(event.getAuthor().getIdLong(), "USER"))
