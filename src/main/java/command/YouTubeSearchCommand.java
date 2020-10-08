@@ -4,13 +4,13 @@ import YouTubeSearchApi.YouTubeSearchClient;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import service.music.GuildMusicManager;
+import service.music.PremiumService;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
@@ -49,33 +49,13 @@ public class YouTubeSearchCommand extends Command
         entry -= 1;
 
         // process premium access
-        this.premiumMember(title[entry], url[entry], event);
+        PremiumService.addHistory(title[entry], url[entry], event);
 
         // get selected video detail
         GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
         musicManager.player.setVolume(15);
         this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry], event.getAuthor());
         return true;
-    }
-
-    protected void premiumMember(String title, String url, CommandEvent event)
-    {
-        // insert track to database
-        TrackModel trackModel = new TrackModel();
-        trackModel.addTrack(title, url);
-        long trackId = trackModel.getTrackId(url);
-
-        if (trackModel.isPremium(event.getGuild().getIdLong(), "GUILD"))
-        {
-            GuildHistoryModel guild = new GuildHistoryModel();
-            guild.addGuildHistory(event.getGuild().getIdLong(), trackId);
-        }
-
-        if (trackModel.isPremium(event.getAuthor().getIdLong(), "USER"))
-        {
-            UserHistoryModel user = new UserHistoryModel();
-            user.addUserHistory(event.getAuthor().getIdLong(), trackId);
-        }
     }
 
     @Override

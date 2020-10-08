@@ -110,6 +110,7 @@ public abstract  class BaseModel
                     if (result.next())
                     {
                         int counter = result.getInt(1);
+                        System.out.println("Counter " + counter);
                         return counter > 0;
                     }
                 }
