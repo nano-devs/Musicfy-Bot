@@ -15,9 +15,11 @@ import java.util.concurrent.*;
 public class MemberLeaveVoiceListener extends ListenerAdapter {
 
     NanoClient nanoClient;
+    ScheduledThreadPoolExecutor exec;
 
-    public MemberLeaveVoiceListener(NanoClient nanoClient) {
+    public MemberLeaveVoiceListener(NanoClient nanoClient, ScheduledThreadPoolExecutor exec) {
         this.nanoClient = nanoClient;
+        this.exec = exec;
     }
 
     @Override
@@ -47,8 +49,6 @@ public class MemberLeaveVoiceListener extends ListenerAdapter {
             GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
             musicManager.setWaitingForUser(true);
             musicManager.player.setPaused(true);
-
-            ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
 
             ScheduledFuture future = exec.schedule(() -> {
                 if (musicManager.isWaitingForUser()) {
@@ -94,7 +94,6 @@ public class MemberLeaveVoiceListener extends ListenerAdapter {
             musicManager.setWaitingForUser(true);
             musicManager.player.setPaused(true);
 
-            ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
             ScheduledFuture future = exec.schedule(() -> {
                 if (musicManager.isWaitingForUser()) {
                     nanoClient.getMusicService().leaveVoiceChannel(event.getGuild(), musicManager);
