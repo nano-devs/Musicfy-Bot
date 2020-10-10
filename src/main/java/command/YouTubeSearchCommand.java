@@ -36,6 +36,7 @@ public class YouTubeSearchCommand extends Command
         this.cooldown = 2;
         this.help = "Search youtube video with specific keyword.";
         this.arguments = "<keyword>";
+        this.category = new Category("Music Commands");
     }
 
     private boolean playVideo(String[] title, String[] url, int entry, CommandEvent event)

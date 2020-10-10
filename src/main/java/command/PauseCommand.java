@@ -16,6 +16,7 @@ public class PauseCommand extends Command {
         this.guildOnly = true;
         this.cooldown = 1;
         this.help = "Pause current playing song";
+        this.category = new Category("Music");
     }
 
     @Override

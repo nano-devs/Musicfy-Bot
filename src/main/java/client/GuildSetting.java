@@ -1,6 +1,6 @@
 package client;
 
-public class GuildSettings {
+public class GuildSetting {
     private String prefix;
     private int defaultVolume;
 

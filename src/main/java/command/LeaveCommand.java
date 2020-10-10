@@ -16,6 +16,7 @@ public class LeaveCommand extends Command {
         this.aliases = new String[]{"stop"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;
+        this.category = new Category("Music");
     }
 
     @Override

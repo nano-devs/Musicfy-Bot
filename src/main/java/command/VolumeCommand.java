@@ -18,6 +18,7 @@ public class VolumeCommand extends Command {
         this.cooldown = 1;
         this.help = "Adjust volume number.";
         this.arguments = "<number>";
+        this.category = new Category("Music");
     }
 
     @Override
