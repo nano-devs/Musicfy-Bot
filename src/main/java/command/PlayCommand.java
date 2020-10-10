@@ -22,6 +22,7 @@ public class PlayCommand extends Command {
         this.cooldown = 2;
         this.arguments = "<url/keywords>";
         this.guildOnly = true;
+        this.category = new Category("Music");
     }
 
     @Override

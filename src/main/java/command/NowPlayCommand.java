@@ -16,6 +16,7 @@ public class NowPlayCommand extends Command {
         this.guildOnly = true;
         this.nanoClient = nanoClient;
         this.cooldown = 2;
+        this.category = new Category("Music");
     }
 
     @Override

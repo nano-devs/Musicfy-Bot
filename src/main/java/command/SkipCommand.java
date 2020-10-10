@@ -18,6 +18,7 @@ public class SkipCommand extends Command {
         this.guildOnly = true;
         this.help = "Vote skip for current playing song";
         this.cooldown = 2;
+        this.category = new Category("Music");
     }
 
     @Override

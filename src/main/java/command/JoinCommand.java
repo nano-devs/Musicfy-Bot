@@ -16,6 +16,7 @@ public class JoinCommand extends Command {
         this.aliases = new String[]{"summon"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;
+        this.category = new Category("Music");
     }
 
     @Override
