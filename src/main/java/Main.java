@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import service.music.MusicService;
 
 import javax.security.auth.login.LoginException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class Main {
 
@@ -30,6 +31,7 @@ public class Main {
         // Initialize Dependencies
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
         YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
+        ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(2);
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -67,7 +69,7 @@ public class Main {
         // Add JDA-Utilities command client.
         builder.addEventListeners(commandClient);
         builder.addEventListeners(nano.getWaiter());
-        builder.addEventListeners(new MemberLeaveVoiceListener(nano));
+        builder.addEventListeners(new MemberLeaveVoiceListener(nano, exec));
 
         try {
             JDA jda = builder.build();
@@ -75,6 +77,16 @@ public class Main {
         } catch (LoginException e) {
             e.printStackTrace();
         }
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                System.out.println("Shutting down scheduled thread pool executor!");
+                exec.shutdown();
+                super.run();
+            }
+        });
+
     }
 
     private static void configureMemoryUsage(JDABuilder builder) {
