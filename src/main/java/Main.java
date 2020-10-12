@@ -1,10 +1,14 @@
-import YouTubeSearchApi.YouTubeSearchClient;
+import YouTubeSearchApi.*;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
+<<<<<<< Updated upstream
 import listener.MemberLeaveVoiceListener;
+=======
+import command.UserPlaylistCommand.*;
+>>>>>>> Stashed changes
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -55,6 +59,14 @@ public class Main {
         commandClientBuilder.addCommand(new PremiumGuildCommand());
         commandClientBuilder.addCommand(new UserHistoryCommand());
         commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
+        commandClientBuilder.addCommand(new AddPlaylistCommand());
+        commandClientBuilder.addCommand(new RenamePlaylistCommand());
+        commandClientBuilder.addCommand(new DeletePlaylistCommand());
+        commandClientBuilder.addCommand(new ShowPlaylistCommand());
+        commandClientBuilder.addCommand(new AddTrackToPlaylistCommand());
+        commandClientBuilder.addCommand(new DeleteTrackFromPlaylistCommand());
+        commandClientBuilder.addCommand(new ShowPlaylistTrackCommand());
+        commandClientBuilder.addCommand(new PlayPlaylistCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
 
