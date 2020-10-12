@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 
 import java.awt.*;
+import java.sql.SQLException;
 
 public class GuildHistoryCommand extends Command
 {
@@ -17,10 +18,11 @@ public class GuildHistoryCommand extends Command
     {
         this.client = client;
 
-        this.name = "history guild";
-        this.aliases = new String[]{"histg", "hist g", "histu guild"};
+//        this.name = "history_guild";
+        this.name = "histg";
+//        this.aliases = new String[]{"histg", "hist g", "histu guild"};
         this.guildOnly = true;
-        this.help = "Get all user history";
+        this.help = "Get all guild history, max 2048 characters.";
         this.cooldown = 2;
     }
 
@@ -32,7 +34,7 @@ public class GuildHistoryCommand extends Command
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(Color.MAGENTA);
-        embed.setTitle("Your " + event.getGuild().getName() + " guild history");
+        embed.setTitle(":calendar_spiral: Your " + event.getGuild().getName() + " guild history");
         embed.setThumbnail(event.getGuild().getIconUrl());
         embed.setDescription(message);
 
