@@ -11,10 +11,11 @@ public class UserHistoryCommand extends Command
 {
     public UserHistoryCommand()
     {
-        this.name = "history user";
-        this.aliases = new String[]{"histu", "hist u", "hist user"};
+//        this.name = "history_user";
+        this.name = "histu";
+//        this.aliases = new String[]{"histu", "hist u", "hist user"};
         this.guildOnly = true;
-        this.help = "Get all user history";
+        this.help = "Get all user history, max 2048 characters";
         this.cooldown = 2;
     }
 
@@ -26,7 +27,7 @@ public class UserHistoryCommand extends Command
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(Color.MAGENTA);
-        embed.setTitle("Your history");
+        embed.setTitle(":calendar_spiral: Your history");
         embed.setThumbnail(event.getAuthor().getAvatarUrl());
         embed.setDescription(message);
 

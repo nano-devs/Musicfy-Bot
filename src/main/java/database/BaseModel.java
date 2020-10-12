@@ -27,6 +27,7 @@ public abstract  class BaseModel
      * @param query SQL query
      * @return the result of Select query as ResultSet
      */
+    @Deprecated
     public ResultSet executeSelectQuery(String query)
     {
         try (
@@ -75,7 +76,10 @@ public abstract  class BaseModel
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                if (!e.getMessage().equals("Unhandled user-defined exception condition"))
+                {
+                    e.printStackTrace();
+                }
             }
         }
         catch (Exception e)
