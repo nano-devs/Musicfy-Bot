@@ -41,7 +41,7 @@ public class YouTubeSearchCommand extends Command
         this.arguments = "<keyword>";
     }
 
-    private boolean playVideo(String[] title, String[] url, int entry, CommandEvent event)
+    private boolean playVideo(YoutubeVideo[] video, int entry, CommandEvent event)
     {
         // check entry number
         if ((entry > this.maxVideoResult) ||
@@ -52,12 +52,12 @@ public class YouTubeSearchCommand extends Command
         entry -= 1;
 
         // process premium access
-        PremiumService.addHistory(title[entry], url[entry], event);
+        PremiumService.addHistory(video[entry].getTitle(), video[entry].getUrl(), event);
 
         // get selected video detail
         GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
         musicManager.player.setVolume(15);
-        this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), url[entry], event.getAuthor());
+        this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), video[entry].getUrl(), event.getAuthor());
         return true;
     }
 
@@ -90,8 +90,10 @@ public class YouTubeSearchCommand extends Command
         embed.setDescription("");
 
         // create video list
+
         String[] url = new String[this.maxVideoResult];
         String[] title = new String[this.maxVideoResult];
+        YoutubeVideo[] video = new YoutubeVideo[this.maxVideoResult];
 
         for (int i = 0; i < this.maxVideoResult; i++)
         {
@@ -100,13 +102,13 @@ public class YouTubeSearchCommand extends Command
                 embed.setThumbnail(response.get(i).getThumbnailUrl());
             }
 
-            url[i] = "https://www.youtube.com/watch?v=" + response.get(i).getId();
-            title[i] = response.get(i).getTitle();
+            video[i].setUrl("https://www.youtube.com/watch?v=" + response.get(i).getId());
+            video[i].setTitle(response.get(i).getTitle());
 
             // video response message
             String output = (i + 1) + ". " +
-                    "[" + title[i] + "]" +
-                    "(" + url[i] + ")";
+                    "[" + video[i].getTitle() + "]" +
+                    "(" + video[i].getUrl() + ")";
 
             // add video data to embed
             embed.appendDescription(output + "\n");
@@ -123,108 +125,15 @@ public class YouTubeSearchCommand extends Command
                 e -> e.getChannel().equals(event.getChannel())
                         && e.getAuthor().getId().equals(event.getAuthor().getId())
                 ,
-                e -> {
+                e ->
+                {
                     int entry = Integer.parseInt(e.getMessage().getContentRaw());
 
-                    if (!this.nano.getMusicService().joinUserVoiceChannel(event)) {
-                        event.reply("not joined int voice channel");
-                    }
-                    else if (!this.playVideo(title, url, entry, event))
+                    if (!this.nano.getMusicService().joinUserVoiceChannel(event))
                     {
-                        event.reply("Incorrect entry number.");
-                    }
-                },
-                10, TimeUnit.SECONDS, () ->
-//                        event.getChannel().deleteMessageById(msg.get().getId()).queue()
-                        msg.get().delete().queue()
-        );
-    }
-
-    @Deprecated
-    protected void execute2(CommandEvent event)
-    {
-        String keywords = event.getArgs();
-        // remove coma "," in args if exist
-        if (keywords.contains(","))
-        {
-            keywords = keywords.replace(",", " ");
-        }
-
-        YouTubeSearchClient ytsc = new YouTubeSearchClient("");
-        String response = ytsc.Search(
-                keywords,
-                "snippet",
-                "video",
-                this.maxVideoResult);
-
-        // create embed message
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.MAGENTA);
-        embed.setTitle("Song selection | Reply the song number to continue");
-        embed.setFooter("Song selection | Type the number to continue");
-        embed.setDescription("");
-
-        // process response
-        // credit to https://www.geeksforgeeks.org/parse-json-java/
-
-        // create json object to access data
-        JSONObject obj = new JSONObject(response);
-
-        // create json array to access video data in "items" scope
-        JSONArray item = obj.getJSONArray("items");
-
-        // create video list
-        String[] url = new String[this.maxVideoResult];
-        String[] title = new String[this.maxVideoResult];
-
-        for (int i = 0; i < this.maxVideoResult; i++)
-        {
-            // get video id
-            JSONObject id = item.getJSONObject(i).getJSONObject("id");
-            String videoId = id.getString("videoId");
-
-            // get video name/title
-            JSONObject snippet = item.getJSONObject(i).getJSONObject("snippet");
-            String videoTitle = snippet.getString("title");
-
-            if (i == 0)
-            {
-                // get video thumbnail
-                JSONObject thumbnails = snippet.getJSONObject("thumbnails");
-                String thumbnailUrl = thumbnails.getJSONObject("default").getString("url");
-                embed.setThumbnail(thumbnailUrl);
-            }
-
-            url[i] = "https://www.youtube.com/watch?v=" + videoId;
-            title[i] = videoTitle;
-
-            // video response message
-            String output = (i + 1) + ". " +
-                    "[" + title[i] + "]" +
-                    "(" + url[i] + ")";
-
-            // add video data to embed
-            embed.appendDescription(output + "\n");
-        }
-
-        //event.reply(embed.build());
-        AtomicReference<Message> msg = new AtomicReference<>();
-        event.getChannel().sendMessage(embed.build()).queue((message) ->
-                msg.set(message));
-
-        // wait user response for playing video
-        this.nano.getWaiter().waitForEvent(
-                GuildMessageReceivedEvent.class,
-                e -> e.getChannel().equals(event.getChannel())
-                        && e.getAuthor().getId().equals(event.getAuthor().getId())
-                        ,
-                e -> {
-                    int entry = Integer.parseInt(e.getMessage().getContentRaw());
-
-                    if (!this.nano.getMusicService().joinUserVoiceChannel(event)) {
                         event.reply("not joined int voice channel");
                     }
-                    else if (!this.playVideo(title, url, entry, event))
+                    else if (!this.playVideo(video, entry, event))
                     {
                         event.reply("Incorrect entry number.");
                     }
