@@ -12,4 +12,11 @@ public class Track
         this.title = "";
         this.url = "";
     }
+
+    public Track(long id, String name, String url)
+    {
+        this.trackId = id;
+        this.title = name;
+        this.url = url;
+    }
 }

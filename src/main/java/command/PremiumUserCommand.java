@@ -11,8 +11,9 @@ public class PremiumUserCommand extends Command
 {
     public PremiumUserCommand()
     {
-        this.name = "premium user";
-        this.aliases = new String[]{"premu", "prem u", "prem user"};
+//        this.name = "premium_user";
+        this.name = "premu";
+//        this.aliases = new String[]{"premu", "prem u", "prem user"};
         this.ownerCommand = true;
         this.guildOnly = false;
         this.cooldown = 2;
