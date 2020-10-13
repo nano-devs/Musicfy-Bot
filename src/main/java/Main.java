@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import service.music.MusicService;
 
 import javax.security.auth.login.LoginException;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class Main {
@@ -24,14 +25,16 @@ public class Main {
     public final static String STOP_EMOJI  = "\u23F9"; // Stop Button
 
     public static void main(String[] args) {
-
+        // BASE
+        int availableProcessors = Runtime.getRuntime().availableProcessors();
+        int coreThreadPoolSize =  availableProcessors - 1 > 0 ? availableProcessors - 1 : 1;
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
 
         // Initialize Dependencies
-        NanoClient nano = new NanoClient(new MusicService(), new EventWaiter());
+        ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
+        NanoClient nano = new NanoClient(new MusicService(), new EventWaiter(exec, true));
         YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
-        ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(2);
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -45,6 +48,7 @@ public class Main {
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));
+        commandClientBuilder.addCommand(new PlayCommand(nano));
         commandClientBuilder.addCommand(new VolumeCommand(nano));
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
@@ -86,7 +90,6 @@ public class Main {
                 super.run();
             }
         });
-
     }
 
     private static void configureMemoryUsage(JDABuilder builder) {
