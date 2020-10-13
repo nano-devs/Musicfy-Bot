@@ -8,8 +8,9 @@ public class PremiumGuildCommand extends Command
 {
     public PremiumGuildCommand()
     {
-        this.name = "premium guild";
-        this.aliases = new String[]{"premg", "prem g", "prem guild"};
+//        this.name = "premium_guild";
+        this.name = "premg";
+//        this.aliases = new String[]{"premg", "prem g", "prem guild"};
         this.ownerCommand = true;
         this.guildOnly = true;
         this.cooldown = 2;

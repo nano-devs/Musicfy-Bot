@@ -1,10 +1,11 @@
-import YouTubeSearchApi.YouTubeSearchClient;
+import YouTubeSearchApi.*;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
 import listener.MemberLeaveVoiceListener;
+import command.UserPlaylistCommand.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -57,6 +58,22 @@ public class Main {
         commandClientBuilder.addCommand(new PremiumGuildCommand());
         commandClientBuilder.addCommand(new UserHistoryCommand());
         commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddPlaylistCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.RenamePlaylistCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeletePlaylistCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddTrackToPlaylistCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeleteTrackFromPlaylistCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistTrackCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.PlayPlaylistCommand(nano));
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddPlaylistCommand());
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.RenamePlaylistCommand());
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeletePlaylistCommand());
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistCommand());
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddTrackToPlaylistCommand());
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
+        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
 
