@@ -51,10 +51,10 @@ public class YouTubeSearchCommand extends Command
         }
 
         YoutubeClient youtubeClient = new YoutubeClient();
-        List<YoutubeVideo> response = null;
+        List<YoutubeVideo> videos = null;
         try
         {
-            response = youtubeClient.search(keywords, this.maxVideoResult);
+            videos = youtubeClient.search(keywords, this.maxVideoResult);
         }
         catch (IOException e)
         {
@@ -68,23 +68,18 @@ public class YouTubeSearchCommand extends Command
         embed.setFooter("Song selection | Type the number to continue");
         embed.setDescription("");
 
-        // create video list
-        YoutubeVideo[] video = new YoutubeVideo[this.maxVideoResult];
-
         for (int i = 0; i < this.maxVideoResult; i++)
         {
+            YoutubeVideo video = videos.get(i);
             if (i == 0)
             {
-                embed.setThumbnail(response.get(i).getThumbnailUrl());
+                embed.setThumbnail(video.getThumbnailUrl());
             }
-
-            video[i].setUrl("https://www.youtube.com/watch?v=" + response.get(i).getId());
-            video[i].setTitle(response.get(i).getTitle());
 
             // video response message
             String output = (i + 1) + ". " +
-                    "[" + video[i].getTitle() + "]" +
-                    "(" + video[i].getUrl() + ")";
+                    "[" + video.getTitle() + "]" +
+                    "(" + video.getUrl() + ")";
 
             // add video data to embed
             embed.appendDescription(output + "\n");
@@ -96,6 +91,7 @@ public class YouTubeSearchCommand extends Command
                 msg.set(message));
 
         // wait user response for playing video
+        List<YoutubeVideo> finalVideos = videos;
         this.nano.getWaiter().waitForEvent(
                 GuildMessageReceivedEvent.class,
                 e -> e.getChannel().equals(event.getChannel())
@@ -119,14 +115,13 @@ public class YouTubeSearchCommand extends Command
                     entry -= 1;
 
                     // process premium access
-                    PremiumService.addHistory(video[entry].getTitle(), video[entry].getUrl(), event);
+                    PremiumService.addHistory(finalVideos.get(entry).getTitle(), finalVideos.get(entry).getUrl(), event);
 
                     // get selected video detail
                     GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
-                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), video[entry].getUrl(), event.getAuthor());
+                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getAuthor());
                 },
                 10, TimeUnit.SECONDS, () ->
-//                        event.getChannel().deleteMessageById(msg.get().getId()).queue()
                         msg.get().delete().queue()
         );
     }

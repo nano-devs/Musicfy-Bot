@@ -1,6 +1,6 @@
 package service.music;
 
-public class Utils {
+public class MusicUtils {
     /**
      *
      * @param durationMillis

@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import service.music.GuildMusicManager;
 import service.music.MusicService;
-import service.music.Utils;
+import service.music.MusicUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +78,7 @@ public class NanoClient {
                         requester.getEffectiveAvatarUrl());
 
                 embedBuilder.addField("Channel", track.getInfo().author, true);
-                embedBuilder.addField("Song Duration", Utils.getDurationFormat(track.getDuration()), true);
+                embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
                 embedBuilder.addField("Position in queue", "" + positionInQueue, true);
                 embedBuilder.addField("Estimated time until playing",
                         musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
@@ -134,7 +134,7 @@ public class NanoClient {
                         requester.getEffectiveAvatarUrl());
 
                 embedBuilder.addField("Channel", track.getInfo().author, true);
-                embedBuilder.addField("Song Duration", Utils.getDurationFormat(track.getDuration()), true);
+                embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
                 embedBuilder.addField("Position in queue", "" + positionInQueue, true);
                 embedBuilder.addField("Estimated time until playing",
                         musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
@@ -162,7 +162,7 @@ public class NanoClient {
                         requester.getEffectiveAvatarUrl());
 
                 embedBuilder.addField("Channel", track.getInfo().author, true);
-                embedBuilder.addField("Song Duration", Utils.getDurationFormat(track.getDuration()), true);
+                embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
                 embedBuilder.addField("Position in queue", "" + positionInQueue, true);
                 embedBuilder.addField("Estimated time until playing",
                         musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
