@@ -130,6 +130,13 @@ public class PlaylistModel extends BaseModel
         return false;
     }
 
+    /**
+     * get playlist id
+     * @param id user id / guild id
+     * @param name plalist name
+     * @param table "USER" / "GUILD"
+     * @return
+     */
     public long getPlaylistId(long id, String name, String table)
     {
         String query =
@@ -162,6 +169,14 @@ public class PlaylistModel extends BaseModel
         return -1;
     }
 
+    /**
+     * get track id from playlist
+     * @param id user id/ guild id
+     * @param name playlist name
+     * @param trackIndex registered index on playlist
+     * @param table "USER" or "GUILD"
+     * @return
+     */
     public long getTrackId(long id, String name, int trackIndex, String table)
     {
         String query =
@@ -200,9 +215,13 @@ public class PlaylistModel extends BaseModel
     }
 
 
-
-
-
+    /**
+     * create new playlist
+     * @param id user id / guild id
+     * @param name playlist name
+     * @param table "USER" / "GUILD"
+     * @return
+     */
     public boolean addPlaylist(long id, String name, String table)
     {
         String query =
@@ -221,6 +240,12 @@ public class PlaylistModel extends BaseModel
         return false;
     }
 
+    /**
+     * get all playlist from user/guild
+     * @param id user id/ guild id
+     * @param table "USER" / "GUILD"
+     * @return
+     */
     public ArrayList<Playlist> getAllPlaylist(long id, String table)
     {
         String query =
@@ -266,6 +291,11 @@ public class PlaylistModel extends BaseModel
         return null;
     }
 
+    /**
+     * get specific playlist
+     * @param playlistId playlist id
+     * @return
+     */
     public Playlist getPlaylist(long playlistId)
     {
         String query =
@@ -297,25 +327,47 @@ public class PlaylistModel extends BaseModel
         return null;
     }
 
-    public boolean renamePlaylist(long userId, String oldName, String newName, String table)
+    /**
+     * rename playlist name
+     * @param id user id / guild id
+     * @param oldName old playlist name
+     * @param newName new playlist name
+     * @param table "USER" / "GUILD"
+     * @return
+     */
+    public boolean renamePlaylist(long id, String oldName, String newName, String table)
     {
         String query =
                 "UPDATE " + table + "_PLAYLIST " +
                 "SET NAME = '" + newName + "' " +
-                "WHERE " + table + "_ID = " + userId +
+                "WHERE " + table + "_ID = " + id +
                 " AND NAME = '" + oldName + "'";
         return this.executeUpdateQuery(query) > 0;
     }
 
-    public boolean deletePlaylist(long userId, String name, String table)
+    /**
+     * delete user/guild playlist
+     * @param id user id / guild id
+     * @param name playlist name
+     * @param table "USER" / "GUILD"
+     * @return
+     */
+    public boolean deletePlaylist(long id, String name, String table)
     {
         String query =
                 "DELETE FROM " + table + "_PLAYLIST " +
-                "WHERE " + table + "_ID = " + userId +
+                "WHERE " + table + "_ID = " + id +
                 " AND NAME = '" + name + "'";
         return this.executeUpdateQuery(query) > 0;
     }
 
+    /**
+     * add track to playlist
+     * @param playlistId playlist id
+     * @param trackId track id
+     * @param table "USER" / "GUILD"
+     * @return
+     */
     public boolean addTrackToPlaylist(long playlistId, long trackId, String table)
     {
         String query =
@@ -324,12 +376,27 @@ public class PlaylistModel extends BaseModel
         return this.executeUpdateQuery(query) > 0;
     }
 
+    /**
+     * add track to playlist
+     * @param id user id / guild id
+     * @param name playlist name
+     * @param trackId track id
+     * @param table "USER" / "GUILD"
+     * @return
+     */
     public boolean addTrackToPlaylist(long id, String name, long trackId, String table)
     {
         long playlistId = this.getPlaylistId(id, name, table);
         return this.addTrackToPlaylist(playlistId, trackId, table);
     }
 
+    /**
+     * get all track from playlist
+     * @param id user id / guild id
+     * @param name playlist name
+     * @param table "USER" / "GUILD"
+     * @return
+     */
     public ArrayList<Track> getTrackListFromPlaylist(long id, String name, String table)
     {
         String query =
@@ -413,6 +480,13 @@ public class PlaylistModel extends BaseModel
         return null;
     }
 
+    /**
+     * delete track from playlist
+     * @param playlistId playlist id
+     * @param trackId track id
+     * @param table "USER" / "GUILD"
+     * @return
+     */
     public boolean deleteTrackFromPlaylist(long playlistId, long trackId, String table)
     {
         String query =
@@ -422,10 +496,18 @@ public class PlaylistModel extends BaseModel
         return this.executeUpdateQuery(query) > 0;
     }
 
-    public boolean deleteTrackFromPlaylist(long id, String name, long trackIndex, String table)
+    /**
+     * delete track from playlist
+     * @param id user id / guild id
+     * @param name playlist name
+     * @param table
+     * @param trackIndex track index to delete based on registered index by ShowPlaylistTrackCommand
+     * @return
+     */
+    public boolean deleteTrackFromPlaylist(long id, String name, int trackIndex, String table)
     {
         long playlistId = this.getPlaylistId(id, name, table);
-        long trackId = this.countPlaylistTrack(playlistId, table);
+        long trackId = this.getTrackId(id, name, trackIndex, table);
         if (trackIndex <= trackId)
         {
             return this.deleteTrackFromPlaylist(playlistId, trackId, table);
