@@ -41,26 +41,6 @@ public class YouTubeSearchCommand extends Command
         this.arguments = "<keyword>";
     }
 
-    private boolean playVideo(YoutubeVideo[] video, int entry, CommandEvent event)
-    {
-        // check entry number
-        if ((entry > this.maxVideoResult) ||
-                (entry <= 0))
-        {
-            return false;
-        }
-        entry -= 1;
-
-        // process premium access
-        PremiumService.addHistory(video[entry].getTitle(), video[entry].getUrl(), event);
-
-        // get selected video detail
-        GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
-        musicManager.player.setVolume(15);
-        this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), video[entry].getUrl(), event.getAuthor());
-        return true;
-    }
-
     @Override
     protected void execute(CommandEvent event)
     {
@@ -133,10 +113,21 @@ public class YouTubeSearchCommand extends Command
                     {
                         event.reply("not joined int voice channel");
                     }
-                    else if (!this.playVideo(video, entry, event))
+
+                    // check entry number
+                    if ((entry > this.maxVideoResult) ||
+                            (entry <= 0))
                     {
                         event.reply("Incorrect entry number.");
                     }
+                    entry -= 1;
+
+                    // process premium access
+                    PremiumService.addHistory(video[entry].getTitle(), video[entry].getUrl(), event);
+
+                    // get selected video detail
+                    GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
+                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), video[entry].getUrl(), event.getAuthor());
                 },
                 10, TimeUnit.SECONDS, () ->
 //                        event.getChannel().deleteMessageById(msg.get().getId()).queue()
