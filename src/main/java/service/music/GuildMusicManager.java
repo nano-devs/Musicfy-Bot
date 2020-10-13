@@ -98,7 +98,7 @@ public class GuildMusicManager {
         String[] progressBar = "\u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501".split(" ");
         progressBar[currentPostIndex] = "\uD83D\uDD18";
         return "\u25B6" + StringUtil.join(progressBar, "") + "`["
-                + Utils.getDurationFormat(position) + "/" + Utils.getDurationFormat(duration)
+                + MusicUtils.getDurationFormat(position) + "/" + MusicUtils.getDurationFormat(duration)
                 + "]` \uD83D\uDD0A \n";
     }
 
@@ -115,7 +115,7 @@ public class GuildMusicManager {
             totalDuration += queuedTrack.getDuration();
         }
         totalDuration += player.getPlayingTrack().getDuration() - player.getPlayingTrack().getPosition();
-        return Utils.getDurationFormat(totalDuration);
+        return MusicUtils.getDurationFormat(totalDuration);
     }
 
     public int getVolume() {

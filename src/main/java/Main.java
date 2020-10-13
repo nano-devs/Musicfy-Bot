@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
+import listener.GuildEventListener;
 import listener.MemberLeaveVoiceListener;
 import command.UserPlaylistCommand.*;
 import net.dv8tion.jda.api.JDA;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.discordbots.api.client.DiscordBotListAPI;
 import service.music.MusicService;
 
 import javax.security.auth.login.LoginException;
@@ -31,11 +33,16 @@ public class Main {
         int coreThreadPoolSize =  availableProcessors - 1 > 0 ? availableProcessors - 1 : 1;
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
+        String dblToken = System.getenv("DBL_TOKEN");
 
         // Initialize Dependencies
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter(exec, true));
         YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
+        DiscordBotListAPI dblApi = new DiscordBotListAPI.Builder()
+                .token(dblToken)
+                .botId("473023109666963467")
+                .build();
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -91,7 +98,7 @@ public class Main {
         builder.addEventListeners(commandClient);
         builder.addEventListeners(nano.getWaiter());
         builder.addEventListeners(new MemberLeaveVoiceListener(nano, exec));
-
+        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
         try {
             JDA jda = builder.build();
             nano.setJda(jda);

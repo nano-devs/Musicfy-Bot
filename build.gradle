@@ -18,6 +18,7 @@ repositories {
 }
 
 dependencies {
+    compile 'org.discordbots:DBL-Java-Library:2.0.1'
     compile 'net.dv8tion:JDA:4.2.0_206'
     compile 'com.jagrosh:jda-utilities:3.0.4'
     implementation 'com.github.Devoxin:lavaplayer:1.3.56'
@@ -25,6 +26,5 @@ dependencies {
     compile 'joda-time:joda-time:2.10.6'
     implementation 'com.github.Shiroechi:YoutubeSearchApi-Java:1.1.2'
     implementation 'mysql:mysql-connector-java:8.0.21'
-    implementation 'com.google.code.gson:gson:2.8.6'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
