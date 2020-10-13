@@ -15,9 +15,9 @@ import java.util.concurrent.*;
 public class MemberLeaveVoiceListener extends ListenerAdapter {
 
     NanoClient nanoClient;
-    ScheduledThreadPoolExecutor exec;
+    ScheduledExecutorService exec;
 
-    public MemberLeaveVoiceListener(NanoClient nanoClient, ScheduledThreadPoolExecutor exec) {
+    public MemberLeaveVoiceListener(NanoClient nanoClient, ScheduledExecutorService exec) {
         this.nanoClient = nanoClient;
         this.exec = exec;
     }
