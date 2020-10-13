@@ -67,7 +67,6 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         else
         {
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
-            musicManager.player.setVolume(15);
 
             for (int i = 0; i < tracks.size(); i++)
             {
