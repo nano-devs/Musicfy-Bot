@@ -1,13 +1,8 @@
 package database;
 
-import client.NanoClient;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.JDA;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 
 public class GuildHistoryModel extends BaseModel
@@ -29,7 +24,6 @@ public class GuildHistoryModel extends BaseModel
                 "VALUES (" + guidId + ", " + userId + ", " + trackId + ")";
         return this.executeUpdateQuery(query) > 0;
     }
-
 
     /**
      * Get history of user
@@ -91,20 +85,22 @@ public class GuildHistoryModel extends BaseModel
                     }
                     return history;
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+//                catch (Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+//            catch (Exception e)
+//            {
+//                e.printStackTrace();
+//            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
         return "";
     }
 }
