@@ -77,7 +77,6 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                     ":white_check_mark:",
                     "Track `" + title + "` added to playlist `" + playlistName + "`.",
                     true);
-            event.reply(embed.build());
         }
         else
         {
