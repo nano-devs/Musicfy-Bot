@@ -1,10 +1,6 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.text.DateFormat;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 
 public class UserHistoryModel extends BaseModel
@@ -84,20 +80,22 @@ public class UserHistoryModel extends BaseModel
                     }
                     return history;
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
+//                catch (Exception e)
+//                {
+//                    e.printStackTrace();
+//                }
             }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
+//            catch (Exception e)
+//            {
+//                e.printStackTrace();
+//            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+//        catch (Exception e)
+//        {
+//            e.printStackTrace();
+//        }
         return "";
     }
 }
