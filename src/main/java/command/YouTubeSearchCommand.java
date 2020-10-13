@@ -8,8 +8,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import service.music.GuildMusicManager;
 import service.music.PremiumService;
 
@@ -70,9 +68,6 @@ public class YouTubeSearchCommand extends Command
         embed.setDescription("");
 
         // create video list
-
-        String[] url = new String[this.maxVideoResult];
-        String[] title = new String[this.maxVideoResult];
         YoutubeVideo[] video = new YoutubeVideo[this.maxVideoResult];
 
         for (int i = 0; i < this.maxVideoResult; i++)
@@ -107,12 +102,12 @@ public class YouTubeSearchCommand extends Command
                 ,
                 e ->
                 {
-                    int entry = Integer.parseInt(e.getMessage().getContentRaw());
-
                     if (!this.nano.getMusicService().joinUserVoiceChannel(event))
                     {
                         event.reply("not joined int voice channel");
                     }
+
+                    int entry = Integer.parseInt(e.getMessage().getContentRaw());
 
                     // check entry number
                     if ((entry > this.maxVideoResult) ||
