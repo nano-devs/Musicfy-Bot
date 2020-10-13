@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
-    private final int maxtrack = 20;
+    private final int maxTrack = 20;
 
     public AddTrackToPlaylistCommand()
     {
@@ -59,7 +59,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        if (db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table) >= this.maxtrack)
+        if (db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table) >= this.maxTrack)
         {
             embed.setTitle("Failed");
             embed.addField(
