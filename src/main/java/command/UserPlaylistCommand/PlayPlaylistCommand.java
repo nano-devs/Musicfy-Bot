@@ -62,7 +62,6 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
                 "There's no track in playlist `" + event.getArgs().trim() + "`.",
                 true);
             event.reply(embed.build());
-            return;
         }
         else
         {
