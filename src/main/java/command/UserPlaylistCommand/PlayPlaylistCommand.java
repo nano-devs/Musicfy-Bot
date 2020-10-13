@@ -46,7 +46,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's playlist with name `" + event.getArgs().trim() + "`.",
+                    "There's no playlist with name `" + event.getArgs().trim() + "`.",
                     true);
             event.reply(embed.build());
             return;
