@@ -171,19 +171,19 @@ public class PlaylistModel extends BaseModel
 
     /**
      * get track id from playlist
-     * @param id user id/ guild id
+     * @param playlistId playlist id
      * @param name playlist name
      * @param trackIndex registered index on playlist
      * @param table "USER" or "GUILD"
      * @return
      */
-    public long getTrackId(long id, String name, int trackIndex, String table)
+    public long getTrackId(long playlistId, String name, int trackIndex, String table)
     {
         String query =
-                "SELECT TRACK_ID " +
-                "FROM " + table + "PLAYLIST " +
-                "WHERE " + table + "_ID = " + id +
-                " AND NAME = '" + name + "'";
+                "SELECT " + table + "_PLAYLIST_TRACK.TRACK_ID " +
+                "FROM " + table + "_PLAYLIST " +
+                "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
+                "WHERE " + table + "_PLAYLIST.ID = " + playlistId ;
         try (
                 Connection connection = DriverManager.getConnection(
                         this.url,
@@ -213,7 +213,6 @@ public class PlaylistModel extends BaseModel
         }
         return -1;
     }
-
 
     /**
      * create new playlist
@@ -507,7 +506,7 @@ public class PlaylistModel extends BaseModel
     public boolean deleteTrackFromPlaylist(long id, String name, int trackIndex, String table)
     {
         long playlistId = this.getPlaylistId(id, name, table);
-        long trackId = this.getTrackId(id, name, trackIndex, table);
+        long trackId = this.getTrackId(playlistId, name, trackIndex, table);
         if (trackIndex <= trackId)
         {
             return this.deleteTrackFromPlaylist(playlistId, trackId, table);
