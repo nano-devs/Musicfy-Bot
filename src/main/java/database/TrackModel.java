@@ -2,10 +2,7 @@ package database;
 
 import database.Entity.Track;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class TrackModel extends BaseModel
 {
@@ -56,17 +53,9 @@ public class TrackModel extends BaseModel
                         return trackId;
                     }
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
             }
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -104,17 +93,9 @@ public class TrackModel extends BaseModel
                         return track;
                     }
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
             }
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -152,17 +133,9 @@ public class TrackModel extends BaseModel
                         return track;
                     }
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
             }
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
