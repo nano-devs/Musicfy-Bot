@@ -3,6 +3,7 @@ package command.GuildPlaylistCommand;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
+import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 import java.util.ArrayList;
@@ -14,9 +15,10 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         this.name = "show_guild_playlist_track";
         this.aliases = new String[]{"sgpt"};
         this.arguments = "<playlist name>";
-        this.help = "Show all track from specific guild playlist.";
+        this.help = "Show all track from specific guild playlist.\n";
         this.cooldown = 2;
         this.guildOnly = true;
+        this.category = new Category("Guild Playlist");
     }
 
     @Override
@@ -25,6 +27,18 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         String playlistName = event.getArgs().trim();
 
         EmbedBuilder embed = new EmbedBuilder();
+        PremiumModel premium = new PremiumModel();
+
+        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "You are not premium, you can't use this command.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         if (playlistName.length() <= 0)
         {
