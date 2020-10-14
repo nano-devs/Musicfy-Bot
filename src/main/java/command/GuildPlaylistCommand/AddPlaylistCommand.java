@@ -2,6 +2,7 @@ package command.GuildPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
+import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class AddPlaylistCommand extends GuildPlaylistBaseCommand
@@ -14,15 +15,28 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
         this.aliases = new String[]{"agp"};
         this.arguments = "<playlist name>";
         this.help = "Create a new guild playlist. \n" +
-                "Playlist name can't be same with existed other guild playlist.";
+                    "Playlist name can't be same with existed other guild playlist.\n";
         this.cooldown = 2;
         this.guildOnly = true;
+        this.category = new Category("Guild Playlist");
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        PremiumModel premium = new PremiumModel();
+
+        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "You are not premium, you can't use this command.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         if (event.getArgs().trim().length() == 0)
         {

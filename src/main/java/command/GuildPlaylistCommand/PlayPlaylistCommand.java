@@ -4,8 +4,10 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
+import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.GuildMusicManager;
+import service.music.PremiumService;
 
 import java.util.ArrayList;
 
@@ -20,15 +22,28 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
         this.name = "play_guild_playlist";
         this.aliases = new String[]{"pgp"};
         this.arguments = "<playlist name>";
-        this.help = "Play all track from specific guild playlist.";
+        this.help = "Play all track from specific guild playlist.\n";
         this.cooldown = 2;
         this.guildOnly = true;
+        this.category = new Category("Guild Playlist");
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        PremiumModel premium = new PremiumModel();
+
+        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "You are not premium, you can't use this command.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         if (event.getArgs().trim().length() <= 0)
         {
@@ -70,6 +85,7 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
 
             for (int i = 0; i < tracks.size(); i++)
             {
+                PremiumService.addHistory(tracks.get(i).title, tracks.get(i).url, event);
                 this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), tracks.get(i).url, event.getAuthor());
             }
         }
