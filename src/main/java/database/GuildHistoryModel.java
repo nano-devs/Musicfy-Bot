@@ -20,7 +20,8 @@ public class GuildHistoryModel extends BaseModel
      */
     public boolean addGuildHistory(long guidId, long userId, long trackId)
     {
-        String query = "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, TRACK_ID) " +
+        String query =
+                "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, TRACK_ID) " +
                 "VALUES (" + guidId + ", " + userId + ", " + trackId + ")";
         return this.executeUpdateQuery(query) > 0;
     }
