@@ -7,7 +7,7 @@ import java.sql.*;
 /**
  * MYSQL database connection
  */
-public abstract  class BaseModel
+public abstract class BaseModel
 {
     protected String url;
     protected String database;
@@ -37,18 +37,17 @@ public abstract  class BaseModel
                         this.password)
         )
         {
-
             try
             {
                 PreparedStatement statement = connection.prepareStatement(query);
                 return statement.executeQuery();
             }
-            catch (Exception e)
+            catch (SQLException e)
             {
                 e.printStackTrace();
             }
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
             e.printStackTrace();
         }
@@ -74,70 +73,15 @@ public abstract  class BaseModel
                 int counter = statement.executeUpdate();
                 return counter;
             }
-            catch (Exception e)
-            {
-                if (!e.getMessage().equals("Unhandled user-defined exception condition"))
-                {
-                    e.printStackTrace();
-                }
-            }
         }
-        catch (Exception e)
+        catch (SQLException e)
         {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    /**
-     * Check user/guild is premium or not
-     * @param id USER ID or GUILD ID
-     * @param type "USER" or "GUILD"
-     * @return true if the id is registered.
-     */
-    public boolean isPremium(long id, String type)
-    {
-        String query = "SELECT COUNT(" + type + "_ID), DATE_END " +
-                        "FROM PREMIUM_" + type +
-                        " WHERE " + type + "_ID = " + id;
-
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
-        {
-            try (PreparedStatement statement = connection.prepareStatement(query))
-            {
-                try (ResultSet result = statement.executeQuery())
-                {
-                    if (result.next())
-                    {
-                        if (result.getLong(1) > 0)
-                        {
-                            String date = result.getDate("DATE_END").toString();
-                            if (DateTime.now().isBefore(DateTime.parse(date)))
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            catch (Exception e)
+            if (!e.getMessage().equals("Unhandled user-defined exception condition"))
             {
                 e.printStackTrace();
             }
         }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return false;
+        return -1;
     }
+
 }
