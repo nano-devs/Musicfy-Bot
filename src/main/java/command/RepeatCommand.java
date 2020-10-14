@@ -11,7 +11,7 @@ public class RepeatCommand extends Command {
 
     public RepeatCommand(NanoClient nanoClient) {
         this.name = "loop";
-        this.help = "Re-enqueue the song after it finished playing";
+        this.help = "Re-enqueue the song after it finished playing\n";
         this.aliases = new String[]{"repeat"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;

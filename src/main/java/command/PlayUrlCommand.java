@@ -17,7 +17,7 @@ public class PlayUrlCommand extends Command {
         this.nanoClient = nanoClient;
 
         this.name = "purl";
-        this.help = "Stands for `play_url`, play song from a given url. Supported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.";
+        this.help = "Stands for `play_url`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
         this.aliases = new String[] {"url", "play_url", "playurl"};
         this.cooldown = 2;
         this.arguments = "<url>";

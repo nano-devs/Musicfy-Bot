@@ -15,7 +15,7 @@ public class ResumeCommand extends Command {
         this.name = "resume";
         this.guildOnly = true;
         this.cooldown = 1;
-        this.help = "Resume paused song";
+        this.help = "Resume paused song\n";
         this.category = new Category("Music");
     }
 

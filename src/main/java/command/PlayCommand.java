@@ -17,7 +17,7 @@ public class PlayCommand extends Command {
         this.nanoClient = nanoClient;
 
         this.name = "play";
-        this.help = "play song from a given url or keywords. Supported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.";
+        this.help = "play song from a given url or keywords.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
         this.aliases = new String[] {"p"};
         this.cooldown = 2;
         this.arguments = "<url/keywords>";
