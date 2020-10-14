@@ -11,7 +11,7 @@ public class NowPlayCommand extends Command {
 
     public NowPlayCommand(NanoClient nanoClient) {
         this.name = "np";
-        this.help = "Get now playing song.";
+        this.help = "Get now playing song.\n";
         this.aliases = new String[]{"nowplay", "now_play", "now_playing", "nowplaying"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;

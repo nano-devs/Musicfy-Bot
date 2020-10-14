@@ -16,7 +16,7 @@ public class SkipCommand extends Command {
         this.name = "skip";
         this.aliases = new String[]{"next", "next_track", "play_next", "skip_next"};
         this.guildOnly = true;
-        this.help = "Vote skip for current playing song";
+        this.help = "Vote skip for current playing song\n";
         this.cooldown = 2;
         this.category = new Category("Music");
     }

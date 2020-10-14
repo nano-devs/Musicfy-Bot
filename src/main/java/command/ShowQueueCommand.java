@@ -16,7 +16,7 @@ public class ShowQueueCommand extends Command {
 
     public ShowQueueCommand(NanoClient nanoClient) {
         this.name = "queue";
-        this.help = "Show song queue & current guild voice state";
+        this.help = "Show song queue & current guild voice state\n";
         this.aliases = new String[]{"show_queue", "show queue", "q", "state"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;
