@@ -15,8 +15,9 @@ public class UserHistoryCommand extends Command
         this.name = "histu";
 //        this.aliases = new String[]{"histu", "hist u", "hist user"};
         this.guildOnly = true;
-        this.help = "Get all user history, max 2048 characters";
+        this.help = "Get all user history.\n";
         this.cooldown = 2;
+        this.category = new Category("History");
     }
 
     @Override
