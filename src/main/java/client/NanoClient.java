@@ -71,19 +71,21 @@ public class NanoClient {
 
                 int positionInQueue = musicManager.scheduler.getQueue().size();
 
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
+                if (channel != null) {
+                    EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                        requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
+                            requester.getEffectiveAvatarUrl());
 
-                embedBuilder.addField("Channel", track.getInfo().author, true);
-                embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
-                embedBuilder.addField("Position in queue", "" + positionInQueue, true);
-                embedBuilder.addField("Estimated time until playing",
-                        musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
+                    embedBuilder.addField("Channel", track.getInfo().author, true);
+                    embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
+                    embedBuilder.addField("Position in queue", "" + positionInQueue, true);
+                    embedBuilder.addField("Estimated time until playing",
+                            musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
 
-                channel.sendMessage(embedBuilder.build()).queue();
+                    channel.sendMessage(embedBuilder.build()).queue();
+                }
             }
 
             @Override
@@ -92,8 +94,9 @@ public class NanoClient {
                     track.setUserData(requester);
                     musicManager.scheduler.queue(track);
                 }
-                channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
-                        " entries from **"+ playlist.getName() + "** has been added to queue").queue();
+                if (channel != null)
+                    channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
+                            " entries from **"+ playlist.getName() + "** has been added to queue").queue();
             }
 
             @Override
@@ -126,21 +129,21 @@ public class NanoClient {
                 musicManager.scheduler.queue(track);
 
                 int positionInQueue = musicManager.scheduler.getQueue().size();
+                if (channel != null) {
+                    EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
+                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
+                            requester.getEffectiveAvatarUrl());
 
-                embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                        requester.getEffectiveAvatarUrl());
+                    embedBuilder.addField("Channel", track.getInfo().author, true);
+                    embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
+                    embedBuilder.addField("Position in queue", "" + positionInQueue, true);
+                    embedBuilder.addField("Estimated time until playing",
+                            musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
 
-                embedBuilder.addField("Channel", track.getInfo().author, true);
-                embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
-                embedBuilder.addField("Position in queue", "" + positionInQueue, true);
-                embedBuilder.addField("Estimated time until playing",
-                        musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
-
-//                channel.sendMessage("Added to queue " + track.getInfo().title).queue();
-                channel.sendMessage(embedBuilder.build()).queue();
+                    channel.sendMessage(embedBuilder.build()).queue();
+                }
             }
 
             @Override
@@ -153,22 +156,23 @@ public class NanoClient {
 
                 musicManager.scheduler.queue(track);
 
-                int positionInQueue = musicManager.scheduler.getQueue().size();
+                if (channel != null) {
+                    int positionInQueue = musicManager.scheduler.getQueue().size();
 
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
+                    EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                        requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
+                            requester.getEffectiveAvatarUrl());
 
-                embedBuilder.addField("Channel", track.getInfo().author, true);
-                embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
-                embedBuilder.addField("Position in queue", "" + positionInQueue, true);
-                embedBuilder.addField("Estimated time until playing",
-                        musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
+                    embedBuilder.addField("Channel", track.getInfo().author, true);
+                    embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
+                    embedBuilder.addField("Position in queue", "" + positionInQueue, true);
+                    embedBuilder.addField("Estimated time until playing",
+                            musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
 
-
-                channel.sendMessage(embedBuilder.build()).queue();
+                    channel.sendMessage(embedBuilder.build()).queue();
+                }
             }
 
             @Override
