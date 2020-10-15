@@ -3,12 +3,17 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.menu.Paginator;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import service.music.GuildMusicManager;
+import service.music.MusicUtils;
 
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 public class ShowQueueCommand extends Command {
 
@@ -18,9 +23,9 @@ public class ShowQueueCommand extends Command {
         this.name = "queue";
         this.help = "Show song queue & current guild voice state\n";
         this.aliases = new String[]{"show_queue", "show queue", "q", "state"};
-        this.guildOnly = true;
+        this.guildOnly = false;
         this.nanoClient = nanoClient;
-        this.cooldown = 2;
+        this.cooldown = 4;
         this.category = new Category("Music");
     }
 
@@ -37,6 +42,72 @@ public class ShowQueueCommand extends Command {
             event.reply("Not playing anything");
             return;
         }
+
+        Paginator paginator = getPaginatedQueue(event, musicManager);
+        paginator.paginate(event.getChannel(), 1);
+    }
+
+    private Paginator.Builder createPaginator() {
+        return new Paginator.Builder()
+                .setColumns(1)
+                .setItemsPerPage(7)
+                .showPageNumbers(true)
+                .waitOnSinglePage(false)
+                .useNumberedItems(true)
+                .setFinalAction(message -> {
+                    try {
+                        message.clearReactions().queue();
+                    } catch(PermissionException ex) {
+                        message.delete().queue();
+                    }
+                })
+                .setEventWaiter(nanoClient.getWaiter())
+                .setTimeout(30, TimeUnit.SECONDS);
+    }
+
+    private Paginator getPaginatedQueue(CommandEvent event, GuildMusicManager musicManager) {
+        String connectVoiceName = event.getGuild().getAudioManager().getConnectedChannel().getName();
+
+        Paginator.Builder paginatorBuilder = createPaginator();
+
+        paginatorBuilder.setText("\uD83C\uDFB6 | Now playing in :loud_sound: `" + connectVoiceName
+                + "`\n**" + musicManager.player.getPlayingTrack().getInfo().title
+                + " by " + musicManager.player.getPlayingTrack().getInfo().author  + "**");
+
+        if (musicManager.scheduler.getQueue().size() > 0) {
+            int counter = 0;
+            String[] songs = new String[musicManager.scheduler.getQueue().size()];
+            AudioTrack tempTrack = null;
+
+            // first entry, estimation time until playing.
+            long total = musicManager.player.getPlayingTrack().getDuration() - musicManager.player.getPlayingTrack().getPosition();
+            for (AudioTrack track : musicManager.scheduler.getQueue()) {
+                if (tempTrack != null) {
+                    total += tempTrack.getDuration();
+                }
+                String queueValue = "**" + track.getInfo().title
+                        + "** by **" + track.getInfo().author + "**\n";
+                queueValue += "Requested by **" + track.getUserData(User.class).getName() + "** | ";
+                queueValue += "Estimated time until playing **" + MusicUtils.getDurationFormat(total) + "**";
+                songs[counter] = queueValue;
+                counter++;
+                tempTrack = track;
+            }
+            paginatorBuilder.setItems(songs);
+        }
+        else {
+            paginatorBuilder.useNumberedItems(false);
+            paginatorBuilder.setItems("**Empty queue**");
+        }
+
+        paginatorBuilder.setColor(event.getSelfMember().getColor());
+
+        paginatorBuilder.setUsers(event.getAuthor());
+
+        return paginatorBuilder.build();
+    }
+
+    private EmbedBuilder getRichEmbeddedQueue(CommandEvent event, GuildMusicManager musicManager) {
 
         // Build embedded message
         EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -74,7 +145,7 @@ public class ShowQueueCommand extends Command {
         int counter = 1;
         for (AudioTrack track : musicManager.scheduler.getQueue()) {
             queueValue += "[" + counter + "]. **" + track.getInfo().title
-                        + "** by **" + track.getInfo().author + "**\n";
+                    + "** by **" + track.getInfo().author + "**\n";
             queueValue += "Requested by **" + track.getUserData(User.class).getName() + "**\n";
 
             counter += 1;
@@ -88,14 +159,13 @@ public class ShowQueueCommand extends Command {
         embedBuilder.addField("\uD83C\uDFB6 | The First 7 Entries in Queue", queueValue, false);
 
         // Footer
-        // MIGHT BE BUGGY, CONCEPT MUST RE-CALCULATE VOTE EVERYTIME VOICE CHANNEL TRIGGER EVENT.
+        // MIGHT BE BUGGY, CONCEPT MUST RE-CALCULATED EVERYTIME VOICE CHANNEL TRIGGER EVENT.
         int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() - 1;
         String footerValue = event.getMember().getEffectiveName() + " can skip current song | "
-                            + musicManager.skipVoteSet.size() + "/" + connectedMembers
-                            + " skip votes";
+                + musicManager.skipVoteSet.size() + "/" + connectedMembers
+                + " skip votes";
         embedBuilder.setFooter(footerValue);
 
-        // Build & Send embed.
-        event.reply(embedBuilder.build());
+        return embedBuilder;
     }
 }
