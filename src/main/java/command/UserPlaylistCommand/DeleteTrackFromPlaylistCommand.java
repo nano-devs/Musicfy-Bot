@@ -2,6 +2,7 @@ package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
+import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
@@ -12,21 +13,36 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
         this.aliases = new String[]{"dtfup"};
         this.arguments = "<playlist name>, <track index>";
         this.help = "Delete existing track from user playlist. \n" +
-                    "Use coma (,) as separator for each arguments.";
+                    "Use coma (,) as separator for each arguments.\n";
         this.cooldown = 2;
+        this.category = new Category("User Playlist");
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        PremiumModel premium = new PremiumModel();
+
+        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "You are not premium, you can't use this command.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         if (event.getArgs().split(",").length != 2)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Invalid given arguments.",
+                    "Invalid given arguments.\n" +
+                            "This command need 2 arguments: <playlist name>, <track index>.\n" +
+                            "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;

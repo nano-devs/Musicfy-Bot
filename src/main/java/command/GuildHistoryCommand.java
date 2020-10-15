@@ -22,8 +22,9 @@ public class GuildHistoryCommand extends Command
         this.name = "histg";
 //        this.aliases = new String[]{"histg", "hist g", "histu guild"};
         this.guildOnly = true;
-        this.help = "Get all guild history, max 2048 characters.";
+        this.help = "Get all guild history.\n";
         this.cooldown = 2;
+        this.category = new Category("History");
     }
 
     @Override

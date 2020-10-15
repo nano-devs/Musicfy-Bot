@@ -18,7 +18,8 @@ public class UserHistoryModel extends BaseModel
      */
     public boolean addUserHistory(long userId, long trackId)
     {
-        String query = "INSERT INTO USER_HISTORY (USER_ID, TRACK_ID) " +
+        String query =
+                "INSERT INTO USER_HISTORY (USER_ID, TRACK_ID) " +
                 "VALUES (" + userId + ", " + trackId + ")";
         return this.executeUpdateQuery(query) > 0;
     }
