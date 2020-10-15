@@ -2,6 +2,7 @@ package command.GuildPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
+import database.PremiumModel;
 import database.TrackModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 
@@ -15,22 +16,37 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         this.aliases = new String[]{"attgp"};
         this.arguments = "<playlist name>, <track title>, <url>";
         this.help = "Add a new track to guild playlist. \n" +
-                    "Use coma (,) as separator for each arguments.";
+                    "Use coma (,) as separator for each arguments.\n";
         this.cooldown = 2;
         this.guildOnly = true;
+        this.category = new Category("Guild Playlist");
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        PremiumModel premium = new PremiumModel();
+
+        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "You are not premium, you can't use this command.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         if (event.getArgs().split(",").length != 3)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Invalid given arguments.",
+                    "Invalid given arguments.\n" +
+                            "This command need 3 arguments: <playlist name>, <track title>, <url>.\n" +
+                            "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;

@@ -1,6 +1,7 @@
 package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import database.PremiumModel;
 import database.TrackModel;
 import database.PlaylistModel;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -15,21 +16,36 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         this.aliases = new String[]{"attup"};
         this.arguments = "<playlist name>, <track title>, <url>";
         this.help = "Add a new track to user playlist. \n" +
-                    "Use coma (,) as separator for each arguments.";
+                    "Use coma (,) as separator for each arguments.\n";
         this.cooldown = 2;
+        this.category = new Category("User Playlist");
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        PremiumModel premium = new PremiumModel();
+
+        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "You are not premium, you can't use this command.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         if (event.getArgs().split(",").length != 3)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Invalid given arguments.",
+                    "Invalid given arguments.\n" +
+                            "This command need 3 arguments: <playlist name>, <track title>, <url>.\n" +
+                            "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;

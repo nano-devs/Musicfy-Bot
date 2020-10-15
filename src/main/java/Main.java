@@ -6,7 +6,6 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
 import listener.GuildEventListener;
 import listener.MemberLeaveVoiceListener;
-import command.UserPlaylistCommand.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -39,10 +38,10 @@ public class Main {
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter(exec, true));
         YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
-        DiscordBotListAPI dblApi = new DiscordBotListAPI.Builder()
-                .token(dblToken)
-                .botId("473023109666963467")
-                .build();
+//        DiscordBotListAPI dblApi = new DiscordBotListAPI.Builder()
+//                .token(dblToken)
+//                .botId("473023109666963467")
+//                .build();
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -86,6 +85,7 @@ public class Main {
         commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
         commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
         commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
+        commandClientBuilder.addCommand(new HelpCommand(nano, commandClientBuilder.build().getCommands()));
 
         CommandClient commandClient = commandClientBuilder.build();
 
@@ -99,7 +99,8 @@ public class Main {
         builder.addEventListeners(commandClient);
         builder.addEventListeners(nano.getWaiter());
         builder.addEventListeners(new MemberLeaveVoiceListener(nano, exec));
-        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
+//        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
+
         try {
             JDA jda = builder.build();
             nano.setJda(jda);
