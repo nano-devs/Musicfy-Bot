@@ -60,7 +60,7 @@ public class GuildMusicManager {
      */
     public void announceNowPlaying(CommandEvent event) {
         String voiceChannelName = event.getGuild().getAudioManager().getConnectedChannel().getName();
-        String announcement = "\uD83D\uDCE2 Now Playing in " + voiceChannelName + " \uD83C\uDFB5";
+        String announcement = "\uD83C\uDFB5 Now Playing in :loud_sound: `" + voiceChannelName + "`";
         String description = "[" + player.getPlayingTrack().getInfo().title + "]("
                 + player.getPlayingTrack().getInfo().uri + ")\n\n";
         description += getProgressBar() + "\n";
