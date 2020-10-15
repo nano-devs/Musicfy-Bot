@@ -2,10 +2,12 @@ package command;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PremiumGuildModel;
+import database.PremiumModel;
 
 public class PremiumGuildCommand extends Command
 {
+    private String table = "GUILD";
+
     public PremiumGuildCommand()
     {
 //        this.name = "premium_guild";
@@ -14,14 +16,15 @@ public class PremiumGuildCommand extends Command
         this.ownerCommand = true;
         this.guildOnly = true;
         this.cooldown = 2;
-        this.help = "Become a premium guild for one month.";
+        this.help = "Become a premium guild for one month.\n";
+        this.category = new Category("Owner");
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
-        PremiumGuildModel db = new PremiumGuildModel();
-        if (db.addPremiumGuild(event.getGuild().getIdLong()))
+        PremiumModel db = new PremiumModel();
+        if (db.addPremium(event.getGuild().getIdLong(), this.table))
         {
             event.reply("This guild become premium for one month");
         }

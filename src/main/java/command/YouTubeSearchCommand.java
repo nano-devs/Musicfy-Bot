@@ -32,7 +32,7 @@ public class YouTubeSearchCommand extends Command
         this.youtube = youtube;
 
         this.name = "search";
-        this.aliases = new String[]{"yts", "yt s", "search", "s"};
+        this.aliases = new String[]{"yts", "yt s", "s"};
         this.guildOnly = true;
         this.cooldown = 2;
         this.help = "Search youtube video with specific keyword.\n";

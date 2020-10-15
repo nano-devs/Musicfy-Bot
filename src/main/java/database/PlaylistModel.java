@@ -133,7 +133,7 @@ public class PlaylistModel extends BaseModel
     /**
      * get playlist id
      * @param id user id / guild id
-     * @param name plalist name
+     * @param name playlist name
      * @param table "USER" / "GUILD"
      * @return
      */

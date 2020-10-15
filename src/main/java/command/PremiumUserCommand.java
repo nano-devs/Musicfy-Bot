@@ -2,13 +2,15 @@ package command;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PremiumUserModel;
+import database.PremiumModel;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.List;
 
 public class PremiumUserCommand extends Command
 {
+    private String table = "USER";
+
     public PremiumUserCommand()
     {
 //        this.name = "premium_user";
@@ -18,7 +20,8 @@ public class PremiumUserCommand extends Command
         this.guildOnly = false;
         this.cooldown = 2;
         this.arguments = "<mentioned user>";
-        this.help = "Become a premium user for one month.";
+        this.help = "Become a premium user for one month.\n";
+        this.category = new Category("Owner");
     }
 
     @Override
@@ -35,10 +38,10 @@ public class PremiumUserCommand extends Command
         String user = "";
         String failed = "";
 
-        PremiumUserModel db = new PremiumUserModel();
+        PremiumModel db = new PremiumModel();
         for (Member member : mention)
         {
-            if (db.addPremiumUser(member.getIdLong()))
+            if (db.addPremium(member.getIdLong(), this.table))
             {
                 user += member.getAsMention() + " ";
             }
