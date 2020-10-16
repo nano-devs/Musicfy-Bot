@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 import service.music.PremiumService;
 
 import java.awt.*;
@@ -32,12 +33,13 @@ public class YouTubeSearchCommand extends Command
         this.youtube = youtube;
 
         this.name = "search";
-        this.aliases = new String[]{"yts", "yt s", "s"};
+        this.aliases = new String[]{"yts", "s"};
         this.guildOnly = true;
         this.cooldown = 2;
         this.help = "Search youtube video with specific keyword.\n";
         this.arguments = "<keyword>";
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

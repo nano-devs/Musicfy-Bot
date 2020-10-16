@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 import service.music.MusicUtils;
 
 import java.awt.*;
@@ -27,6 +28,7 @@ public class ShowQueueCommand extends Command {
         this.nanoClient = nanoClient;
         this.cooldown = 4;
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

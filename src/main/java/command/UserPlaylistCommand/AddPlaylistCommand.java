@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
 import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.HelpProcess;
 
 public class AddPlaylistCommand extends UserPlaylistBaseCommand
 {
@@ -18,6 +19,7 @@ public class AddPlaylistCommand extends UserPlaylistBaseCommand
                     "Playlist name can't be same with your existed other playlist.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

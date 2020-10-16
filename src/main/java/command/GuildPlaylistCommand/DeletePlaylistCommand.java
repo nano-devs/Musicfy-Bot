@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
 import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.HelpProcess;
 
 public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
 {
@@ -16,6 +17,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

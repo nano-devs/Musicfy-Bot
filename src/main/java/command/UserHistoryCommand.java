@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.UserHistoryModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.HelpProcess;
 
 import java.awt.*;
 
@@ -18,6 +19,7 @@ public class UserHistoryCommand extends Command
         this.help = "Get all user history.\n";
         this.cooldown = 2;
         this.category = new Category("History");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

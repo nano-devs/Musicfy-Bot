@@ -4,7 +4,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
-import listener.GuildEventListener;
+import command.HelpCommand.HelpCommand;
 import listener.MemberLeaveVoiceListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.discordbots.api.client.DiscordBotListAPI;
 import service.music.MusicService;
 
 import javax.security.auth.login.LoginException;
@@ -33,6 +32,7 @@ public class Main {
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
         String dblToken = System.getenv("DBL_TOKEN");
+        String prefix = "..";
 
         // Initialize Dependencies
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
@@ -45,7 +45,7 @@ public class Main {
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
-        commandClientBuilder.setPrefix("..");
+        commandClientBuilder.setPrefix(prefix);
         commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
         commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
@@ -85,7 +85,7 @@ public class Main {
         commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
         commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
         commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
-        commandClientBuilder.addCommand(new HelpCommand(nano, commandClientBuilder.build().getCommands()));
+        commandClientBuilder.addCommand(new HelpCommand(commandClientBuilder.build().getCommands(), prefix));
 
         CommandClient commandClient = commandClientBuilder.build();
 

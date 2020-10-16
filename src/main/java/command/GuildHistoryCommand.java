@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.GuildHistoryModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import service.music.HelpProcess;
 
 import java.awt.*;
 import java.sql.SQLException;
@@ -25,6 +26,7 @@ public class GuildHistoryCommand extends Command
         this.help = "Get all guild history.\n";
         this.cooldown = 2;
         this.category = new Category("History");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override
