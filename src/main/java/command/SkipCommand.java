@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.User;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 
 public class SkipCommand extends Command {
 
@@ -19,6 +20,7 @@ public class SkipCommand extends Command {
         this.help = "Vote skip for current playing song\n";
         this.cooldown = 2;
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

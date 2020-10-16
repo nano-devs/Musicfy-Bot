@@ -18,6 +18,7 @@ public class PremiumGuildCommand extends Command
         this.cooldown = 2;
         this.help = "Become a premium guild for one month.\n";
         this.category = new Category("Owner");
+        this.hidden = true;
     }
 
     @Override

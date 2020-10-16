@@ -4,6 +4,7 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 
 public class ResumeCommand extends Command {
 
@@ -17,6 +18,7 @@ public class ResumeCommand extends Command {
         this.cooldown = 1;
         this.help = "Resume paused song\n";
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override
