@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 import service.music.PremiumService;
 
 public class PlayCommand extends Command {
@@ -23,6 +24,7 @@ public class PlayCommand extends Command {
         this.arguments = "<url/keywords>";
         this.guildOnly = true;
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

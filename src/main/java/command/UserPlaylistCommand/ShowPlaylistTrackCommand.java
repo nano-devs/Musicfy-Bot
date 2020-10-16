@@ -5,6 +5,7 @@ import database.Entity.Track;
 import database.PlaylistModel;
 import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.HelpProcess;
 
 import java.util.ArrayList;
 
@@ -18,6 +19,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
         this.help = "Show all track from specific user playlist.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

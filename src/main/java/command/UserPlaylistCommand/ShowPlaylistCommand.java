@@ -5,6 +5,7 @@ import database.Entity.Playlist;
 import database.PlaylistModel;
 import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.HelpProcess;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
         this.help = "Show all existed user playlist.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override
