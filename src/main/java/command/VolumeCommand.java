@@ -4,6 +4,7 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 
 public class VolumeCommand extends Command {
 
@@ -19,6 +20,7 @@ public class VolumeCommand extends Command {
         this.help = "Adjust volume number.\n";
         this.arguments = "<number>";
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

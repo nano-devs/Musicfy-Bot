@@ -4,6 +4,7 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 
 public class NowPlayCommand extends Command {
 
@@ -17,6 +18,7 @@ public class NowPlayCommand extends Command {
         this.nanoClient = nanoClient;
         this.cooldown = 2;
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

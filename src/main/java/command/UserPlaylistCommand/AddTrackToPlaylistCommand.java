@@ -5,6 +5,7 @@ import database.PremiumModel;
 import database.TrackModel;
 import database.PlaylistModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.HelpProcess;
 
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
@@ -19,6 +20,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                     "Use coma (,) as separator for each arguments.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

@@ -5,6 +5,7 @@ import database.Entity.Track;
 import database.PlaylistModel;
 import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.HelpProcess;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override

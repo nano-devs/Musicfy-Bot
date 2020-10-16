@@ -7,6 +7,7 @@ import database.PlaylistModel;
 import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 import service.music.PremiumService;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         this.help = "Play all track from specific user playlist.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override
@@ -80,13 +82,20 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         }
         else
         {
+            embed.setTitle("Success");
+            embed.addField(
+                    ":white_check_mark:",
+                    "Add " + tracks.size() + " track to queue.",
+                    true);
+
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
 
             for (int i = 0; i < tracks.size(); i++)
             {
                 PremiumService.addHistory(tracks.get(i).title, tracks.get(i).url, event);
-                this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), tracks.get(i).url, event.getAuthor());
+                this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getAuthor());
             }
+            event.reply(embed.build());
         }
     }
 }

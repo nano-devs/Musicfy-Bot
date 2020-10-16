@@ -22,6 +22,7 @@ public class PremiumUserCommand extends Command
         this.arguments = "<mentioned user>";
         this.help = "Become a premium user for one month.\n";
         this.category = new Category("Owner");
+        this.hidden = true;
     }
 
     @Override

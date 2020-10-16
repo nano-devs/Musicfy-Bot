@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import service.music.GuildMusicManager;
+import service.music.HelpProcess;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,7 @@ public class ShuffleCommand extends Command {
         this.guildOnly = true;
         this.cooldown = 2;
         this.category = new Category("Music");
+        this.help = HelpProcess.getHelp(this);
     }
 
     @Override
