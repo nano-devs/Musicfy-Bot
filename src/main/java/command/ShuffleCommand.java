@@ -23,6 +23,7 @@ public class ShuffleCommand extends Command {
         this.guildOnly = true;
         this.cooldown = 2;
         this.category = new Category("Music");
+        this.help = "Shuffles queue";
     }
 
     @Override
