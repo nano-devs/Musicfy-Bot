@@ -64,7 +64,8 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.addPlaylist(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
+        String name = event.getArgs().trim().replace("'", "\\'");
+        if (db.addPlaylist(event.getGuild().getIdLong(), name.trim(), this.table))
         {
             embed.setTitle("Success");
             embed.addField(

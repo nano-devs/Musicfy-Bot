@@ -19,7 +19,9 @@ public class TrackModel extends BaseModel
      */
     public boolean addTrack(String title, String url)
     {
-        String query = "INSERT INTO TRACK (TITLE, URL) " +
+        title = title.replace("'", "\\'");
+        String query = 
+                "INSERT INTO TRACK (TITLE, URL) " +
                 "VALUES ('" + title + "', '" + url + "')";
         return this.executeUpdateQuery(query) > 0;
     }
@@ -32,7 +34,8 @@ public class TrackModel extends BaseModel
      */
     public long getTrackId(String url)
     {
-        String query = "SELECT ID " +
+        String query =
+                "SELECT ID " +
                 "FROM TRACK " +
                 "WHERE URL = '" + url + "'";
 
@@ -69,7 +72,8 @@ public class TrackModel extends BaseModel
      */
     public Track getObject(String url)
     {
-        String query = "SELECT ID, TITLE, URL " +
+        String query =
+                "SELECT ID, TITLE, URL " +
                 "FROM TRACK " +
                 "WHERE URL = '" + url + "'";
 
@@ -109,7 +113,8 @@ public class TrackModel extends BaseModel
      */
     public Track getObject(long trackId)
     {
-        String query = "SELECT ID, TITLE, URL " +
+        String query =
+                "SELECT ID, TITLE, URL " +
                 "FROM TRACK " +
                 "WHERE ID = " + trackId;
 

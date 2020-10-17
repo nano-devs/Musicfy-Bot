@@ -62,6 +62,14 @@ public class YouTubeSearchCommand extends Command
         catch (IOException | NoResultFoundException e)
         {
             e.printStackTrace();
+            EmbedBuilder temp = new EmbedBuilder();
+            temp.setTitle("Failed");
+            temp.addField(
+                    ":x:",
+                    e.getMessage(),
+                    true);
+            event.reply(temp.build());
+            return;
         }
 
         // create embed message
@@ -104,7 +112,7 @@ public class YouTubeSearchCommand extends Command
                 {
                     if (!this.nano.getMusicService().joinUserVoiceChannel(event))
                     {
-                        event.reply("not joined int voice channel");
+                        event.reply("Not joined int voice channel");
                     }
 
                     int entry = Integer.parseInt(e.getMessage().getContentRaw());
