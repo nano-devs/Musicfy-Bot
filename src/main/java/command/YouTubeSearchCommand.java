@@ -2,6 +2,7 @@ package command;
 
 import YouTubeSearchApi.*;
 import YouTubeSearchApi.entity.YoutubeVideo;
+import YouTubeSearchApi.exception.NoResultFoundException;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -58,7 +59,7 @@ public class YouTubeSearchCommand extends Command
         {
             videos = youtubeClient.search(keywords, this.maxVideoResult);
         }
-        catch (IOException e)
+        catch (IOException | NoResultFoundException e)
         {
             e.printStackTrace();
         }
