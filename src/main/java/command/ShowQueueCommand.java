@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.Paginator;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import service.music.GuildMusicManager;
@@ -23,7 +24,7 @@ public class ShowQueueCommand extends Command {
         this.name = "queue";
         this.help = "Show song queue & current guild voice state\n";
         this.aliases = new String[]{"show_queue", "show queue", "q", "state"};
-        this.guildOnly = false;
+        this.guildOnly = true;
         this.nanoClient = nanoClient;
         this.cooldown = 4;
         this.category = new Category("Music");
@@ -88,7 +89,7 @@ public class ShowQueueCommand extends Command {
                 }
                 String queueValue = "**" + track.getInfo().title
                         + "** by **" + track.getInfo().author + "**\n";
-                queueValue += "Requested by **" + track.getUserData(User.class).getName() + "** | ";
+                queueValue += "Requested by **" + track.getUserData(Member.class).getUser().getName() + "** | ";
                 queueValue += "Estimated time until playing **" + MusicUtils.getDurationFormat(total) + "**";
                 songs[counter] = queueValue;
                 counter++;
@@ -101,7 +102,7 @@ public class ShowQueueCommand extends Command {
             paginatorBuilder.setItems("**Empty queue**");
         }
 
-        paginatorBuilder.setColor(event.getSelfMember().getColor());
+        paginatorBuilder.setColor(event.getMember().getColor());
 
         paginatorBuilder.setUsers(event.getAuthor());
 
@@ -112,7 +113,7 @@ public class ShowQueueCommand extends Command {
 
         // Build embedded message
         EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(Color.MAGENTA);
+        embedBuilder.setColor(event.getMember().getColor());
 
         // Title
         embedBuilder.setTitle("**" + event.getGuild().getName() + "**'s Queue");
@@ -147,7 +148,7 @@ public class ShowQueueCommand extends Command {
         for (AudioTrack track : musicManager.scheduler.getQueue()) {
             queueValue += "[" + counter + "]. **" + track.getInfo().title
                     + "** by **" + track.getInfo().author + "**\n";
-            queueValue += "Requested by **" + track.getUserData(User.class).getName() + "**\n";
+            queueValue += "Requested by **" + track.getUserData(Member.class).getUser().getName() + "**\n";
 
             counter += 1;
             if (counter >= 7) {

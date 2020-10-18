@@ -18,8 +18,8 @@ public class PlayUrlCommand extends Command {
     public PlayUrlCommand(NanoClient nanoClient) {
         this.nanoClient = nanoClient;
 
-        this.name = "purl";
-        this.help = "Stands for `play_url`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
+        this.name = "play_url";
+        this.help = "Stands for `purl`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
         this.aliases = new String[] {"url", "play_url", "playurl"};
         this.cooldown = 2;
         this.arguments = "<url>";
@@ -32,7 +32,7 @@ public class PlayUrlCommand extends Command {
     protected void execute(CommandEvent event) {
         VoiceChannel channel = event.getMember().getVoiceState().getChannel();
         if (channel == null) {
-            event.reply("You're not connected to any voice channel");
+            event.reply(":x: | You're not connected to any voice channel");
             return;
         }
 

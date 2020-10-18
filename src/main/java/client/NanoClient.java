@@ -97,18 +97,18 @@ public class NanoClient {
                     musicManager.scheduler.queue(track);
                 }
                 if (channel != null)
-                    channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
+                    channel.sendMessage(":white_check_mark: | " + String.valueOf(playlist.getTracks().size()) +
                             " entries from **"+ playlist.getName() + "** has been added to queue").queue();
             }
 
             @Override
             public void noMatches() {
-                channel.sendMessage("Nothing found by " + trackUrl).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Nothing found by " + trackUrl).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Could not play: " + exception.getMessage()).queue();
             }
         });
     }
@@ -179,12 +179,12 @@ public class NanoClient {
 
             @Override
             public void noMatches() {
-                channel.sendMessage("Nothing found by " + keywords).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Nothing found by " + keywords).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Could not play: " + exception.getMessage()).queue();
             }
         });
     }

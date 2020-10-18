@@ -32,7 +32,7 @@ public class PlayCommand extends Command {
     protected void execute(CommandEvent event) {
         VoiceChannel channel = event.getMember().getVoiceState().getChannel();
         if (channel == null) {
-            event.reply("You're not connected to any voice channel");
+            event.reply(":x: | You're not connected to any voice channel");
             return;
         }
 

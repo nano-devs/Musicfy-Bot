@@ -22,16 +22,16 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Search video from youtube based on keyword.
  */
-public class YouTubeSearchCommand extends Command
+public class YoutubeSearchCommand extends Command
 {
     private final int maxVideoResult = 5;
-    private final YouTubeSearchClient youtube;
+    YoutubeClient youtubeClient;
     private final NanoClient nano;
 
-    public YouTubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube)
+    public YoutubeSearchCommand(NanoClient nano, YoutubeClient youtubeClient)
     {
         this.nano = nano;
-        this.youtube = youtube;
+        this.youtubeClient = youtubeClient;
 
         this.name = "search";
         this.aliases = new String[]{"yts", "s"};
@@ -62,7 +62,6 @@ public class YouTubeSearchCommand extends Command
             keywords = keywords.replace(",", " ");
         }
 
-        YoutubeClient youtubeClient = new YoutubeClient();
         List<YoutubeVideo> videos = null;
         try
         {
