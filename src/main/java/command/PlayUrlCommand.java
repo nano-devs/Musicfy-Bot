@@ -3,6 +3,7 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -35,6 +36,16 @@ public class PlayUrlCommand extends Command {
             return;
         }
 
+        String args = event.getArgs();
+        if (args.isEmpty()) {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(event.getMember().getColor());
+            embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
+                    + event.getClient().getPrefix() + this.name + " " + this.arguments, true);
+            event.reply(embedBuilder.build());
+            return;
+        }
+
         // check if client is connected to any voice channel
         AudioManager guildAudioManager = event.getGuild().getAudioManager();
         VoiceChannel connectedChannel = guildAudioManager.getConnectedChannel();
@@ -47,6 +58,6 @@ public class PlayUrlCommand extends Command {
         PremiumService.addHistory("", event.getArgs(), event);
 
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
-        nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), event.getArgs(), event.getAuthor());
+        nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), args, event.getMember());
     }
 }

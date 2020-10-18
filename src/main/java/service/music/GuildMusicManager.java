@@ -72,7 +72,7 @@ public class GuildMusicManager {
         embedBuilder.setDescription(description);
         embedBuilder.setFooter("Source: " + player.getPlayingTrack().getInfo().author);
 
-        embedBuilder.setColor(Color.MAGENTA);
+        embedBuilder.setColor(event.getMember().getColor());
 
         event.getChannel().sendMessage(embedBuilder.build()).queue();
     }

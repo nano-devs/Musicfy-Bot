@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import service.music.GuildMusicManager;
@@ -62,7 +63,7 @@ public class NanoClient {
      * @param requester User who request the song.
      */
     public void loadAndPlayUrl(GuildMusicManager musicManager, final TextChannel channel,
-                               final String trackUrl, User requester) {
+                               final String trackUrl, Member requester) {
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
@@ -73,10 +74,11 @@ public class NanoClient {
 
                 if (channel != null) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setColor(requester.getColor());
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                            requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
 
                     embedBuilder.addField("Channel", track.getInfo().author, true);
                     embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
@@ -119,7 +121,7 @@ public class NanoClient {
      * @param requester User, requester.
      */
     public void loadAndPlayKeywords(GuildMusicManager musicManager, final TextChannel channel,
-                               final String keywords, User requester) {
+                               final String keywords, Member requester) {
         playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
@@ -133,8 +135,8 @@ public class NanoClient {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                            requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
 
                     embedBuilder.addField("Channel", track.getInfo().author, true);
                     embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
@@ -162,8 +164,8 @@ public class NanoClient {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                            requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
 
                     embedBuilder.addField("Channel", track.getInfo().author, true);
                     embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);

@@ -47,6 +47,15 @@ public class YouTubeSearchCommand extends Command
     protected void execute(CommandEvent event)
     {
         String keywords = event.getArgs();
+        if (keywords.isEmpty()) {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(event.getMember().getColor());
+            embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
+                    + event.getClient().getPrefix() + this.name + " " + this.arguments, true);
+            event.reply(embedBuilder.build());
+            return;
+        }
+
         // remove coma "," in args if exist
         if (keywords.contains(","))
         {
@@ -130,7 +139,7 @@ public class YouTubeSearchCommand extends Command
 
                     // get selected video detail
                     GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
-                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getAuthor());
+                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getMember());
                 },
                 10, TimeUnit.SECONDS, () ->
                         msg.get().delete().queue()

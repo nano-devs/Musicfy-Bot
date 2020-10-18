@@ -93,7 +93,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             for (int i = 0; i < tracks.size(); i++)
             {
                 PremiumService.addHistory(tracks.get(i).title, tracks.get(i).url, event);
-                this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getAuthor());
+                this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getMember());
             }
             event.reply(embed.build());
         }
