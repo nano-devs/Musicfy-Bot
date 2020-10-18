@@ -34,23 +34,25 @@ public class PremiumService
      */
     public static void addHistory(String title, String url, CommandEvent event)
     {
-        // insert track to database
-        TrackModel trackModel = new TrackModel();
-        trackModel.addTrack(title, url);
-        long trackId = trackModel.getTrackId(url);
+        CompletableFuture.runAsync(() -> {
+            // insert track to database
+            TrackModel trackModel = new TrackModel();
+            trackModel.addTrack(title, url);
+            long trackId = trackModel.getTrackId(url);
 
-        PremiumModel db = new PremiumModel();
-        if (db.isPremium(event.getGuild().getIdLong(), "GUILD"))
-        {
-            GuildHistoryModel guild = new GuildHistoryModel();
-            guild.addGuildHistory(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
-        }
+            PremiumModel db = new PremiumModel();
+            if (db.isPremium(event.getGuild().getIdLong(), "GUILD"))
+            {
+                GuildHistoryModel guild = new GuildHistoryModel();
+                guild.addGuildHistory(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
+            }
 
-        if (db.isPremium(event.getAuthor().getIdLong(), "USER"))
-        {
-            UserHistoryModel user = new UserHistoryModel();
-            user.addUserHistory(event.getAuthor().getIdLong(), trackId);
-        }
+            if (db.isPremium(event.getAuthor().getIdLong(), "USER"))
+            {
+                UserHistoryModel user = new UserHistoryModel();
+                user.addUserHistory(event.getAuthor().getIdLong(), trackId);
+            }
+        });
     }
 
     /**

@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
 import java.awt.*;
+import java.util.concurrent.CompletableFuture;
 
 public class GuildHistoryCommand extends Command
 {
@@ -30,15 +31,18 @@ public class GuildHistoryCommand extends Command
     @Override
     protected void execute(CommandEvent event)
     {
-        GuildHistoryModel db = new GuildHistoryModel();
-        String message = db.GetGuildHistory(event.getGuild().getIdLong(), event.getJDA());
+        CompletableFuture.runAsync(() ->
+        {
+            GuildHistoryModel db = new GuildHistoryModel();
+            String message = db.GetGuildHistory(event.getGuild().getIdLong(), event.getJDA());
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
-        embed.setTitle(":calendar_spiral: Your " + event.getGuild().getName() + " guild history");
-        embed.setThumbnail(event.getGuild().getIconUrl());
-        embed.setDescription(message);
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setColor(event.getMember().getColor());
+            embed.setTitle(":calendar_spiral: Your " + event.getGuild().getName() + " guild history");
+            embed.setThumbnail(event.getGuild().getIconUrl());
+            embed.setDescription(message);
 
-        event.replyInDm(embed.build());
+            event.replyInDm(embed.build());
+        });
     }
 }
