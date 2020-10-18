@@ -29,7 +29,7 @@ public class UserHistoryCommand extends Command
         String message = db.GetUserHistory(event.getAuthor().getIdLong());
 
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.MAGENTA);
+        embed.setColor(event.getMember().getColor());
         embed.setTitle(":calendar_spiral: Your history");
         embed.setThumbnail(event.getAuthor().getAvatarUrl());
         embed.setDescription(message);

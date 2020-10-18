@@ -26,6 +26,7 @@ public class ShowPlaylistCommand extends GuildPlaylistBaseCommand
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)

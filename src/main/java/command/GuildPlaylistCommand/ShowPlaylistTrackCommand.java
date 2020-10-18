@@ -29,6 +29,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         String playlistName = event.getArgs().trim();
 
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)

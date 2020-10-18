@@ -34,7 +34,7 @@ public class GuildHistoryCommand extends Command
         String message = db.GetGuildHistory(event.getGuild().getIdLong(), event.getJDA());
 
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.MAGENTA);
+        embed.setColor(event.getMember().getColor());
         embed.setTitle(":calendar_spiral: Your " + event.getGuild().getName() + " guild history");
         embed.setThumbnail(event.getGuild().getIconUrl());
         embed.setDescription(message);

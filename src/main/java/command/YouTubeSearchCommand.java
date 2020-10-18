@@ -63,6 +63,7 @@ public class YouTubeSearchCommand extends Command
         {
             e.printStackTrace();
             EmbedBuilder temp = new EmbedBuilder();
+            temp.setColor(event.getMember().getColor());
             temp.setTitle("Failed");
             temp.addField(
                     ":x:",
@@ -74,7 +75,7 @@ public class YouTubeSearchCommand extends Command
 
         // create embed message
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.MAGENTA);
+        embed.setColor(event.getMember().getColor());
         embed.setTitle("Song selection | Reply the song number to continue");
         embed.setFooter("Song selection | Type the number to continue");
         embed.setDescription("");
