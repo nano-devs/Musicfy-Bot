@@ -67,6 +67,11 @@ public class NanoClient {
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
+                if (track.getDuration() > 900000) {
+                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
+                    channel.sendMessage(errorMessage).queue();
+                    return;
+                }
                 track.setUserData(requester);
                 musicManager.scheduler.queue(track);
 
@@ -92,12 +97,17 @@ public class NanoClient {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
+                int skipCounter = 0;
                 for (AudioTrack track : playlist.getTracks()) {
+                    if (track.getDuration() > 900000) {
+                        skipCounter += 1;
+                        continue;
+                    }
                     track.setUserData(requester);
                     musicManager.scheduler.queue(track);
                 }
                 if (channel != null)
-                    channel.sendMessage(":white_check_mark: | " + String.valueOf(playlist.getTracks().size()) +
+                    channel.sendMessage(":white_check_mark: | " + String.valueOf(playlist.getTracks().size() - skipCounter) +
                             " entries from **"+ playlist.getName() + "** has been added to queue").queue();
             }
 
@@ -125,7 +135,11 @@ public class NanoClient {
         playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-
+                if (track.getDuration() > 900000) {
+                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
+                    channel.sendMessage(errorMessage).queue();
+                    return;
+                }
                 track.setUserData(requester);
 
                 musicManager.scheduler.queue(track);
@@ -153,6 +167,11 @@ public class NanoClient {
                 AudioTrack track = playlist.getSelectedTrack();
                 if (track == null) {
                     track = playlist.getTracks().get(0);
+                }
+                if (track.getDuration() > 900000) {
+                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
+                    channel.sendMessage(errorMessage).queue();
+                    return;
                 }
                 track.setUserData(requester);
 
