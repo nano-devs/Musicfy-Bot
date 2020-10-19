@@ -7,13 +7,11 @@ import com.jagrosh.jdautilities.menu.Paginator;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.MusicUtils;
 
-import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 public class ShowQueueCommand extends Command {
