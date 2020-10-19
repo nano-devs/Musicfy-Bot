@@ -11,6 +11,7 @@ import service.music.HelpProcess;
 import service.music.PremiumService;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class PlayPlaylistCommand extends UserPlaylistBaseCommand
 {
@@ -32,71 +33,74 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setColor(event.getMember().getColor());
+            PremiumModel premium = new PremiumModel();
 
-        if (event.getArgs().trim().length() <= 0)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "Please give playlist name you want to to play.",
-                    true);
-            return;
-        }
-
-        PlaylistModel db = new PlaylistModel();
-
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "There's no playlist with name `" + event.getArgs().trim() + "`.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
-
-        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table);
-
-        if (tracks.size() <= 0)
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                ":x:",
-                "There's no track in playlist `" + event.getArgs().trim() + "`.",
-                true);
-            event.reply(embed.build());
-        }
-        else
-        {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Add " + tracks.size() + " track to queue.",
-                    true);
-
-            GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
-
-            for (int i = 0; i < tracks.size(); i++)
+            if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
             {
-                PremiumService.addHistory(tracks.get(i).title, tracks.get(i).url, event);
-                this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getAuthor());
+                embed.setTitle("Attention");
+                embed.addField(
+                        ":warning:",
+                        "You are not premium, you can't use this command.",
+                        true);
+                event.reply(embed.build());
+                return;
             }
-            event.reply(embed.build());
-        }
+
+            if (event.getArgs().trim().length() <= 0)
+            {
+                embed.setTitle("Attention");
+                embed.addField(
+                        ":warning:",
+                        "Please give playlist name you want to to play.",
+                        true);
+                return;
+            }
+
+            PlaylistModel db = new PlaylistModel();
+
+            if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
+            {
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "There's no playlist with name `" + event.getArgs().trim() + "`.",
+                        true);
+                event.reply(embed.build());
+                return;
+            }
+
+            ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table);
+
+            if (tracks.size() <= 0)
+            {
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "There's no track in playlist `" + event.getArgs().trim() + "`.",
+                        true);
+                event.reply(embed.build());
+            }
+            else
+            {
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Add " + tracks.size() + " track to queue.",
+                        true);
+
+                GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
+
+                for (int i = 0; i < tracks.size(); i++)
+                {
+                    PremiumService.addHistory(tracks.get(i).title, tracks.get(i).url, event);
+                    this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getAuthor());
+                }
+                event.reply(embed.build());
+            }
+        });
     }
 }

@@ -6,6 +6,8 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
+import java.util.concurrent.CompletableFuture;
+
 public class AddPlaylistCommand extends UserPlaylistBaseCommand
 {
     private final int maxPlaylist = 3;
@@ -25,62 +27,65 @@ public class AddPlaylistCommand extends UserPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setColor(event.getMember().getColor());
+            PremiumModel premium = new PremiumModel();
+
+            if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
+            {
+                embed.setTitle("Attention");
+                embed.addField(
+                        ":warning:",
+                        "You are not premium, you can't use this command.",
+                        true);
+                event.reply(embed.build());
+                return;
+            }
+
+            if (event.getArgs().trim().length() == 0)
+            {
+                embed.setTitle("Attention");
+                embed.addField(
+                        ":warning:",
+                        "Please give a name to playlist.",
+                        true);
+                event.reply(embed.build());
+                return;
+            }
+
+            PlaylistModel db = new PlaylistModel();
+
+            if (db.countPlaylist(event.getAuthor().getIdLong(), this.table) >= this.maxPlaylist)
+            {
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "You have reached the maximum limit for playlist allocated to each user.",
+                        true);
+                event.reply(embed.build());
+                return;
+            }
+
+            String name = event.getArgs().trim().replace("'", "\\'");
+            if (db.addPlaylist(event.getAuthor().getIdLong(), name.trim(), this.table))
+            {
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Playlist `" + event.getArgs().trim() + "` created.",
+                        true);
+            }
+            else
+            {
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "There's already playlist with name `" + event.getArgs().trim() + "`.",
+                        true);
+            }
             event.reply(embed.build());
-            return;
-        }
-
-        if (event.getArgs().trim().length() == 0)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "Please give a name to playlist.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
-
-        PlaylistModel db = new PlaylistModel();
-
-        if (db.countPlaylist(event.getAuthor().getIdLong(), this.table) >= this.maxPlaylist)
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "You have reached the maximum limit for playlist allocated to each user.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
-
-        String name = event.getArgs().trim().replace("'", "\\'");
-        if (db.addPlaylist(event.getAuthor().getIdLong(), name.trim(), this.table))
-        {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Playlist `" + event.getArgs().trim() + "` created.",
-                    true);
-        }
-        else
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "There's already playlist with name `" + event.getArgs().trim() + "`.",
-                    true);
-        }
-        event.reply(embed.build());
+        });
     }
 }

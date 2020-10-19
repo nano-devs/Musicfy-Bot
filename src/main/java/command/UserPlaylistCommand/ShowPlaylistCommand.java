@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class ShowPlaylistCommand extends UserPlaylistBaseCommand
 {
@@ -24,46 +25,49 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setColor(event.getMember().getColor());
+            PremiumModel premium = new PremiumModel();
 
-        PlaylistModel db = new PlaylistModel();
-        ArrayList<Playlist> playlists = db.getAllPlaylist(event.getAuthor().getIdLong(), this.table);
-
-        if (playlists == null || playlists.size() <= 0)
-        {
-            embed.setTitle("Empty");
-            embed.addField(
-                    ":x:",
-                    "You have no playlist.",
-                    true);
-        }
-        else
-        {
-            embed.setTitle("Your playlist :notes:");
-            StringBuilder output = new StringBuilder();
-
-            for (int i = 0; i < playlists.size(); i++)
+            if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
             {
-                output.append((i + 1) + ". ");
-                output.append("**" + playlists.get(i).name + "**");
-                output.append(" `ID: " + playlists.get(i).id + "`");
-                output.append("\n");
+                embed.setTitle("Attention");
+                embed.addField(
+                        ":warning:",
+                        "You are not premium, you can't use this command.",
+                        true);
+                event.reply(embed.build());
+                return;
             }
-            embed.setDescription(output.toString());
-        }
-        event.reply(embed.build());
+
+            PlaylistModel db = new PlaylistModel();
+            ArrayList<Playlist> playlists = db.getAllPlaylist(event.getAuthor().getIdLong(), this.table);
+
+            if (playlists == null || playlists.size() <= 0)
+            {
+                embed.setTitle("Empty");
+                embed.addField(
+                        ":x:",
+                        "You have no playlist.",
+                        true);
+            }
+            else
+            {
+                embed.setTitle("Your playlist :notes:");
+                StringBuilder output = new StringBuilder();
+
+                for (int i = 0; i < playlists.size(); i++)
+                {
+                    output.append((i + 1) + ". ");
+                    output.append("**" + playlists.get(i).name + "**");
+                    output.append(" `ID: " + playlists.get(i).id + "`");
+                    output.append("\n");
+                }
+                embed.setDescription(output.toString());
+            }
+            event.reply(embed.build());
+        });
     }
 }
