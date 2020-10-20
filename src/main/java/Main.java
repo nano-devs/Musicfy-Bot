@@ -36,7 +36,7 @@ public class Main {
         // Initialize Dependencies
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter(exec, true));
-        YouTubeSearchClient YouTubeSearchClient = new YouTubeSearchClient(ytToken);
+        YoutubeClient youtubeClient = new YoutubeClient();
 //        DiscordBotListAPI dblApi = new DiscordBotListAPI.Builder()
 //                .token(dblToken)
 //                .botId("473023109666963467")
@@ -51,6 +51,7 @@ public class Main {
         commandClientBuilder.setCoOwnerIds("456130311365984267");
         commandClientBuilder.setActivity(Activity.listening("..help"));
 
+        // Add Command & Inject Dependencies.
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));
@@ -59,11 +60,12 @@ public class Main {
         commandClientBuilder.addCommand(new SkipCommand(nano));
         commandClientBuilder.addCommand(new PauseCommand(nano));
         commandClientBuilder.addCommand(new ResumeCommand(nano));
-        commandClientBuilder.addCommand(new YouTubeSearchCommand(nano, YouTubeSearchClient));
+        commandClientBuilder.addCommand(new YoutubeSearchCommand(nano, youtubeClient));
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
         commandClientBuilder.addCommand(new RepeatCommand(nano));
         commandClientBuilder.addCommand(new ShowQueueCommand(nano));
         commandClientBuilder.addCommand(new ShuffleCommand(nano));
+        commandClientBuilder.addCommand(new RecommendationCommand(nano, youtubeClient));
         commandClientBuilder.addCommand(new PremiumUserCommand());
         commandClientBuilder.addCommand(new PremiumGuildCommand());
         commandClientBuilder.addCommand(new UserHistoryCommand());

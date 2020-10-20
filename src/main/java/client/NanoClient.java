@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import service.music.GuildMusicManager;
@@ -62,10 +63,15 @@ public class NanoClient {
      * @param requester User who request the song.
      */
     public void loadAndPlayUrl(GuildMusicManager musicManager, final TextChannel channel,
-                               final String trackUrl, User requester) {
+                               final String trackUrl, Member requester) {
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
+                if (track.getDuration() > 900000) {
+                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
+                    channel.sendMessage(errorMessage).queue();
+                    return;
+                }
                 track.setUserData(requester);
                 musicManager.scheduler.queue(track);
 
@@ -73,10 +79,11 @@ public class NanoClient {
 
                 if (channel != null) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setColor(requester.getColor());
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                            requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
 
                     embedBuilder.addField("Channel", track.getInfo().author, true);
                     embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
@@ -90,23 +97,28 @@ public class NanoClient {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
+                int skipCounter = 0;
                 for (AudioTrack track : playlist.getTracks()) {
+                    if (track.getDuration() > 900000) {
+                        skipCounter += 1;
+                        continue;
+                    }
                     track.setUserData(requester);
                     musicManager.scheduler.queue(track);
                 }
                 if (channel != null)
-                    channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
+                    channel.sendMessage(":white_check_mark: | " + String.valueOf(playlist.getTracks().size() - skipCounter) +
                             " entries from **"+ playlist.getName() + "** has been added to queue").queue();
             }
 
             @Override
             public void noMatches() {
-                channel.sendMessage("Nothing found by " + trackUrl).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Nothing found by " + trackUrl).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Could not play: " + exception.getMessage()).queue();
             }
         });
     }
@@ -119,11 +131,15 @@ public class NanoClient {
      * @param requester User, requester.
      */
     public void loadAndPlayKeywords(GuildMusicManager musicManager, final TextChannel channel,
-                               final String keywords, User requester) {
+                               final String keywords, Member requester) {
         playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-
+                if (track.getDuration() > 900000) {
+                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
+                    channel.sendMessage(errorMessage).queue();
+                    return;
+                }
                 track.setUserData(requester);
 
                 musicManager.scheduler.queue(track);
@@ -133,8 +149,8 @@ public class NanoClient {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                            requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
 
                     embedBuilder.addField("Channel", track.getInfo().author, true);
                     embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
@@ -152,6 +168,11 @@ public class NanoClient {
                 if (track == null) {
                     track = playlist.getTracks().get(0);
                 }
+                if (track.getDuration() > 900000) {
+                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
+                    channel.sendMessage(errorMessage).queue();
+                    return;
+                }
                 track.setUserData(requester);
 
                 musicManager.scheduler.queue(track);
@@ -162,8 +183,8 @@ public class NanoClient {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
-                    embedBuilder.setAuthor("Added to queue", requester.getEffectiveAvatarUrl(),
-                            requester.getEffectiveAvatarUrl());
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
 
                     embedBuilder.addField("Channel", track.getInfo().author, true);
                     embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
@@ -177,12 +198,12 @@ public class NanoClient {
 
             @Override
             public void noMatches() {
-                channel.sendMessage("Nothing found by " + keywords).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Nothing found by " + keywords).queue();
             }
 
             @Override
             public void loadFailed(FriendlyException exception) {
-                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
+                channel.sendMessage(":negative_squared_cross_mark: | Could not play: " + exception.getMessage()).queue();
             }
         });
     }

@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.jsoup.internal.StringUtil;
 
@@ -64,15 +65,16 @@ public class GuildMusicManager {
         String description = "[" + player.getPlayingTrack().getInfo().title + "]("
                 + player.getPlayingTrack().getInfo().uri + ")\n\n";
         description += getProgressBar() + "\n";
-        User requester = player.getPlayingTrack().getUserData(User.class);
+        Member requester = player.getPlayingTrack().getUserData(Member.class);
 
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle(announcement);
-        embedBuilder.setAuthor(requester.getName(), requester.getAvatarUrl(), requester.getAvatarUrl());
+        embedBuilder.setAuthor(requester.getUser().getName(),
+                requester.getUser().getAvatarUrl(), requester.getUser().getAvatarUrl());
         embedBuilder.setDescription(description);
         embedBuilder.setFooter("Source: " + player.getPlayingTrack().getInfo().author);
 
-        embedBuilder.setColor(Color.MAGENTA);
+        embedBuilder.setColor(event.getMember().getColor());
 
         event.getChannel().sendMessage(embedBuilder.build()).queue();
     }

@@ -3,6 +3,7 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
@@ -33,7 +34,7 @@ public class SkipCommand extends Command {
             return;
         }
         User requester = event.getAuthor();
-        User nowPlayRequester = musicManager.player.getPlayingTrack().getUserData(User.class);
+        Member nowPlayRequester = musicManager.player.getPlayingTrack().getUserData(Member.class);
         if (requester.getId().equals(nowPlayRequester.getId())) {
             musicManager.scheduler.nextTrack();
             event.getMessage().addReaction("U+23ED").queue();

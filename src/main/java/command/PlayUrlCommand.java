@@ -3,6 +3,7 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -17,8 +18,8 @@ public class PlayUrlCommand extends Command {
     public PlayUrlCommand(NanoClient nanoClient) {
         this.nanoClient = nanoClient;
 
-        this.name = "purl";
-        this.help = "Stands for `play_url`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
+        this.name = "play_url";
+        this.help = "Stands for `purl`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
         this.aliases = new String[] {"url", "play_url", "playurl"};
         this.cooldown = 2;
         this.arguments = "<url>";
@@ -31,7 +32,17 @@ public class PlayUrlCommand extends Command {
     protected void execute(CommandEvent event) {
         VoiceChannel channel = event.getMember().getVoiceState().getChannel();
         if (channel == null) {
-            event.reply("You're not connected to any voice channel");
+            event.reply(":x: | You're not connected to any voice channel");
+            return;
+        }
+
+        String args = event.getArgs();
+        if (args.isEmpty()) {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(event.getMember().getColor());
+            embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
+                    + event.getClient().getPrefix() + this.name + " " + this.arguments, true);
+            event.reply(embedBuilder.build());
             return;
         }
 
@@ -47,6 +58,6 @@ public class PlayUrlCommand extends Command {
         PremiumService.addHistory("", event.getArgs(), event);
 
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
-        nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), event.getArgs(), event.getAuthor());
+        nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), args, event.getMember());
     }
 }

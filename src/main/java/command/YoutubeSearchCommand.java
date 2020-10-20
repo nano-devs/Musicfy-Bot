@@ -24,13 +24,13 @@ import java.util.concurrent.atomic.AtomicReference;
 public class YoutubeSearchCommand extends Command
 {
     private final int maxVideoResult = 5;
-    private final YouTubeSearchClient youtube;
+    YoutubeClient youtubeClient;
     private final NanoClient nano;
 
-    public YoutubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube)
+    public YoutubeSearchCommand(NanoClient nano, YoutubeClient youtubeClient)
     {
         this.nano = nano;
-        this.youtube = youtube;
+        this.youtubeClient = youtubeClient;
 
         this.name = "search";
         this.aliases = new String[]{"yts", "s"};
@@ -46,13 +46,21 @@ public class YoutubeSearchCommand extends Command
     protected void execute(CommandEvent event)
     {
         String keywords = event.getArgs();
+        if (keywords.isEmpty()) {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(event.getMember().getColor());
+            embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
+                    + event.getClient().getPrefix() + this.name + " " + this.arguments, true);
+            event.reply(embedBuilder.build());
+            return;
+        }
+
         // remove coma "," in args if exist
         if (keywords.contains(","))
         {
             keywords = keywords.replace(",", " ");
         }
 
-        YoutubeClient youtubeClient = new YoutubeClient();
         List<YoutubeVideo> videos = null;
         try
         {
@@ -130,7 +138,7 @@ public class YoutubeSearchCommand extends Command
 
                     // get selected video detail
                     GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
-                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getAuthor());
+                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getMember());
                 },
                 10, TimeUnit.SECONDS, () ->
                         msg.get().delete().queue()
