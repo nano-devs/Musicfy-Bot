@@ -21,13 +21,13 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Search video from youtube based on keyword.
  */
-public class YouTubeSearchCommand extends Command
+public class YoutubeSearchCommand extends Command
 {
     private final int maxVideoResult = 5;
     private final YouTubeSearchClient youtube;
     private final NanoClient nano;
 
-    public YouTubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube)
+    public YoutubeSearchCommand(NanoClient nano, YouTubeSearchClient youtube)
     {
         this.nano = nano;
         this.youtube = youtube;
