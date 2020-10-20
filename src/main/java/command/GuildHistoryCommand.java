@@ -31,18 +31,15 @@ public class GuildHistoryCommand extends Command
     @Override
     protected void execute(CommandEvent event)
     {
-        CompletableFuture.runAsync(() ->
-        {
-            GuildHistoryModel db = new GuildHistoryModel();
-            String message = db.GetGuildHistory(event.getGuild().getIdLong(), event.getJDA());
+        GuildHistoryModel db = new GuildHistoryModel();
+        String message = db.GetGuildHistory(event.getGuild().getIdLong(), event.getJDA());
 
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(event.getMember().getColor());
-            embed.setTitle(":calendar_spiral: Your " + event.getGuild().getName() + " guild history");
-            embed.setThumbnail(event.getGuild().getIconUrl());
-            embed.setDescription(message);
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
+        embed.setTitle(":calendar_spiral: Your " + event.getGuild().getName() + " guild history");
+        embed.setThumbnail(event.getGuild().getIconUrl());
+        embed.setDescription(message);
 
-            event.replyInDm(embed.build());
-        });
+        event.replyInDm(embed.build());
     }
 }

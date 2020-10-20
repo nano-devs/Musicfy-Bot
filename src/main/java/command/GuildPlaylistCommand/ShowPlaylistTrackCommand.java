@@ -7,8 +7,7 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
-import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;;
 
 public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
 {
@@ -27,74 +26,71 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        CompletableFuture.runAsync(() ->
+        String playlistName = event.getArgs().trim();
+
+        EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
+        PremiumModel premium = new PremiumModel();
+
+        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
         {
-            String playlistName = event.getArgs().trim();
-
-            EmbedBuilder embed = new EmbedBuilder();
-            embed.setColor(event.getMember().getColor());
-            PremiumModel premium = new PremiumModel();
-
-            if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
-            {
-                embed.setTitle("Attention");
-                embed.addField(
-                        ":warning:",
-                        "You are not premium, you can't use this command.",
-                        true);
-                event.reply(embed.build());
-                return;
-            }
-
-            if (playlistName.length() <= 0)
-            {
-                embed.setTitle("Attention");
-                embed.addField(
-                        ":warning:",
-                        "Please give playlist name.",
-                        true);
-                event.reply(embed.build());
-                return;
-            }
-
-            PlaylistModel db = new PlaylistModel();
-
-            if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
-            {
-                embed.setTitle("Failed");
-                embed.addField(
-                        ":x:",
-                        "Playlist with name `" + playlistName + "` is not exist.",
-                        true);
-                event.reply(embed.build());
-                return;
-            }
-
-            ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
-
-            if (tracks.size() <= 0)
-            {
-                embed.setTitle("Empty");
-                embed.addField(
-                        ":x:",
-                        "No track inside playlist.",
-                        true);
-            }
-            else
-            {
-                embed.setTitle("Playlist `" + playlistName + "`");
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < tracks.size(); i++)
-                {
-                    sb.append((i + 1) + ". ");
-                    sb.append("**" + tracks.get(i).title + "**");
-                    sb.append(" `ID :" + tracks.get(i).trackId + "`");
-                    sb.append("\n");
-                }
-                embed.setDescription(sb.toString());
-            }
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "You are not premium, you can't use this command.",
+                    true);
             event.reply(embed.build());
-        });
+            return;
+        }
+
+        if (playlistName.length() <= 0)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "Please give playlist name.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
+        PlaylistModel db = new PlaylistModel();
+
+        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "Playlist with name `" + playlistName + "` is not exist.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
+        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
+
+        if (tracks.size() <= 0)
+        {
+            embed.setTitle("Empty");
+            embed.addField(
+                    ":x:",
+                    "No track inside playlist.",
+                    true);
+        }
+        else
+        {
+            embed.setTitle("Playlist `" + playlistName + "`");
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < tracks.size(); i++)
+            {
+                sb.append((i + 1) + ". ");
+                sb.append("**" + tracks.get(i).title + "**");
+                sb.append(" `ID :" + tracks.get(i).trackId + "`");
+                sb.append("\n");
+            }
+            embed.setDescription(sb.toString());
+        }
+        event.reply(embed.build());
     }
 }
