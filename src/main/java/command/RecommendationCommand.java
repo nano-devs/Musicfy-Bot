@@ -54,7 +54,11 @@ public class RecommendationCommand extends Command {
         // if user is not registered. make new user record and recommend.
         if (classicUser == null) {
             CompletableFuture.runAsync(() -> {
-                userModel.create(event.getAuthor().getIdLong(), 0, 0);
+                try {
+                    userModel.create(event.getAuthor().getIdLong(), 0, 0);
+                } catch (SQLException sqlException) {
+                    sqlException.printStackTrace();
+                }
             });
             recommend(event);
             return;
@@ -64,8 +68,12 @@ public class RecommendationCommand extends Command {
         if (classicUser.getDailyQuota() > 0) {
             // Update quota & recommend
             CompletableFuture.runAsync(() -> {
-                userModel.updateDailyQuota(classicUser.getId(),
-                        classicUser.getDailyQuota() - 1);
+                try {
+                    userModel.updateDailyQuota(classicUser.getId(),
+                            classicUser.getDailyQuota() - 1);
+                } catch (SQLException sqlException) {
+                    sqlException.printStackTrace();
+                }
             });
             recommend(event);
             return;
@@ -79,8 +87,12 @@ public class RecommendationCommand extends Command {
 
         // if quota is available
         CompletableFuture.runAsync(() -> {
-           userModel.updateRecommendationQuota(classicUser.getId(),
-                   classicUser.getRecommendationQuota() - 1);
+            try {
+                userModel.updateRecommendationQuota(classicUser.getId(),
+                        classicUser.getRecommendationQuota() - 1);
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         });
         recommend(event);
     }
