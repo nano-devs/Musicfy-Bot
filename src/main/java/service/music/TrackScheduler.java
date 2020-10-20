@@ -76,8 +76,8 @@ public class TrackScheduler extends AudioEventAdapter {
         if (endReason.mayStartNext) {
             nextTrack();
         } else {
-            System.out.println(endReason.name());
-            System.out.println("May not start next!");
+//            System.out.println(endReason.name());
+//            System.out.println("May not start next!");
         }
     }
 
@@ -90,7 +90,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         super.onTrackException(player, track, exception);
 
-        System.out.println("TrackException: " + exception.getMessage());
+//        System.out.println("TrackException: " + exception.getMessage());
         exception.printStackTrace();
     }
 
@@ -98,7 +98,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
         super.onTrackStuck(player, track, thresholdMs);
 
-        System.out.println(thresholdMs);
-        System.out.println("Stuck " + track.getInfo().title);
+//        System.out.println(thresholdMs);
+//        System.out.println("Stuck " + track.getInfo().title);
     }
 }
