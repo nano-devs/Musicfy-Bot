@@ -3,6 +3,8 @@ package database;
 import org.joda.time.DateTime;
 
 import java.sql.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * MYSQL database connection
@@ -61,27 +63,33 @@ public abstract class BaseModel
      */
     public int executeUpdateQuery(String query)
     {
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        AtomicInteger counter = new AtomicInteger();
+
+        CompletableFuture.runAsync(() ->
         {
-            try (PreparedStatement statement = connection.prepareStatement(query))
+            try (
+                    Connection connection = DriverManager.getConnection(
+                            this.url,
+                            this.username,
+                            this.password)
+            )
             {
-                int counter = statement.executeUpdate();
-                return counter;
+                try (PreparedStatement statement = connection.prepareStatement(query))
+                {
+                    counter.set(statement.executeUpdate());
+                }
             }
-        }
-        catch (SQLException e)
-        {
-            if (!e.getMessage().equals("Unhandled user-defined exception condition"))
+            catch (SQLException e)
             {
-                e.printStackTrace();
+                if (!e.getMessage().equals("Unhandled user-defined exception condition"))
+                {
+                    e.printStackTrace();
+                }
+                counter.set(-1);
             }
-        }
-        return -1;
+        });
+
+        return counter.get();
     }
 
 }
