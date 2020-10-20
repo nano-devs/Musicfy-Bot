@@ -6,6 +6,9 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+
 public class AddPlaylistCommand extends UserPlaylistBaseCommand
 {
     private final int maxPlaylist = 3;
@@ -65,22 +68,31 @@ public class AddPlaylistCommand extends UserPlaylistBaseCommand
         }
 
         String name = event.getArgs().trim().replace("'", "\\'");
-        if (db.addPlaylistAsync(event.getAuthor().getIdLong(), name.trim(), this.table))
+
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Playlist `" + event.getArgs().trim() + "` created.",
-                    true);
-        }
-        else
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "There's already playlist with name `" + event.getArgs().trim() + "`.",
-                    true);
-        }
-        event.reply(embed.build());
+            try
+            {
+                db.addPlaylistAsync(event.getAuthor().getIdLong(), name.trim(), this.table);
+
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Playlist `" + event.getArgs().trim() + "` created.",
+                        true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "There's already playlist with name `" + event.getArgs().trim() + "`.",
+                        true);
+            }
+
+            event.reply(embed.build());
+        });
     }
 }

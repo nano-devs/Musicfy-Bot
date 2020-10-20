@@ -6,6 +6,9 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+
 public class RenamePlaylistCommand extends UserPlaylistBaseCommand
 {
     public RenamePlaylistCommand()
@@ -55,22 +58,42 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
         String newName = event.getArgs().split(",")[1].trim();
 
         PlaylistModel db = new PlaylistModel();
-        if (db.renamePlaylistAsync(event.getAuthor().getIdLong(), oldName, newName, this.table))
-        {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Playlist renamed from `" + oldName + "` to `" + newName + "`.",
-                    true);
-        }
-        else
+
+        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), oldName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Can't rename playlist.",
+                    "Playlist `" + oldName + "` not exist.",
                     true);
+            event.reply(embed.build());
+            return;
         }
-        event.reply(embed.build());
+
+        CompletableFuture.runAsync(() ->
+        {
+            try
+            {
+                db.renamePlaylistAsync(event.getAuthor().getIdLong(), oldName, newName, this.table);
+
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Playlist renamed from `" + oldName + "` to `" + newName + "`.",
+                        true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "Can't rename playlist.",
+                        true);
+            }
+
+            event.reply(embed.build());
+        });
     }
 }

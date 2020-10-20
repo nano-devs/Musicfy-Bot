@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 
 import java.sql.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -61,35 +62,29 @@ public abstract class BaseModel
      * @param query SQL query
      * @return number of changed record
      */
-    public int executeUpdateQuery(String query)
+    public int executeUpdateQuery(String query) throws SQLException
     {
-        AtomicInteger counter = new AtomicInteger();
-
-        CompletableFuture.runAsync(() ->
+        try (
+                Connection connection = DriverManager.getConnection(
+                        this.url,
+                        this.username,
+                        this.password)
+        )
         {
-            try (
-                    Connection connection = DriverManager.getConnection(
-                            this.url,
-                            this.username,
-                            this.password)
-            )
+            try (PreparedStatement statement = connection.prepareStatement(query))
             {
-                try (PreparedStatement statement = connection.prepareStatement(query))
-                {
-                    counter.set(statement.executeUpdate());
-                }
+                int counter = statement.executeUpdate();
+                return counter;
             }
-            catch (SQLException e)
+        }
+        catch (SQLException e)
+        {
+            if (!e.getMessage().equals("Unhandled user-defined exception condition"))
             {
-                if (!e.getMessage().equals("Unhandled user-defined exception condition"))
-                {
-                    e.printStackTrace();
-                }
-                counter.set(-1);
+                throw new SQLException(e);
             }
-        });
-
-        return counter.get();
+        }
+        return -1;
     }
 
 }

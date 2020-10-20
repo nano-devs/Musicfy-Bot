@@ -7,6 +7,9 @@ import database.PlaylistModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
     private final int maxTrack = 20;
@@ -62,11 +65,22 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         long trackId = track.getTrackId(url);
         if (trackId <= 0)
         {
-            track.addTrackAsync(title, url);
+            CompletableFuture.runAsync(() ->
+            {
+                try
+                {
+                    track.addTrackAsync(title, url);
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
         trackId = track.getTrackId(url);
 
         PlaylistModel db = new PlaylistModel();
+
         if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Attention");
@@ -89,22 +103,30 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        if (db.addTrackToPlaylistAsync(event.getAuthor().getIdLong(), playlistName, trackId, this.table))
+        long finalTrackId = trackId;
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Track `" + title + "` added to playlist `" + playlistName + "`.",
-                    true);
-        }
-        else
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "Can't add track `" + title + "` to playlist `" + playlistName + "`.",
-                    true);
-        }
-        event.reply(embed.build());
+            try
+            {
+                db.addTrackToPlaylistAsync(event.getAuthor().getIdLong(), playlistName, finalTrackId, this.table);
+
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Track `" + title + "` added to playlist `" + playlistName + "`.",
+                        true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "Can't add track `" + title + "` to playlist `" + playlistName + "`.",
+                        true);
+            }
+
+            event.reply(embed.build());
+        });
     }
 }

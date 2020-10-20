@@ -4,6 +4,9 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PremiumModel;
 
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+
 public class PremiumGuildCommand extends Command
 {
     private String table = "GUILD";
@@ -25,13 +28,17 @@ public class PremiumGuildCommand extends Command
     protected void execute(CommandEvent event)
     {
         PremiumModel db = new PremiumModel();
-        if (db.addPremiumAsync(event.getGuild().getIdLong(), this.table))
+        CompletableFuture.runAsync(() ->
         {
-            event.reply("This guild become premium for one month");
-        }
-        else
-        {
-            event.reply("The guild is already have a premium membership.");
-        }
+            try
+            {
+                db.addPremiumAsync(event.getGuild().getIdLong(), this.table);
+                event.reply("This guild become premium for one month");
+            }
+            catch (SQLException e)
+            {
+                event.reply("The guild is already have a premium membership.");
+            }
+        });
     }
 }

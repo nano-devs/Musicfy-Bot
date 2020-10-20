@@ -5,7 +5,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PremiumModel;
 import net.dv8tion.jda.api.entities.Member;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class PremiumUserCommand extends Command
 {
@@ -36,29 +38,22 @@ public class PremiumUserCommand extends Command
             return;
         }
 
-        String user = "";
-        String failed = "";
-
         PremiumModel db = new PremiumModel();
         for (Member member : mention)
         {
-            if (db.addPremiumAsync(member.getIdLong(), this.table))
+            CompletableFuture.runAsync(() ->
             {
-                user += member.getAsMention() + " ";
-            }
-            else
-            {
-                failed += member.getAsMention() + " ";
-            }
-        }
-
-        if (user.length() > 1)
-        {
-            event.getChannel().sendMessage(user + "Become premium success.").queue();
-        }
-        else
-        {
-            event.getChannel().sendMessage(failed + " is already premium").queue();
+                try
+                {
+                    db.addPremiumAsync(member.getIdLong(), this.table);
+                    member.getUser().openPrivateChannel().queue(
+                            msg -> msg.sendMessage("You become premium user."));
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 }

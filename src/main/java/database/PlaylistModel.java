@@ -221,7 +221,7 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean addPlaylistAsync(long id, String name, String table)
+    public boolean addPlaylistAsync(long id, String name, String table) throws SQLException
     {
         String query =
                 "INSERT INTO " + table + "_PLAYLIST (" + table + "_ID, NAME) " +
@@ -334,7 +334,7 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean renamePlaylistAsync(long id, String oldName, String newName, String table)
+    public boolean renamePlaylistAsync(long id, String oldName, String newName, String table) throws SQLException
     {
         String query =
                 "UPDATE " + table + "_PLAYLIST " +
@@ -351,7 +351,7 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean deletePlaylistAsync(long id, String name, String table)
+    public boolean deletePlaylistAsync(long id, String name, String table) throws SQLException
     {
         String query =
                 "DELETE FROM " + table + "_PLAYLIST " +
@@ -367,7 +367,7 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean addTrackToPlaylistAsync(long playlistId, long trackId, String table)
+    public boolean addTrackToPlaylistAsync(long playlistId, long trackId, String table) throws SQLException
     {
         String query =
                 "INSERT INTO " + table + "_PLAYLIST_TRACK VALUES " +
@@ -383,7 +383,7 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean addTrackToPlaylistAsync(long id, String name, long trackId, String table)
+    public boolean addTrackToPlaylistAsync(long id, String name, long trackId, String table) throws SQLException
     {
         long playlistId = this.getPlaylistId(id, name, table);
         return this.addTrackToPlaylistAsync(playlistId, trackId, table);
@@ -486,7 +486,7 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean deleteTrackFromPlaylistAsync(long playlistId, long trackId, String table)
+    public boolean deleteTrackFromPlaylistAsync(long playlistId, long trackId, String table) throws SQLException
     {
         String query =
                 "DELETE FROM " +table + "_PLAYLIST_TRACK " +
@@ -503,7 +503,7 @@ public class PlaylistModel extends BaseModel
      * @param trackIndex track index to delete based on registered index by ShowPlaylistTrackCommand
      * @return
      */
-    public boolean deleteTrackFromPlaylistAsync(long id, String name, int trackIndex, String table)
+    public boolean deleteTrackFromPlaylistAsync(long id, String name, int trackIndex, String table) throws SQLException
     {
         long playlistId = this.getPlaylistId(id, name, table);
         long trackId = this.getTrackId(playlistId, name, trackIndex, table);
