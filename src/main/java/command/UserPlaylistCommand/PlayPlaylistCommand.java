@@ -33,6 +33,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
@@ -75,9 +76,9 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         {
             embed.setTitle("Failed");
             embed.addField(
-                ":x:",
-                "There's no track in playlist `" + event.getArgs().trim() + "`.",
-                true);
+                    ":x:",
+                    "There's no track in playlist `" + event.getArgs().trim() + "`.",
+                    true);
             event.reply(embed.build());
         }
         else

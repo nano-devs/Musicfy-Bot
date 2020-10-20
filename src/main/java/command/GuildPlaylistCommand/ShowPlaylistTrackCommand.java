@@ -7,7 +7,7 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
-import java.util.ArrayList;
+import java.util.ArrayList;;
 
 public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
 {
@@ -29,6 +29,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         String playlistName = event.getArgs().trim();
 
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)

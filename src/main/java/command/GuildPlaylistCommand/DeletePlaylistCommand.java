@@ -6,6 +6,9 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+
 public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
 {
     public DeletePlaylistCommand()
@@ -24,6 +27,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
@@ -60,22 +64,30 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.deletePlaylist(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Playlist `" + event.getArgs().trim() + "` deleted.",
-                    true);
-        }
-        else
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "Playlist `" + event.getArgs().trim() + "` not deleted.",
-                    true);
-        }
-        event.reply(embed.build());
+            try
+            {
+                db.deletePlaylistAsync(event.getGuild().getIdLong(), event.getArgs().trim(), this.table);
+
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Playlist `" + event.getArgs().trim() + "` deleted.",
+                        true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "Playlist `" + event.getArgs().trim() + "` not deleted.",
+                        true);
+            }
+
+            event.reply(embed.build());
+        });
     }
 }

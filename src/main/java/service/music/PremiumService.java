@@ -5,6 +5,7 @@ import database.*;
 import io.donatebot.api.DBClient;
 import io.donatebot.api.Donation;
 
+import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -34,22 +35,56 @@ public class PremiumService
      */
     public static void addHistory(String title, String url, CommandEvent event)
     {
-        // insert track to database
         TrackModel trackModel = new TrackModel();
-        trackModel.addTrack(title, url);
+        try
+        {
+            trackModel.addTrackAsync(title, url);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+//        CompletableFuture.runAsync(() ->
+//        {
+//
+//        });
+
         long trackId = trackModel.getTrackId(url);
 
         PremiumModel db = new PremiumModel();
+
         if (db.isPremium(event.getGuild().getIdLong(), "GUILD"))
         {
             GuildHistoryModel guild = new GuildHistoryModel();
-            guild.addGuildHistory(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
+
+            CompletableFuture.runAsync(() ->
+            {
+                try
+                {
+                    guild.addGuildHistoryAsync(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
 
         if (db.isPremium(event.getAuthor().getIdLong(), "USER"))
         {
             UserHistoryModel user = new UserHistoryModel();
-            user.addUserHistory(event.getAuthor().getIdLong(), trackId);
+
+            CompletableFuture.runAsync(() ->
+            {
+                try
+                {
+                    user.addUserHistoryAsync(event.getAuthor().getIdLong(), trackId);
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
@@ -89,11 +124,11 @@ public class PremiumService
                         long userId = Long.parseLong(item.getBuyerID());
                         if (db.isNew(userId, "USER"))
                         {
-                            result = db.addPremium(userId, "USER");
+                            result = db.addPremiumAsync(userId, "USER");
                         }
                         else
                         {
-                            result = db.renewSubscription(userId, "USER");
+                            result = db.renewSubscriptionAsync(userId, "USER");
                         }
                     }
                     // guild
@@ -102,11 +137,11 @@ public class PremiumService
                         long guildId = Long.parseLong(item.getBuyerID());
                         if (db.isNew(guildId, "GUILD"))
                         {
-                            result = db.addPremium(guildId, "GUILD");
+                            result = db.addPremiumAsync(guildId, "GUILD");
                         }
                         else
                         {
-                            result = db.renewSubscription(guildId, "GUILD");
+                            result = db.renewSubscriptionAsync(guildId, "GUILD");
                         }
                     }
 
@@ -119,6 +154,10 @@ public class PremiumService
                 System.out.println("Done");
             }
             catch (InterruptedException | ExecutionException e)
+            {
+                e.printStackTrace();
+            }
+            catch (SQLException e)
             {
                 e.printStackTrace();
             }

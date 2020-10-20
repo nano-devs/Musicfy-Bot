@@ -7,6 +7,9 @@ import database.TrackModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+
 public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
 {
     private final int maxTrack = 20;
@@ -28,6 +31,7 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
@@ -62,11 +66,22 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         long trackId = track.getTrackId(url);
         if (trackId <= 0)
         {
-            track.addTrack(title, url);
+            CompletableFuture.runAsync(() ->
+            {
+                try
+                {
+                    track.addTrackAsync(title, url);
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+                }
+            });
         }
         trackId = track.getTrackId(url);
 
         PlaylistModel db = new PlaylistModel();
+
         if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Attention");
@@ -89,22 +104,31 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.addTrackToPlaylist(event.getGuild().getIdLong(), playlistName, trackId, this.table))
+        long finalTrackId = trackId;
+
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Track `" + title + "` added to playlist `" + playlistName + "`.",
-                    true);
-        }
-        else
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "Can't add track `" + title + "` to playlist `" + playlistName + "`.",
-                    true);
-        }
-        event.reply(embed.build());
+            try
+            {
+                db.addTrackToPlaylistAsync(event.getGuild().getIdLong(), playlistName, finalTrackId, this.table);
+
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Track `" + title + "` added to playlist `" + playlistName + "`.",
+                        true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "Can't add track `" + title + "` to playlist `" + playlistName + "`.",
+                        true);
+            }
+            event.reply(embed.build());
+        });
     }
 }

@@ -18,7 +18,7 @@ public class GuildHistoryModel extends BaseModel
      * @param trackId Track id that the user play
      * @return
      */
-    public boolean addGuildHistory(long guidId, long userId, long trackId)
+    public boolean addGuildHistoryAsync(long guidId, long userId, long trackId) throws SQLException
     {
         String query =
                 "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, TRACK_ID) " +
@@ -86,22 +86,12 @@ public class GuildHistoryModel extends BaseModel
                     }
                     return history;
                 }
-//                catch (Exception e)
-//                {
-//                    e.printStackTrace();
-//                }
             }
-//            catch (Exception e)
-//            {
-//                e.printStackTrace();
-//            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
         return "";
     }
 }

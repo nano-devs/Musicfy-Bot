@@ -63,7 +63,7 @@ public class PremiumModel extends BaseModel
      * @param table "USER" or "GUILD"
      * @return
      */
-    public boolean addPremium(long id,  String table)
+    public boolean addPremiumAsync(long id, String table) throws SQLException
     {
         DateTime start = DateTime.now();
         DateTime end = start.plus(Months.ONE);
@@ -84,7 +84,7 @@ public class PremiumModel extends BaseModel
      * @param table "USER" or "GUILD"
      * @return true if success renew.
      */
-    public boolean renewSubscription(long id, String table)
+    public boolean renewSubscriptionAsync(long id, String table) throws SQLException
     {
         DateTime start = DateTime.now();
         DateTime end = start.plus(Months.ONE);

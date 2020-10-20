@@ -16,7 +16,7 @@ public class UserHistoryModel extends BaseModel
      * @param trackId Track id that the user play
      * @return true if success to insert data to database.
      */
-    public boolean addUserHistory(long userId, long trackId)
+    public boolean addUserHistoryAsync(long userId, long trackId) throws SQLException
     {
         String query =
                 "INSERT INTO USER_HISTORY (USER_ID, TRACK_ID) " +
@@ -81,22 +81,12 @@ public class UserHistoryModel extends BaseModel
                     }
                     return history;
                 }
-//                catch (Exception e)
-//                {
-//                    e.printStackTrace();
-//                }
             }
-//            catch (Exception e)
-//            {
-//                e.printStackTrace();
-//            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
-//        catch (Exception e)
-//        {
-//            e.printStackTrace();
-//        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
         return "";
     }
 }

@@ -28,6 +28,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
         String playlistName = event.getArgs().trim();
 
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)

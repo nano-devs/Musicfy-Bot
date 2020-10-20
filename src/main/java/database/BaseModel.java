@@ -3,6 +3,9 @@ package database;
 import org.joda.time.DateTime;
 
 import java.sql.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * MYSQL database connection
@@ -59,7 +62,7 @@ public abstract class BaseModel
      * @param query SQL query
      * @return number of changed record
      */
-    public int executeUpdateQuery(String query)
+    public int executeUpdateQuery(String query) throws SQLException
     {
         try (
                 Connection connection = DriverManager.getConnection(
@@ -78,7 +81,7 @@ public abstract class BaseModel
         {
             if (!e.getMessage().equals("Unhandled user-defined exception condition"))
             {
-                e.printStackTrace();
+                throw new SQLException(e);
             }
         }
         return -1;

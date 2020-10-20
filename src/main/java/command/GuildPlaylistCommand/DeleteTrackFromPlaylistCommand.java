@@ -6,6 +6,9 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+
 public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
 {
     public DeleteTrackFromPlaylistCommand()
@@ -25,6 +28,7 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
     protected void execute(CommandEvent event)
     {
         EmbedBuilder embed = new EmbedBuilder();
+        embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
         if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
@@ -66,22 +70,30 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.deleteTrackFromPlaylist(event.getGuild().getIdLong(), playlistName, index, this.table))
+        CompletableFuture.runAsync(() ->
         {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Track deleted from playlist `" + playlistName + "`",
-                    true);
-        }
-        else
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "Can't delete track from playlist `" + playlistName + "`.",
-                    true);
-        }
-        event.reply(embed.build());
+            try
+            {
+                db.deleteTrackFromPlaylistAsync(event.getGuild().getIdLong(), playlistName, index, this.table);
+
+                embed.setTitle("Success");
+                embed.addField(
+                        ":white_check_mark:",
+                        "Track deleted from playlist `" + playlistName + "`",
+                        true);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "Can't delete track from playlist `" + playlistName + "`.",
+                        true);
+            }
+
+            event.reply(embed.build());
+        });
     }
 }

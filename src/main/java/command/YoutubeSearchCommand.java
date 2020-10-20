@@ -13,7 +13,6 @@ import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.PremiumService;
 
-import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -71,6 +70,7 @@ public class YoutubeSearchCommand extends Command
         {
             e.printStackTrace();
             EmbedBuilder temp = new EmbedBuilder();
+            temp.setColor(event.getMember().getColor());
             temp.setTitle("Failed");
             temp.addField(
                     ":x:",
@@ -82,7 +82,7 @@ public class YoutubeSearchCommand extends Command
 
         // create embed message
         EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(Color.MAGENTA);
+        embed.setColor(event.getMember().getColor());
         embed.setTitle("Song selection | Reply the song number to continue");
         embed.setFooter("Song selection | Type the number to continue");
         embed.setDescription("");
