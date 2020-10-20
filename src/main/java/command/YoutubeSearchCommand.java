@@ -123,6 +123,15 @@ public class YoutubeSearchCommand extends Command
                         event.reply("Not joined int voice channel");
                     }
 
+                    GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
+                    if (musicManager.isQueueFull()) {
+                        EmbedBuilder embedBuilder = new EmbedBuilder();
+                        embedBuilder.setColor(event.getMember().getColor());
+                        embedBuilder.addField(":x: | Queue is full", "Maximum queue length is 60.", true);
+                        event.reply(embedBuilder.build());
+                        return;
+                    }
+
                     int entry = Integer.parseInt(e.getMessage().getContentRaw());
 
                     // check entry number
@@ -137,7 +146,6 @@ public class YoutubeSearchCommand extends Command
                     PremiumService.addHistory(finalVideos.get(entry).getTitle(), finalVideos.get(entry).getUrl(), event);
 
                     // get selected video detail
-                    GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
                     this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getMember());
                 },
                 10, TimeUnit.SECONDS, () ->

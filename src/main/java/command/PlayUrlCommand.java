@@ -46,6 +46,15 @@ public class PlayUrlCommand extends Command {
             return;
         }
 
+        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
+        if (musicManager.isQueueFull()) {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(event.getMember().getColor());
+            embedBuilder.addField(":x: | Queue is full", "Maximum queue length is 60.", true);
+            event.reply(embedBuilder.build());
+            return;
+        }
+
         // check if client is connected to any voice channel
         AudioManager guildAudioManager = event.getGuild().getAudioManager();
         VoiceChannel connectedChannel = guildAudioManager.getConnectedChannel();
@@ -57,7 +66,6 @@ public class PlayUrlCommand extends Command {
 
         PremiumService.addHistory("", event.getArgs(), event);
 
-        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
         nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), args, event.getMember());
     }
 }

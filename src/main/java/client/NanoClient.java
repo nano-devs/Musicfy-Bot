@@ -97,17 +97,20 @@ public class NanoClient {
 
             @Override
             public void playlistLoaded(AudioPlaylist playlist) {
-                int skipCounter = 0;
+                int addedSize = 0;
                 for (AudioTrack track : playlist.getTracks()) {
                     if (track.getDuration() > 900000) {
-                        skipCounter += 1;
                         continue;
                     }
                     track.setUserData(requester);
                     musicManager.scheduler.queue(track);
+                    addedSize += 1;
+                    if (musicManager.isQueueFull()) {
+                        break;
+                    }
                 }
                 if (channel != null)
-                    channel.sendMessage(":white_check_mark: | " + String.valueOf(playlist.getTracks().size() - skipCounter) +
+                    channel.sendMessage(":white_check_mark: | " + addedSize +
                             " entries from **"+ playlist.getName() + "** has been added to queue").queue();
             }
 

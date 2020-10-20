@@ -37,6 +37,8 @@ public class GuildMusicManager {
 
     private ScheduledFuture<?> waitingFuture;
 
+    private int maxQueueSize = 60;
+
     /**
      * Creates a player and a track scheduler.
      * @param manager Audio player manager to use for creating the player.
@@ -142,5 +144,9 @@ public class GuildMusicManager {
 
     public void setWaitingFuture(ScheduledFuture<?> waitingFuture) {
         this.waitingFuture = waitingFuture;
+    }
+
+    public boolean isQueueFull() {
+        return this.scheduler.getQueue().size() >= this.maxQueueSize;
     }
 }

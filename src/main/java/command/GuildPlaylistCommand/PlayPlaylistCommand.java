@@ -84,19 +84,22 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
         }
         else
         {
-            embed.setTitle("Success");
-            embed.addField(
-                    ":white_check_mark:",
-                    "Add " + tracks.size() + " track to queue.",
-                    true);
-
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
-
+            int addedSize = 0;
             for (int i = 0; i < tracks.size(); i++)
             {
                 PremiumService.addHistory(tracks.get(i).title, tracks.get(i).url, event);
                 this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getMember());
+                addedSize += 1;
+                if (musicManager.isQueueFull()) {
+                    break;
+                }
             }
+            embed.setTitle("Success");
+            embed.addField(
+                    ":white_check_mark:",
+                    "Add " + addedSize + " track to queue.",
+                    true);
             event.reply(embed.build());
         }
     }

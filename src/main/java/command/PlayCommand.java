@@ -46,6 +46,16 @@ public class PlayCommand extends Command {
             return;
         }
 
+        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
+
+        if (musicManager.isQueueFull()) {
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setColor(event.getMember().getColor());
+            embedBuilder.addField(":x: | Queue is full", "Maximum queue length is 60.", true);
+            event.reply(embedBuilder.build());
+            return;
+        }
+
         // check if client is connected to any voice channel
         AudioManager guildAudioManager = event.getGuild().getAudioManager();
         VoiceChannel connectedChannel = guildAudioManager.getConnectedChannel();
@@ -54,7 +64,6 @@ public class PlayCommand extends Command {
             // if not connected to any voice channel, try to join user voice channel.
             nanoClient.getMusicService().joinUserVoiceChannel(event);
         }
-        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
 
 
         String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
