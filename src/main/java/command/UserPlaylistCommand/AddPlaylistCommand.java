@@ -65,7 +65,7 @@ public class AddPlaylistCommand extends UserPlaylistBaseCommand
         }
 
         String name = event.getArgs().trim().replace("'", "\\'");
-        if (db.addPlaylist(event.getAuthor().getIdLong(), name.trim(), this.table))
+        if (db.addPlaylistAsync(event.getAuthor().getIdLong(), name.trim(), this.table))
         {
             embed.setTitle("Success");
             embed.addField(

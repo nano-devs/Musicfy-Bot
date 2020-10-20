@@ -35,7 +35,7 @@ public class PremiumService
     public static void addHistory(String title, String url, CommandEvent event)
     {
         TrackModel trackModel = new TrackModel();
-        trackModel.addTrack(title, url);
+        trackModel.addTrackAsync(title, url);
         long trackId = trackModel.getTrackId(url);
 
         PremiumModel db = new PremiumModel();
@@ -43,13 +43,13 @@ public class PremiumService
         if (db.isPremium(event.getGuild().getIdLong(), "GUILD"))
         {
             GuildHistoryModel guild = new GuildHistoryModel();
-            guild.addGuildHistory(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
+            guild.addGuildHistoryAsync(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
         }
 
         if (db.isPremium(event.getAuthor().getIdLong(), "USER"))
         {
             UserHistoryModel user = new UserHistoryModel();
-            user.addUserHistory(event.getAuthor().getIdLong(), trackId);
+            user.addUserHistoryAsync(event.getAuthor().getIdLong(), trackId);
         }
     }
 
@@ -89,11 +89,11 @@ public class PremiumService
                         long userId = Long.parseLong(item.getBuyerID());
                         if (db.isNew(userId, "USER"))
                         {
-                            result = db.addPremium(userId, "USER");
+                            result = db.addPremiumAsync(userId, "USER");
                         }
                         else
                         {
-                            result = db.renewSubscription(userId, "USER");
+                            result = db.renewSubscriptionAsync(userId, "USER");
                         }
                     }
                     // guild
@@ -102,11 +102,11 @@ public class PremiumService
                         long guildId = Long.parseLong(item.getBuyerID());
                         if (db.isNew(guildId, "GUILD"))
                         {
-                            result = db.addPremium(guildId, "GUILD");
+                            result = db.addPremiumAsync(guildId, "GUILD");
                         }
                         else
                         {
-                            result = db.renewSubscription(guildId, "GUILD");
+                            result = db.renewSubscriptionAsync(guildId, "GUILD");
                         }
                     }
 

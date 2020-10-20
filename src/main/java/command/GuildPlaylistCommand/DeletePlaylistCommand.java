@@ -6,8 +6,6 @@ import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
-import java.util.concurrent.CompletableFuture;
-
 public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
 {
     public DeletePlaylistCommand()
@@ -63,7 +61,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.deletePlaylist(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
+        if (db.deletePlaylistAsync(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
         {
             embed.setTitle("Success");
             embed.addField(

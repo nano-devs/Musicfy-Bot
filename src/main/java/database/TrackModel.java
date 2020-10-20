@@ -17,7 +17,7 @@ public class TrackModel extends BaseModel
      * @param url Link to the track/song
      * @return True if track added to database, False otherwise.
      */
-    public boolean addTrack(String title, String url)
+    public boolean addTrackAsync(String title, String url)
     {
         title = title.replace("'", "\\'");
         String query = 

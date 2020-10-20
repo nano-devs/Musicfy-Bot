@@ -25,7 +25,7 @@ public class PremiumGuildCommand extends Command
     protected void execute(CommandEvent event)
     {
         PremiumModel db = new PremiumModel();
-        if (db.addPremium(event.getGuild().getIdLong(), this.table))
+        if (db.addPremiumAsync(event.getGuild().getIdLong(), this.table))
         {
             event.reply("This guild become premium for one month");
         }

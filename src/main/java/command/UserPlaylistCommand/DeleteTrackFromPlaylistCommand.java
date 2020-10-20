@@ -66,7 +66,7 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        if (db.deleteTrackFromPlaylist(event.getAuthor().getIdLong(), playlistName, index, this.table))
+        if (db.deleteTrackFromPlaylistAsync(event.getAuthor().getIdLong(), playlistName, index, this.table))
         {
             embed.setTitle("Success");
             embed.addField(

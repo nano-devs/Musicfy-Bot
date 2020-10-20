@@ -60,7 +60,7 @@ public class DeletePlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        if (db.deletePlaylist(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
+        if (db.deletePlaylistAsync(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
         {
             embed.setTitle("Success");
             embed.addField(

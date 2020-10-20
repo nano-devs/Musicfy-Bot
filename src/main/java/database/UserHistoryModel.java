@@ -16,7 +16,7 @@ public class UserHistoryModel extends BaseModel
      * @param trackId Track id that the user play
      * @return true if success to insert data to database.
      */
-    public boolean addUserHistory(long userId, long trackId)
+    public boolean addUserHistoryAsync(long userId, long trackId)
     {
         String query =
                 "INSERT INTO USER_HISTORY (USER_ID, TRACK_ID) " +

@@ -55,7 +55,7 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
         String newName = event.getArgs().split(",")[1].trim();
 
         PlaylistModel db = new PlaylistModel();
-        if (db.renamePlaylist(event.getAuthor().getIdLong(), oldName, newName, this.table))
+        if (db.renamePlaylistAsync(event.getAuthor().getIdLong(), oldName, newName, this.table))
         {
             embed.setTitle("Success");
             embed.addField(

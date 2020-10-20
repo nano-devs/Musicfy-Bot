@@ -18,7 +18,7 @@ public class GuildHistoryModel extends BaseModel
      * @param trackId Track id that the user play
      * @return
      */
-    public boolean addGuildHistory(long guidId, long userId, long trackId)
+    public boolean addGuildHistoryAsync(long guidId, long userId, long trackId)
     {
         String query =
                 "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, TRACK_ID) " +

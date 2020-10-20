@@ -62,7 +62,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         long trackId = track.getTrackId(url);
         if (trackId <= 0)
         {
-            track.addTrack(title, url);
+            track.addTrackAsync(title, url);
         }
         trackId = track.getTrackId(url);
 
@@ -89,7 +89,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        if (db.addTrackToPlaylist(event.getAuthor().getIdLong(), playlistName, trackId, this.table))
+        if (db.addTrackToPlaylistAsync(event.getAuthor().getIdLong(), playlistName, trackId, this.table))
         {
             embed.setTitle("Success");
             embed.addField(

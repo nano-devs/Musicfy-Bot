@@ -42,7 +42,7 @@ public class PremiumUserCommand extends Command
         PremiumModel db = new PremiumModel();
         for (Member member : mention)
         {
-            if (db.addPremium(member.getIdLong(), this.table))
+            if (db.addPremiumAsync(member.getIdLong(), this.table))
             {
                 user += member.getAsMention() + " ";
             }

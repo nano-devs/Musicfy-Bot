@@ -67,7 +67,7 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.deleteTrackFromPlaylist(event.getGuild().getIdLong(), playlistName, index, this.table))
+        if (db.deleteTrackFromPlaylistAsync(event.getGuild().getIdLong(), playlistName, index, this.table))
         {
             embed.setTitle("Success");
             embed.addField(

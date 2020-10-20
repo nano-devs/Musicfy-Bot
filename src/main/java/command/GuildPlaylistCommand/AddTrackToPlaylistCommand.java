@@ -63,7 +63,7 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         long trackId = track.getTrackId(url);
         if (trackId <= 0)
         {
-            track.addTrack(title, url);
+            track.addTrackAsync(title, url);
         }
         trackId = track.getTrackId(url);
 
@@ -90,7 +90,7 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.addTrackToPlaylist(event.getGuild().getIdLong(), playlistName, trackId, this.table))
+        if (db.addTrackToPlaylistAsync(event.getGuild().getIdLong(), playlistName, trackId, this.table))
         {
             embed.setTitle("Success");
             embed.addField(
