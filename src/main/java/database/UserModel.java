@@ -9,7 +9,7 @@ public class UserModel extends BaseModel {
         super();
     }
 
-    public void create(long id, int recommendationQuota, int dailyQuota) {
+    public void create(long id, int recommendationQuota, int dailyQuota) throws SQLException {
         String query = "INSERT INTO USER (ID, RECOMMENDATION_QUOTA, DAILY_QUOTA) " +
                 "VALUES (" + id + ", " + recommendationQuota + ", " + dailyQuota + ")";
         this.executeUpdateQuery(query);
@@ -43,7 +43,7 @@ public class UserModel extends BaseModel {
 
     }
 
-    public void updateRecommendationQuota(long id, int recommendationQuota) {
+    public void updateRecommendationQuota(long id, int recommendationQuota) throws SQLException {
         String query =
                 "UPDATE USER" +
                 " SET RECOMMENDATION_QUOTA = " + recommendationQuota +
@@ -51,7 +51,7 @@ public class UserModel extends BaseModel {
         this.executeUpdateQuery(query);
     }
 
-    public void updateDailyQuota(long id, int dailyQuota) {
+    public void updateDailyQuota(long id, int dailyQuota) throws SQLException {
         String query =
                 "UPDATE USER" +
                         " SET DAILY_QUOTA = " + dailyQuota +
