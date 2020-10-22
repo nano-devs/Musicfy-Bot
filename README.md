@@ -1,5 +1,4 @@
-# Musicfy
-A discord music bot made in Java using JDA and JDA-Utilities and Lavaplayer. A discord bot designed mainly for music.
+![Musicfy, The Beat Goes On](https://github.com/madeyoga/Nano.Jda/blob/master/assets/twitter_header_photo_2.png)
 
 # Using the Official Musicfy
 
