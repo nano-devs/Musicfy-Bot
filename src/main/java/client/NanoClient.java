@@ -1,5 +1,6 @@
 package client;
 
+import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -8,6 +9,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import database.Entity.ClassicUser;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -241,5 +243,24 @@ public class NanoClient {
 
     public void setWaiter(EventWaiter waiter) {
         this.waiter = waiter;
+    }
+
+    public EmbedBuilder getEmbeddedVoteLink(ClassicUser classicUser, CommandEvent event) {
+        String voteUrl = "";
+        String message = "[Vote]() & use **" + event.getClient().getPrefix() +
+                "claim** command to claim rewards :>\n" + voteUrl;
+
+        EmbedBuilder embedBuilder = new EmbedBuilder();
+        embedBuilder.setColor(event.getMember().getColor());
+        embedBuilder.setTitle(":headphones: | Thank you for using " + event.getSelfUser().getName() + "!");
+        embedBuilder.setAuthor(event.getAuthor().getName() + " Stocks",
+                event.getAuthor().getEffectiveAvatarUrl(),
+                event.getAuthor().getEffectiveAvatarUrl());
+        embedBuilder.addField("Daily Quota", String.valueOf(classicUser.getDailyQuota()), true);
+        embedBuilder.addField("Claimed Reward", String.valueOf(classicUser.getRecommendationQuota()), true);
+        embedBuilder.addField("Increase your stocks :chart_with_upwards_trend: ", message, false);
+        embedBuilder.setFooter("Have a nice dayy~");
+
+        return embedBuilder;
     }
 }

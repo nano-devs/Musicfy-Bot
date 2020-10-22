@@ -53,7 +53,7 @@ public class Main {
         commandClientBuilder.setActivity(Activity.listening(prefix + "help"));
 
         // Add Command & Inject Dependencies.
-        commandClientBuilder.addCommand(new VoteCommand(prefix));
+        commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
 //        commandClientBuilder.addCommand(new ClaimCommand());
         commandClientBuilder.addCommand(new JoinCommand(nano));
