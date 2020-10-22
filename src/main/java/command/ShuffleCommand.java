@@ -20,7 +20,7 @@ public class ShuffleCommand extends Command {
         this.nanoClient = nanoClient;
 
         this.name = "shuffle";
-        this.aliases = new String[] {"shuffle_queue", "sq"};
+        this.aliases = new String[] {"shuffle_queue"};
         this.help = "Shuffles song queue";
         this.guildOnly = true;
         this.cooldown = 2;
