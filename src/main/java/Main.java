@@ -45,13 +45,17 @@ public class Main {
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
         commandClientBuilder.setPrefix(prefix);
+        commandClientBuilder.setAlternativePrefix("@mention");
         commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
         commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
         commandClientBuilder.setCoOwnerIds("456130311365984267");
-        commandClientBuilder.setActivity(Activity.listening("..help"));
+        commandClientBuilder.setActivity(Activity.listening(prefix + "help"));
 
         // Add Command & Inject Dependencies.
+        commandClientBuilder.addCommand(new VoteCommand(prefix));
+        commandClientBuilder.addCommand(new InviteCommand());
+//        commandClientBuilder.addCommand(new ClaimCommand());
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));
@@ -66,26 +70,26 @@ public class Main {
         commandClientBuilder.addCommand(new ShowQueueCommand(nano));
         commandClientBuilder.addCommand(new ShuffleCommand(nano));
         commandClientBuilder.addCommand(new RecommendationCommand(nano, youtubeClient));
-        commandClientBuilder.addCommand(new PremiumUserCommand());
-        commandClientBuilder.addCommand(new PremiumGuildCommand());
-        commandClientBuilder.addCommand(new UserHistoryCommand());
-        commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddPlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.RenamePlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeletePlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddTrackToPlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeleteTrackFromPlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistTrackCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.PlayPlaylistCommand(nano));
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddPlaylistCommand());
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.RenamePlaylistCommand());
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeletePlaylistCommand());
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistCommand());
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddTrackToPlaylistCommand());
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
-        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
+//        commandClientBuilder.addCommand(new PremiumUserCommand());
+//        commandClientBuilder.addCommand(new PremiumGuildCommand());
+//        commandClientBuilder.addCommand(new UserHistoryCommand());
+//        commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.RenamePlaylistCommand());
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeletePlaylistCommand());
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddTrackToPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeleteTrackFromPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistTrackCommand());
+//        commandClientBuilder.addCommand(new command.UserPlaylistCommand.PlayPlaylistCommand(nano));
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.RenamePlaylistCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeletePlaylistCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddTrackToPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
 
         CommandClient commandClient = commandClientBuilder.build();
 

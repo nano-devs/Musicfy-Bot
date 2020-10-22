@@ -55,7 +55,7 @@ public class RecommendationCommand extends Command {
         if (classicUser == null) {
             CompletableFuture.runAsync(() -> {
                 try {
-                    userModel.create(event.getAuthor().getIdLong(), 0, 0);
+                    userModel.create(event.getAuthor().getIdLong(), 3, 0);
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
                 }

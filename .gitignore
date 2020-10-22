@@ -73,7 +73,6 @@ fabric.properties
 **/build/**
 **/out/**
 **.txt
-**.png
 **.dia
 
 buildOutputCleanup.lock
