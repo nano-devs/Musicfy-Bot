@@ -8,6 +8,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.ClassicUser;
 import database.UserModel;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
@@ -81,7 +82,8 @@ public class RecommendationCommand extends Command {
 
         // if quota is not available
         if (classicUser.getRecommendationQuota() < 1) {
-            event.reply("Upvote to get recommendation quota: **..vote**. Claim quota with **..claim**");
+            EmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
+            event.reply(embedBuilder.build());
             return;
         }
 

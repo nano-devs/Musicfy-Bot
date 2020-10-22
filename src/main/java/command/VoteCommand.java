@@ -1,5 +1,6 @@
 package command;
 
+import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.ClassicUser;
@@ -12,7 +13,11 @@ import java.util.concurrent.CompletableFuture;
 
 public class VoteCommand extends Command {
 
-    public VoteCommand(String prefix) {
+    NanoClient nanoClient;
+
+    public VoteCommand(NanoClient nanoClient) {
+        this.nanoClient = nanoClient;
+
         this.name="vote";
         this.category = new Category("Daily Event");
         this.help = "Vote daily and claim rewards `More rewards at weekend` :love_letter:";
@@ -44,19 +49,7 @@ public class VoteCommand extends Command {
             classicUser.setDailyQuota(1);
         }
 
-        String voteUrl = "";
-        String message = "Use **" +event.getClient().getPrefix() +
-                "claim** command to claim rewards\n" + voteUrl;
-
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(event.getMember().getColor());
-        embedBuilder.setTitle(":headphones: | Thank you for using " + event.getSelfUser().getName() + "!");
-        embedBuilder.setAuthor("My Stocks", event.getAuthor().getEffectiveAvatarUrl(),
-                event.getAuthor().getEffectiveAvatarUrl());
-        embedBuilder.addField("Daily Quota", String.valueOf(classicUser.getDailyQuota()), true);
-        embedBuilder.addField("Claimed Reward", String.valueOf(classicUser.getRecommendationQuota()), true);
-        embedBuilder.addField("Usage", message, false);
-        embedBuilder.setFooter("Have a nice dayy~");
+        EmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
         event.reply(embedBuilder.build());
     }
 }
