@@ -31,7 +31,7 @@ public class Main {
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
         String dblToken = System.getenv("DBL_TOKEN");
-        String prefix = "..";
+        String prefix = "m$";
 
         // Initialize Dependencies
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);

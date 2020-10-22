@@ -6,7 +6,7 @@ public class HelpProcess
 {
     public static String getHelp(Command command)
     {
-        String prefix = "..";
+        String prefix = "m$";
         StringBuilder query = new StringBuilder();
         query.append("\n");
         if (command.getAliases() != null && command.getAliases().length > 0)
