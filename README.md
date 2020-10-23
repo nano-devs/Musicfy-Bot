@@ -6,6 +6,14 @@
 
 **[Invite Musicfy Bot](https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot) to your server and enjoy all the features ^^**
 
+### Features
+- 24/7 & 99.9% Uptime.
+- Play Music! (`m$play` `m$url` `m$search` and many more!)
+- Queue system!
+- Recommendation Command! `m$recommend`
+- Support server, 
+- Many more to come!
+
 ## Why use Musicfy ? 
 **Musicfy got it all!** Musicfy has the complete features for a basic music discord bot. 
 
@@ -18,7 +26,7 @@ Musicfy will automatically leave voice channel if there is no *non bot user* in 
 ## What makes Musicfy different ? 
 Please try our song **recommendation** command! ^^
 
-You just need to play a song and use `recommend` command and Musicfy will search for the best recommendation song for you & add them to the queue. <3
+You just need to play a song and use `m$recommend` command and Musicfy will search for the best recommendation song for you & add them to the queue. <3
 
 Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :( 
 
