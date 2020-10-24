@@ -12,12 +12,12 @@ import service.music.GuildMusicManager;
 
 import java.util.concurrent.*;
 
-public class MemberLeaveVoiceListener extends ListenerAdapter {
+public class MemberVoiceListener extends ListenerAdapter {
 
     NanoClient nanoClient;
     ScheduledExecutorService exec;
 
-    public MemberLeaveVoiceListener(NanoClient nanoClient, ScheduledExecutorService exec) {
+    public MemberVoiceListener(NanoClient nanoClient, ScheduledExecutorService exec) {
         this.nanoClient = nanoClient;
         this.exec = exec;
     }
