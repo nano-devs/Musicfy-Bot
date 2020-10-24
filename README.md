@@ -7,7 +7,7 @@
 **[Invite Musicfy Bot](https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot) to your server and enjoy all the features ^^**
 
 ### Features
-- 24/7 & 99.9% Uptime.
+- 99.0% Uptime.
 - Play Music! (`m$play` `m$url` `m$search` and many more!)
 - Playback from Youtube, Soundcloud, Twitch, and Bandcam
 - Queue system!
