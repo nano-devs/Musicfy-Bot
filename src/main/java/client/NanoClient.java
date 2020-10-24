@@ -152,6 +152,7 @@ public class NanoClient {
                 int positionInQueue = musicManager.scheduler.getQueue().size();
                 if (channel != null) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setColor(requester.getColor());
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
                     embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
@@ -186,6 +187,7 @@ public class NanoClient {
                     int positionInQueue = musicManager.scheduler.getQueue().size();
 
                     EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setColor(requester.getColor());
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
                     embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
