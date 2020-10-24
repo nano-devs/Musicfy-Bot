@@ -11,10 +11,10 @@
 - Play Music! (`m$play` `m$url` `m$search` and many more!)
 - Queue system!
 - Recommendation Command! `m$recommend`
-- Support server, 
-- Many more to come!
+- Support server!
+- Many more!
 
-## Why use Musicfy ? 
+### Why use Musicfy ? 
 **Musicfy got it all!** Musicfy has the complete features for a basic music discord bot. 
 
 **including**: search & select song command, play url (song/playlist) command, play by keywords command, loop/repeat command, vote command, volume adjustment command, Resume/Pause command, etc. 
@@ -23,7 +23,7 @@ Checkout the command list and usage on **[guide pages here]() \o/**.
 
 Musicfy will automatically leave voice channel if there is no *non bot user* in the connected voice channel. very cool right???
 
-## What makes Musicfy different ? 
+### What makes Musicfy different ? 
 Please try our song **recommendation** command! ^^
 
 You just need to play a song and use `m$recommend` command and Musicfy will search for the best recommendation song for you & add them to the queue. <3
@@ -31,3 +31,8 @@ You just need to play a song and use `m$recommend` command and Musicfy will sear
 Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :( 
 
 Have a Musicfy and Smile :))
+
+## Tools Musicfy Uses
+- [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
+- [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer)
+- [JDA-Utilities by jagrosh](https://github.com/JDA-Applications/JDA-Utilities)
