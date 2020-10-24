@@ -27,7 +27,7 @@ Musicfy will automatically leave voice channel if there is no *non bot user* in 
 ## What makes Musicfy different ? 
 Please try our song **recommendation** command! ^^
 
-You just need to play a song and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
+You just need to play a song from **youtube** and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
 
 ⚠ Recommendation command is limited by quota to prevent abuse & spamming! :(
 
@@ -36,7 +36,8 @@ You just need to play a song and use `m$recommend` command! Musicfy will search 
 - Daily: 1 quota everyday (Priority use).
 - Claim Rewards: Vote and claim! More rewards at weekend! Thanks for supporting! :))
 
-⚠ Recommendation is based on the current playing song. Using `m$recommend` on the same song might result the same recommendation. Please use the command wisely.
+⚠ Recommendation is based on the current playing song (currently support only song from youtube). 
+Using `m$recommend` on the same song might result the same recommendation. Please use the command wisely.
 We will update this later in the future. :(
 
 Have a Musicfy and Smile :))
