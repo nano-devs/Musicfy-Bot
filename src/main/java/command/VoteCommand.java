@@ -22,7 +22,7 @@ public class VoteCommand extends Command {
         this.category = new Category("Daily Event");
         this.help = "Vote daily and claim rewards `More rewards at weekend` :love_letter:";
         this.cooldown = 2;
-        this.aliases = new String[] {"daily"};
+        this.aliases = new String[] {"daily", "stocks", "stock"};
         this.help = HelpProcess.getHelp(this);
     }
 
