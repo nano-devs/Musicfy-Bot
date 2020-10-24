@@ -5,6 +5,7 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -16,6 +17,7 @@ public class TrackScheduler extends AudioEventAdapter {
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue;
     private boolean inLoopState;
+    public TextChannel textChannel;
 
     /**
      * @param player The audio player this scheduler uses
@@ -76,8 +78,7 @@ public class TrackScheduler extends AudioEventAdapter {
         if (endReason.mayStartNext) {
             nextTrack();
         } else {
-//            System.out.println(endReason.name());
-//            System.out.println("May not start next!");
+
         }
     }
 
@@ -90,7 +91,9 @@ public class TrackScheduler extends AudioEventAdapter {
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
         super.onTrackException(player, track, exception);
 
-//        System.out.println("TrackException: " + exception.getMessage());
+        textChannel.sendMessage(":x: | " + exception.getMessage() +
+                ". Try request the song again, if it's still broke, please contact developers... :(").queue();
+
         exception.printStackTrace();
     }
 

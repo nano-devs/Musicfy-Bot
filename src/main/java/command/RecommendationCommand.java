@@ -27,6 +27,7 @@ public class RecommendationCommand extends Command {
         this.youtubeClient = youtubeClient;
 
         this.name = "recommend";
+        this.arguments = "<number>";
         this.aliases = new String[] {"play_recommendation", "pr", "play_r"};
         this.category = new Category("Music");
         this.cooldown = 2;
@@ -40,13 +41,18 @@ public class RecommendationCommand extends Command {
     protected void execute(CommandEvent event) {
         VoiceChannel channel = event.getMember().getVoiceState().getChannel();
         if (channel == null) {
-            event.reply(":x: | You're not connected to any voice channel");
+            event.reply(":x: | You're not connected to any voice channel.");
+            return;
+        }
+
+        if (event.getArgs().isEmpty()) {
+            event.reply(":x: | Please provide a number `(1 - 24)`. Example `"+event.getClient().getPrefix()+"recommend`");
             return;
         }
 
         GuildMusicManager musicManager = this.nanoClient.getGuildAudioPlayer(event.getGuild());
         if (musicManager.player.getPlayingTrack() == null) {
-            event.reply(":x: | Play a song first and try `m$recommend` again :>");
+            event.reply(":x: | Play a song first and try `m$recommend " + event.getArgs() + "` again :>");
             return;
         }
 
@@ -61,7 +67,7 @@ public class RecommendationCommand extends Command {
 
         // if user is not registered. make new user record and recommend.
         if (classicUser == null) {
-            recommend(event, musicManager);
+            recommend(event, musicManager, Integer.parseInt(event.getArgs()));
             CompletableFuture.runAsync(() -> {
                 try {
                     userModel.create(event.getAuthor().getIdLong(), 8, 0);
@@ -75,7 +81,7 @@ public class RecommendationCommand extends Command {
         // if user is registered. then Check user's daily quota (priority)
         if (classicUser.getDailyQuota() > 0) {
             // Recommend & Update quota
-            recommend(event, musicManager);
+            recommend(event, musicManager, Integer.parseInt(event.getArgs()));
             CompletableFuture.runAsync(() -> {
                 try {
                     userModel.updateDailyQuota(classicUser.getId(),
@@ -94,7 +100,7 @@ public class RecommendationCommand extends Command {
             return;
         }
 
-        recommend(event, musicManager);
+        recommend(event, musicManager, Integer.parseInt(event.getArgs()));
         // if quota is available
         CompletableFuture.runAsync(() -> {
             try {
@@ -106,15 +112,13 @@ public class RecommendationCommand extends Command {
         });
     }
 
-    private void recommend(CommandEvent event, GuildMusicManager musicManager) {
+    private void recommend(CommandEvent event, GuildMusicManager musicManager, int loadLimit) {
         String currentPlayingTrackId = musicManager.player.getPlayingTrack().getIdentifier();
         try {
             YoutubePlaylist youtubePlaylist = youtubeClient.getRecommendation(currentPlayingTrackId);
             this.nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(),
-                    youtubePlaylist.getUrl(), event.getMember());
-        } catch (IOException e) {
-            event.reply(":x: | " + e.getMessage());
-        } catch (NoResultFoundException e) {
+                    youtubePlaylist.getUrl(), event.getMember(), loadLimit);
+        } catch (IOException | NoResultFoundException e) {
             event.reply(":x: | " + e.getMessage());
         }
     }

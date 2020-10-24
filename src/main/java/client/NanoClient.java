@@ -66,6 +66,9 @@ public class NanoClient {
      */
     public void loadAndPlayUrl(GuildMusicManager musicManager, final TextChannel channel,
                                final String trackUrl, Member requester) {
+
+        musicManager.scheduler.textChannel = channel;
+
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
@@ -132,11 +135,93 @@ public class NanoClient {
      *
      * @param musicManager Music manager to load & play the url
      * @param channel Current text channel
+     * @param trackUrl Given url. Supported URL: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo
+     * @param requester User who request the song.
+     */
+    public void loadAndPlayUrl(GuildMusicManager musicManager, final TextChannel channel,
+                               final String trackUrl, Member requester, int loadLimit) {
+
+        musicManager.scheduler.textChannel = channel;
+
+        playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack track) {
+                if (track.getDuration() > 900000) {
+                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
+                    channel.sendMessage(errorMessage).queue();
+                    return;
+                }
+                track.setUserData(requester);
+                musicManager.scheduler.queue(track);
+
+                int positionInQueue = musicManager.scheduler.getQueue().size();
+
+                if (channel != null) {
+                    EmbedBuilder embedBuilder = new EmbedBuilder();
+                    embedBuilder.setColor(requester.getColor());
+                    embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
+
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
+
+                    embedBuilder.addField("Channel", track.getInfo().author, true);
+                    embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
+                    embedBuilder.addField("Position in queue", "" + positionInQueue, true);
+                    embedBuilder.addField("Estimated time until playing",
+                            musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
+
+                    channel.sendMessage(embedBuilder.build()).queue();
+                }
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist playlist) {
+                int addedSize = 0;
+                int index = 0;
+                for (AudioTrack track : playlist.getTracks()) {
+                    if (index == 0) {
+                        index += 1;
+                        continue;
+                    }
+                    if (track.getDuration() > 900000) {
+                        continue;
+                    }
+                    track.setUserData(requester);
+                    musicManager.scheduler.queue(track);
+                    addedSize += 1;
+                    if (musicManager.isQueueFull() || addedSize >= loadLimit) {
+                        break;
+                    }
+                }
+                if (channel != null)
+                    channel.sendMessage(":white_check_mark: | " + addedSize +
+                            " entries from **"+ playlist.getName() + "** has been added to queue").queue();
+            }
+
+            @Override
+            public void noMatches() {
+                channel.sendMessage(":negative_squared_cross_mark: | Nothing found by " + trackUrl).queue();
+            }
+
+            @Override
+            public void loadFailed(FriendlyException exception) {
+                channel.sendMessage(":negative_squared_cross_mark: | Could not play: " + exception.getMessage()).queue();
+            }
+        });
+    }
+
+    /**
+     *
+     * @param musicManager Music manager to load & play the url
+     * @param channel Current text channel
      * @param keywords Given keywords.
      * @param requester User, requester.
      */
     public void loadAndPlayKeywords(GuildMusicManager musicManager, final TextChannel channel,
                                final String keywords, Member requester) {
+
+        musicManager.scheduler.textChannel = channel;
+
         playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
