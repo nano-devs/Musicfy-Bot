@@ -1,4 +1,4 @@
-![Musicfy, The Beat Goes On](https://github.com/madeyoga/Nano.Jda/blob/master/assets/twitter_header_photo_2.png)
+![Musicfy, The Beat Goes On](https://github.com/madeyoga/Nano.Jda/blob/master/assets/Banner.jpg)
 
 **A simple and easy to use Discord music bot with song recommendation command**
 
@@ -27,16 +27,17 @@ Musicfy will automatically leave voice channel if there is no *non bot user* in 
 ## What makes Musicfy different ? 
 Please try our song **recommendation** command! ^^
 
-You just need to play a song and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
+You just need to play a song from **youtube** and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
 
-⚠ Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :(
+⚠ Recommendation command is limited by quota to prevent abuse & spamming! :(
 
 - First time use: You will have 8 quotas.
 - Every `m$recommend` will decrease 1 quota in stocks.
 - Daily: 1 quota everyday (Priority use).
 - Claim Rewards: Vote and claim! More rewards at weekend! Thanks for supporting! :))
 
-⚠ Recommendation is based on the current playing song. Using `m$recommend` on the same song might result the same recommendation. Please use the command wisely.
+⚠ Recommendation is based on the current playing song (currently support only song from youtube). 
+Using `m$recommend` on the same song might result the same recommendation. Please use the command wisely.
 We will update this later in the future. :(
 
 Have a Musicfy and Smile :))
@@ -54,7 +55,7 @@ We are really appreciate any suggestions/feedbacks from users! <3
 
 ## Tools Musicfy Uses
 - [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
-- [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer)
+- [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer) / [Lavaplayer by sedmelluq](https://github.com/sedmelluq/lavaplayer)
 - [JDA-Utilities by jagrosh](https://github.com/JDA-Applications/JDA-Utilities)
 
 ## Inspired by these cool Discord bots
