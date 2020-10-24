@@ -28,24 +28,20 @@ public class MemberVoiceListener extends ListenerAdapter {
 
         // Ignore if bot event.
         if (event.getMember().getUser().isBot()) {
-            System.out.println("Bot event");
             return;
         }
 
         // Ignore if not connected to any voice channel
         if (clientVoiceChannel == null) {
-            System.out.println("not connected");
             return;
         }
 
         // Ignore if the event is from another voice channel.
         if (!event.getChannelLeft().getId().equals(clientVoiceChannel.getId())) {
-            System.out.println("another vc event");
             return;
         }
 
         if (!isThereAnyMemberIn(clientVoiceChannel)) {
-            System.out.println("PAUSE & WAITING");
             GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
             musicManager.setWaitingForUser(true);
             musicManager.player.setPaused(true);
@@ -70,26 +66,22 @@ public class MemberVoiceListener extends ListenerAdapter {
         // Ignore if bot event.
         if (event.getMember().getUser().isBot() &&
                 !event.getMember().getId().equals(nanoClient.getJda().getSelfUser().getId())) {
-            System.out.println("Bot event");
             return;
         }
 
         // Ignore if not connected to any voice channel
         if (clientVoiceChannel == null) {
-            System.out.println("client not connected");
             return;
         }
 
         // Ignore if the left/join event is from another voice channel.
         if (!event.getChannelJoined().getId().equals(clientVoiceChannel.getId()) &&
             !event.getChannelLeft().getId().equals(clientVoiceChannel.getId())) {
-            System.out.println("another vc event");
             return;
         }
 
         // if there is no member in connected voice channel.
         if (!isThereAnyMemberIn(clientVoiceChannel)) {
-            System.out.println("PAUSE & WAITING");
             GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
             musicManager.setWaitingForUser(true);
             musicManager.player.setPaused(true);
@@ -122,19 +114,16 @@ public class MemberVoiceListener extends ListenerAdapter {
 
         // Ignore if bot event.
         if (event.getMember().getUser().isBot()) {
-            System.out.println("Bot event");
             return;
         }
 
         // Ignore event, If client is not connected to any voice channel.
         if (clientVoiceChannel == null) {
-            System.out.println("client not connected");
             return;
         }
 
         // Ignore join event to other voice channel.
         if (!clientVoiceChannel.getId().equals(event.getChannelJoined().getId())) {
-            System.out.println("Other VC join event");
             return;
         }
 
