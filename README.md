@@ -9,6 +9,7 @@
 ### Features
 - 24/7 & 99.9% Uptime.
 - Play Music! (`m$play` `m$url` `m$search` and many more!)
+- Playback from Youtube, Soundcloud, Twitch, and Bandcam
 - Queue system!
 - Recommendation Command! `m$recommend`
 - Support server!
