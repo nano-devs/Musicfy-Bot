@@ -43,6 +43,12 @@ public class RecommendationCommand extends Command {
             return;
         }
 
+        GuildMusicManager musicManager = this.nanoClient.getGuildAudioPlayer(event.getGuild());
+        if (musicManager.player.getPlayingTrack() == null) {
+            event.reply(":x: | Play a song first and try `m$recommend` again :>");
+            return;
+        }
+
         UserModel userModel = new UserModel();
         ClassicUser classicUser;
         try {
@@ -54,20 +60,21 @@ public class RecommendationCommand extends Command {
 
         // if user is not registered. make new user record and recommend.
         if (classicUser == null) {
+            recommend(event, musicManager);
             CompletableFuture.runAsync(() -> {
                 try {
-                    userModel.create(event.getAuthor().getIdLong(), 3, 0);
+                    userModel.create(event.getAuthor().getIdLong(), 8, 0);
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
                 }
             });
-            recommend(event);
             return;
         }
 
-        // if user is registered. Check daily quota (priority) then
+        // if user is registered. then Check user's daily quota (priority)
         if (classicUser.getDailyQuota() > 0) {
-            // Update quota & recommend
+            // Recommend & Update quota
+            recommend(event, musicManager);
             CompletableFuture.runAsync(() -> {
                 try {
                     userModel.updateDailyQuota(classicUser.getId(),
@@ -76,17 +83,17 @@ public class RecommendationCommand extends Command {
                     sqlException.printStackTrace();
                 }
             });
-            recommend(event);
             return;
         }
 
-        // if quota is not available
+        // if Daily Quota not available & Claimed quota is not available
         if (classicUser.getRecommendationQuota() < 1) {
             EmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
             event.reply(embedBuilder.build());
             return;
         }
 
+        recommend(event, musicManager);
         // if quota is available
         CompletableFuture.runAsync(() -> {
             try {
@@ -96,11 +103,9 @@ public class RecommendationCommand extends Command {
                 sqlException.printStackTrace();
             }
         });
-        recommend(event);
     }
 
-    private void recommend(CommandEvent event) {
-        GuildMusicManager musicManager = this.nanoClient.getGuildAudioPlayer(event.getGuild());
+    private void recommend(CommandEvent event, GuildMusicManager musicManager) {
         String currentPlayingTrackId = musicManager.player.getPlayingTrack().getIdentifier();
         try {
             YoutubePlaylist youtubePlaylist = youtubeClient.getRecommendation(currentPlayingTrackId);
