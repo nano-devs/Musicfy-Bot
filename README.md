@@ -29,7 +29,8 @@ Please try our song **recommendation** command! ^^
 
 You just need to play a song and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
 
-⚠ Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :( 
+⚠ Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :(
+
 - First time use: You will have 8 quotas
 - Every `m$recommend` will decrease 1 quota in stocks.
 - Daily: 1 quota everyday (Priority use).
@@ -39,6 +40,16 @@ You just need to play a song and use `m$recommend` command! Musicfy will search 
 We will try to update this later in the future. :(
 
 Have a Musicfy and Smile :))
+
+## Support
+#### Suggestions are welcome!!
+
+Do you have any suggestions about the quota systems or anything related to Musicfy ?
+you can contact me via discord dm or email or join the support server and let's discuss about it :>
+
+We are really appreciate any suggestion/feedback from users! <3
+
+⚠ We will not provide any support whatsoever in selfhosting or building the bot by yourself
 
 ## Tools Musicfy Uses
 - [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
