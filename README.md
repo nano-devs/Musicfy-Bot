@@ -55,7 +55,7 @@ We are really appreciate any suggestions/feedbacks from users! <3
 
 ## Tools Musicfy Uses
 - [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
-- [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer)
+- [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer) / [Lavaplayer by sedmelluq](https://github.com/sedmelluq/lavaplayer)
 - [JDA-Utilities by jagrosh](https://github.com/JDA-Applications/JDA-Utilities)
 
 ## Inspired by these cool Discord bots
