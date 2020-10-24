@@ -30,9 +30,9 @@ Please try our song **recommendation** command! ^^
 You just need to play a song and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
 
 ⚠ Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :( 
+- First time use: You will have 8 quotas
 - Every `m$recommend` will decrease 1 quota in stocks.
-- Daily: 1 quota everyday (Priority use)
-- First time use: 8 quotas
+- Daily: 1 quota everyday (Priority use).
 - Claim Rewards: Vote and claim! More rewards at weekend! Thanks for supporting! :))
 
 ⚠ Recommendation is based on the current playing song. Using `m$recommend` on the same song might result the same recommendation. Please use the command wisely.
@@ -44,6 +44,3 @@ Have a Musicfy and Smile :))
 - [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
 - [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer)
 - [JDA-Utilities by jagrosh](https://github.com/JDA-Applications/JDA-Utilities)
-
-## Support Musicfy
-We really appreciate any kind of support, Thanks a ton!! - devs
