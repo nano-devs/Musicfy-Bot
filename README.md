@@ -56,3 +56,8 @@ We are really appreciate any suggestions/feedbacks from users! <3
 - [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
 - [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer)
 - [JDA-Utilities by jagrosh](https://github.com/JDA-Applications/JDA-Utilities)
+
+## Inspired by these cool Discord bots
+Check them out! :))
+- [Rythm](https://top.gg/bot/rythm)
+- [Mantaro](https://top.gg/bot/213466096718708737)
