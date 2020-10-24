@@ -6,11 +6,6 @@
 
 **[Invite Musicfy Bot](https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot) to your server and enjoy all the features ^^**
 
-## Tools Musicfy Uses
-- [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
-- [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer)
-- [JDA-Utilities by jagrosh](https://github.com/JDA-Applications/JDA-Utilities)
-
 ### Features
 - 24/7 & 99.9% Uptime.
 - Play Music! (`m$play` `m$url` `m$search` and many more!)
@@ -42,6 +37,11 @@ You just need to play a song and use `m$recommend` command! Musicfy will search 
 We will try to update this later in the future. :(
 
 Have a Musicfy and Smile :))
+
+## Tools Musicfy Uses
+- [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
+- [Unofficial-Lavaplayer by Devoxin](https://github.com/Devoxin/lavaplayer)
+- [JDA-Utilities by jagrosh](https://github.com/JDA-Applications/JDA-Utilities)
 
 ## Support Musicfy
 We really appreciate any kind of support, Thanks a ton!! - devs
