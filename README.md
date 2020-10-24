@@ -31,13 +31,13 @@ You just need to play a song and use `m$recommend` command! Musicfy will search 
 
 ⚠ Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :(
 
-- First time use: You will have 8 quotas
+- First time use: You will have 8 quotas.
 - Every `m$recommend` will decrease 1 quota in stocks.
 - Daily: 1 quota everyday (Priority use).
 - Claim Rewards: Vote and claim! More rewards at weekend! Thanks for supporting! :))
 
 ⚠ Recommendation is based on the current playing song. Using `m$recommend` on the same song might result the same recommendation. Please use the command wisely.
-We will try to update this later in the future. :(
+We will update this later in the future. :(
 
 Have a Musicfy and Smile :))
 
