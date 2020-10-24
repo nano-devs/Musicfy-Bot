@@ -45,9 +45,10 @@ Have a Musicfy and Smile :))
 #### Suggestions are welcome!!
 
 Do you have any suggestions about the quota systems or anything related to Musicfy ?
+
 you can contact me via discord dm or email or join the support server and let's discuss about it :>
 
-We are really appreciate any suggestion/feedback from users! <3
+We are really appreciate any suggestions/feedbacks from users! <3
 
 ⚠ We will not provide any support whatsoever in selfhosting or building the bot by yourself
 
