@@ -15,7 +15,7 @@
 - Many more!
 
 ## Why use Musicfy ? 
-**Musicfy got it all!** Musicfy has the complete features for a basic music discord bot. 
+**Musicfy got it all!** Musicfy is easy to use and has the complete features for a basic music discord bot!
 
 **including**: search & select song command, play url (song/playlist) command, play by keywords command, loop/repeat command, vote command, volume adjustment command, Resume/Pause command, etc. 
 
