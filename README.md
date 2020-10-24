@@ -29,7 +29,7 @@ Please try our song **recommendation** command! ^^
 
 You just need to play a song and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
 
-⚠ Recommendation command is limited by quota due to limited resources. Sorry,, we will upgrade the server later in the future :(
+⚠ Recommendation command is limited by quota to prevent abuse & spamming! :(
 
 - First time use: You will have 8 quotas.
 - Every `m$recommend` will decrease 1 quota in stocks.
