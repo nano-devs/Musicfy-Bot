@@ -28,7 +28,7 @@ Musicfy will automatically leave voice channel if there is no *non bot user* in 
 
 You just need to play a song from **youtube** and use `m$recommend <number>` command! Musicfy will search for `<number>` most similar (*recommended*) songs & add them to the queue for you. <3
 
-⚠ Recommendation command is limited by quota to prevent abuse & spamming! :(
+⚠ Recommendation command is limited by quota to prevent abuse & spam! :(
 
 - First time use: You will have 8 quotas.
 - Every `m$recommend` will decrease 1 quota in stocks.
