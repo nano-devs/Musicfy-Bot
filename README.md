@@ -15,7 +15,7 @@
 - Support server!
 - Many more!
 
-## Why use Musicfy ? 
+## Why use Musicfy ?
 **Musicfy got it all!** Musicfy is easy to use and has the complete features for a basic music discord bot!
 
 **including**: search & select song command, play url (song/playlist) command, play by keywords command, loop/repeat command, vote command, volume adjustment command, Resume/Pause command, etc. 
@@ -24,10 +24,9 @@ Checkout the command list and usage on **[guide pages here]() \o/**.
 
 Musicfy will automatically leave voice channel if there is no *non bot user* in the connected voice channel. very cool right???
 
-## What makes Musicfy different ? 
-Please try our song **recommendation** command! ^^
+### Please try our song **recommendation** command! ^^
 
-You just need to play a song from **youtube** and use `m$recommend` command! Musicfy will search for 25 most similar (*recommended*) songs & add them to the queue for you. <3
+You just need to play a song from **youtube** and use `m$recommend <number>` command! Musicfy will search for `<number>` most similar (*recommended*) songs & add them to the queue for you. <3
 
 ⚠ Recommendation command is limited by quota to prevent abuse & spamming! :(
 
@@ -43,9 +42,10 @@ We will update this later in the future. :(
 Have a Musicfy and Smile :))
 
 ## Support
-#### Suggestions are welcome!!
+Thanks! We really appreciate any kind of support! Your vote alone is very valuable to us! 
 
-Do you have any suggestions about the quota systems or anything related to Musicfy ?
+#### Suggestions are welcome!!
+You have some suggestions about the quota system or features ?!
 
 you can contact me via discord dm or email or join the support server and let's discuss about it :>
 
