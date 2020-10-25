@@ -1,4 +1,4 @@
-package command;
+package command.general;
 
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
@@ -19,7 +19,7 @@ public class VoteCommand extends Command {
         this.nanoClient = nanoClient;
 
         this.name="vote";
-        this.category = new Category("Daily Event");
+        this.category = new Category("General");
         this.help = "Vote daily and claim rewards `More rewards at weekend` :love_letter:";
         this.cooldown = 2;
         this.aliases = new String[] {"daily", "stocks", "stock"};

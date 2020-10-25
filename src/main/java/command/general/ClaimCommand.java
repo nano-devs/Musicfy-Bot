@@ -1,4 +1,4 @@
-package command;
+package command.general;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -13,7 +13,7 @@ public class ClaimCommand extends Command {
         this.dblApi = dblApi;
 
         this.name="claim";
-        this.category = new Category("Daily Event");
+        this.category = new Category("General");
         this.help = "Vote and `claim` reward. Hope you like the reward :pray:";
         this.cooldown = 2;
         this.aliases = new String[] {"quota"};

@@ -4,6 +4,9 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
+import command.general.InviteCommand;
+import command.general.VoteCommand;
+import command.owner.ChangePresenceCommand;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -90,6 +93,7 @@ public class Main {
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
+        commandClientBuilder.addCommand(new ChangePresenceCommand());
 
         CommandClient commandClient = commandClientBuilder.build();
 
