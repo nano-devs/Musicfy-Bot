@@ -47,7 +47,7 @@ Thanks! We really appreciate any kind of support! Your vote alone is very valuab
 #### Suggestions are welcome!!
 You have some suggestions about the quota system or features ?!
 
-you can contact me via discord dm or email or join the support server and let's discuss about it :>
+you can contact us via discord dm or email or join the support server and let's discuss about it :>
 
 We are really appreciate any suggestions/feedbacks from users! <3
 
