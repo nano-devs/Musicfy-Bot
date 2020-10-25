@@ -1,4 +1,4 @@
-![Musicfy, The Beat Goes On](https://github.com/madeyoga/Nano.Jda/blob/master/assets/Banner.jpg)
+![Musicfy, The Beat Goes On](https://github.com/madeyoga/musicfy.github.io/blob/master/assets/Banner.jpg)
 
 **A simple and easy to use Discord music bot with song recommendation command**
 
