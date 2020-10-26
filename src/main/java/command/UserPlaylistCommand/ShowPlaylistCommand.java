@@ -15,7 +15,7 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
     {
         this.name = "show_user_playlist";
         this.aliases = new String[]{"sup"};
-        this.help = "Show all existed user playlist.\n";
+        this.help = "Show all existing user playlist.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
