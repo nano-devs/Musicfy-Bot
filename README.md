@@ -1,4 +1,4 @@
-![Musicfy, The Beat Goes On](https://github.com/madeyoga/musicfy.github.io/blob/master/assets/Banner.jpg)
+![Musicfy, The Beat Goes On](https://github.com/nano-devs/musicfy/blob/master/assets/Banner.jpg)
 
 **A simple and easy to use Discord music bot with song recommendation command**
 
@@ -20,7 +20,7 @@
 
 **including**: search & select song command, play url (song/playlist) command, play by keywords command, loop/repeat command, vote command, volume adjustment command, Resume/Pause command, etc. 
 
-Checkout the command list and usage on **[guide pages here]() \o/**.
+Checkout the command list and usage on **[guide pages here](https://github.com/madeyoga/Musicfy-Bot/wiki/How-to-use-Musicfy's-commands) \o/**.
 
 Musicfy will automatically leave voice channel if there is no *non bot user* in the connected voice channel. very cool right???
 
