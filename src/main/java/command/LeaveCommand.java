@@ -24,13 +24,19 @@ public class LeaveCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         Guild guild = event.getGuild();
+
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
 
+        if (!nanoClient.getMusicManagers().containsKey(guild.getIdLong())) {
+            return;
+        }
+
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(guild);
+
         musicManager.player.stopTrack();
         musicManager.scheduler.getQueue().clear();
-        nanoClient.getMusicManagers().remove(Long.parseLong(guild.getId()));
+        nanoClient.getMusicManagers().remove(guild.getIdLong());
 
         event.getMessage().addReaction("\u23F9").queue();
     }

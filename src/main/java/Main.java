@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
+import command.general.ClaimCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
 import command.owner.ChangePresenceCommand;
@@ -15,6 +16,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.discordbots.api.client.DiscordBotListAPI;
 import service.music.MusicService;
 
 import javax.security.auth.login.LoginException;
@@ -40,10 +42,10 @@ public class Main {
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
         NanoClient nano = new NanoClient(new MusicService(), new EventWaiter(exec, true));
         YoutubeClient youtubeClient = new YoutubeClient();
-//        DiscordBotListAPI dblApi = new DiscordBotListAPI.Builder()
-//                .token(dblToken)
-//                .botId("473023109666963467")
-//                .build();
+        DiscordBotListAPI dblApi = new DiscordBotListAPI.Builder()
+                .token(dblToken)
+                .botId("473023109666963467")
+                .build();
 
         // Configure CommandClient
         CommandClientBuilder commandClientBuilder = new CommandClientBuilder();
@@ -58,7 +60,7 @@ public class Main {
         // Add Command & Inject Dependencies.
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
-//        commandClientBuilder.addCommand(new ClaimCommand());
+        commandClientBuilder.addCommand(new ClaimCommand(dblApi));
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));
