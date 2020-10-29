@@ -70,6 +70,17 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
 
         String name = event.getArgs().trim().replace("'", "\\'");
 
+        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), name, this.table))
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "You already have playlist with the same name.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
         CompletableFuture.runAsync(() ->
         {
             try
