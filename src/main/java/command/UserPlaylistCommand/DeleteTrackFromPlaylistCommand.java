@@ -45,7 +45,9 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
         int index = Integer.parseInt(event.getArgs().split(",")[1].trim());
 
         PlaylistModel db = new PlaylistModel();
-        if (db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table) <= 0)
+        int playlistSize = db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table);
+
+        if (playlistSize <= 0)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -56,11 +58,25 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
+        if (index > (playlistSize))
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "`" + playlistName + "` playlist only have " + playlistSize + " track(s).",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
+        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
+        long playlistTrackId = db.getPlaylistTrackId(playlistId, index, this.table);
+
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.deleteTrackFromPlaylistAsync(event.getAuthor().getIdLong(), playlistName, index, this.table);
+                db.deleteTrackFromPlaylistAsync(playlistTrackId, this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
