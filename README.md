@@ -43,9 +43,9 @@ We will update this later in the future. :(
 Have a Musicfy and Smile :))
 
 ## Support 
-Check the complete command list [here](https://github.com/madeyoga/Musicfy-Bot/wiki/How-to-use-Musicfy's-commands).
+**Checkout the complete command list [here](https://github.com/madeyoga/Musicfy-Bot/wiki/How-to-use-Musicfy's-commands).**
 
-If you need more help, feel free to contact us developers via dm or you can also join the support server.
+If you need more help, feel free to contact us developers via dm or join the support server.
 
 ## Support Musicfy
 Thanks! We really appreciate any kind of support! Your vote alone is very valuable to us! 
