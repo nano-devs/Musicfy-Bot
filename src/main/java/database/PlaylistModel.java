@@ -401,11 +401,11 @@ public class PlaylistModel extends BaseModel
         String query =
                 "SELECT " + table + "_playlist.ID, track.ID, track.TITLE, track.URL " +
                 "FROM " + table + "_playlist " +
-                "LEFT JOIN " + table + "_playlist_track ON " + table + "_playlist.ID = " + table + "_playlist_track." + table + "_PLAYLIST_ID " +
-                "LEFT JOIN track ON " + table + "_playlist_track.TRACK_ID = track.ID " +
+                "JOIN " + table + "_playlist_track ON " + table + "_playlist.ID = " + table + "_playlist_track." + table + "_PLAYLIST_ID " +
+                "JOIN track ON " + table + "_playlist_track.TRACK_ID = track.ID " +
                 "WHERE " + table + "_playlist." + table + "_ID = " + id +
                 " AND " + table + "_playlist.NAME = '" + name + "'";
-
+        
         ArrayList<Track> tracks = new ArrayList<Track>(this.maxTrackEachPlaylist);
 
         try (
