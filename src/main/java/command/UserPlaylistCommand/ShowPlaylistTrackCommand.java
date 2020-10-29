@@ -3,7 +3,6 @@ package command.UserPlaylistCommand;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
-import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
@@ -16,7 +15,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
         this.name = "show_user_playlist_track";
         this.aliases = new String[]{"supt"};
         this.arguments = "<playlist name>";
-        this.help = "Show all track from specific user playlist.\n";
+        this.help = "Show all track(s) in the playlist owned by the user.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
@@ -29,25 +28,13 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
 
         if (playlistName.length() <= 0)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give playlist name.",
+                    "Please give the name of the playlist.",
                     true);
             event.reply(embed.build());
             return;
@@ -60,7 +47,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist with name `" + playlistName + "` is not exist.",
+                    "`" + playlistName + "` playlist does not exist.",
                     true);
             event.reply(embed.build());
             return;
@@ -78,7 +65,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
         }
         else
         {
-            embed.setTitle("Playlist `" + playlistName + "`");
+            embed.setTitle("`" + playlistName + "` playlist :notes:");
             StringBuilder sb = new StringBuilder();
 
             for (int i = 0; i < tracks.size(); i++)
