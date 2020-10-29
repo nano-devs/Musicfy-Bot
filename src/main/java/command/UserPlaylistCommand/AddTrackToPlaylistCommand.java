@@ -1,7 +1,6 @@
 package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PremiumModel;
 import database.TrackModel;
 import database.PlaylistModel;
 import net.dv8tion.jda.api.EmbedBuilder;
