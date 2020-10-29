@@ -52,17 +52,14 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         long trackId = track.getTrackId(url);
         if (trackId <= 0)
         {
-            CompletableFuture.runAsync(() ->
+            try
             {
-                try
-                {
-                    track.addTrackAsync(title, url);
-                }
-                catch (SQLException e)
-                {
-                    e.printStackTrace();
-                }
-            });
+                track.addTrackAsync(title, url);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
         }
         trackId = track.getTrackId(url);
 
