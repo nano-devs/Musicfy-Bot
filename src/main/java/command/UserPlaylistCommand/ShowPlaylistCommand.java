@@ -3,7 +3,6 @@ package command.UserPlaylistCommand;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Playlist;
 import database.PlaylistModel;
-import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
@@ -15,7 +14,7 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
     {
         this.name = "show_user_playlist";
         this.aliases = new String[]{"sup"};
-        this.help = "Show all existing user playlist.\n";
+        this.help = "Show all playlists owned by the user.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
@@ -26,18 +25,6 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
     {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
 
         PlaylistModel db = new PlaylistModel();
         ArrayList<Playlist> playlists = db.getAllPlaylist(event.getAuthor().getIdLong(), this.table);
@@ -47,7 +34,7 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Empty");
             embed.addField(
                     ":x:",
-                    "You have no playlist.",
+                    "You don't have a playlist.",
                     true);
         }
         else
