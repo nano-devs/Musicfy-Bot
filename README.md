@@ -53,11 +53,11 @@ If you need more help, feel free to contact us developers via dm or join the sup
 Thanks! We really appreciate any kind of support! Your vote alone is very valuable to us! 
 
 #### Suggestions are welcome!!
-You have some suggestions about the quota system or features ?!
+You have some suggestions about the quota system or featuresor anything related to MusicfyBot?!
 
 you can contact us via discord dm or email or join the support server and let's discuss about it :>
 
-We are really appreciate any suggestions/feedbacks from users! <3
+We really appreciate all of your suggestions / feedbacks! <3
 
 ## Tools Musicfy Uses
 - [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
