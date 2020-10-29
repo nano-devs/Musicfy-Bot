@@ -47,6 +47,8 @@ Have a Musicfy and Smile :))
 
 If you need more help, feel free to contact us developers via dm or join the support server.
 
+#### ⚠ We will not provide any support whatsoever in selfhosting or building the bot by yourself
+
 ## Support Musicfy
 Thanks! We really appreciate any kind of support! Your vote alone is very valuable to us! 
 
@@ -56,8 +58,6 @@ You have some suggestions about the quota system or features ?!
 you can contact us via discord dm or email or join the support server and let's discuss about it :>
 
 We are really appreciate any suggestions/feedbacks from users! <3
-
-#### ⚠ We will not provide any support whatsoever in selfhosting or building the bot by yourself
 
 ## Tools Musicfy Uses
 - [JDA by DV8FromTheWorld](https://github.com/DV8FromTheWorld/JDA)
