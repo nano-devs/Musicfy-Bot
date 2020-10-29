@@ -17,7 +17,12 @@ insert_vote_query = """
 """
 update_rewards_query = """
     UPDATE USER
-    SET RECOMMENDATION_QUOTA = RECOMMENDATION_QUOTA + 2
+    SET RECOMMENDATION_QUOTA = RECOMMENDATION_QUOTA + 1
+    WHERE ID = {};
+"""
+update_rewards_weekend_query = """
+    UPDATE USER
+    SET RECOMMENDATION_QUOTA = RECOMMENDATION_QUOTA + 3
     WHERE ID = {};
 """
 
@@ -48,8 +53,16 @@ def vote_post():
         connection.commit()
     else:
         print("Test", data)
+
+        # Vote history
         cursor.execute(insert_vote_query.format(user_id, int(is_weekend)))
-        cursor.execute(update_rewards_query.format(user_id))
+
+        # Give more rewards if weekend
+        if !is_weekend:
+            cursor.execute(update_rewards_query.format(user_id))
+        else:
+            cursor.execute(update_rewards_weekend_query.format(user_id))
+            
         connection.commit()
     
     return 'success', 200
