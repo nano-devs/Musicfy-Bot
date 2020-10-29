@@ -50,7 +50,7 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "`" + playlistName + " playlist is empty, no track to delete.",
+                    "`" + playlistName + "` playlist is empty, no track to delete.",
                     true);
             event.reply(embed.build());
             return;
