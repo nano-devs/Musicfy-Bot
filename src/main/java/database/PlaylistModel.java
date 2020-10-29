@@ -224,17 +224,7 @@ public class PlaylistModel extends BaseModel
         String query =
                 "INSERT INTO " + table + "_PLAYLIST (" + table + "_ID, NAME) " +
                 "VALUES (" + id + ", '" + name + "')";
-
-        if (!this.isPlaylistNameAvailable(id, name, table))
-        {
-            return false;
-        }
-
-        if (this.countPlaylist(id, table) < this.maxPlaylist)
-        {
-            return this.executeUpdateQuery(query) > 0;
-        }
-        return false;
+        return this.executeUpdateQuery(query) > 0;
     }
 
     /**
