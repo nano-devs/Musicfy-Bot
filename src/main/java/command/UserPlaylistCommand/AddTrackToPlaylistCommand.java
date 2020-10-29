@@ -74,7 +74,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Playlist `" + playlistName + "` not exist.",
+                    "`" + playlistName + "` playlist does not exist.",
                     true);
             event.reply(embed.build());
             return;
@@ -85,7 +85,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Track for playlist have reached maximum limit.",
+                    "Track for playlist has reached the maximum limit.",
                     true);
             event.reply(embed.build());
             return;
@@ -101,7 +101,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Track `" + title + "` added to playlist `" + playlistName + "`.",
+                        "Track `" + title + "` added to `" + playlistName + "` playlist.",
                         true);
             }
             catch (SQLException e)
@@ -110,7 +110,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Can't add track `" + title + "` to playlist `" + playlistName + "`.",
+                        "Can't add track `" + title + "` to `" + playlistName + "` playlist.",
                         true);
             }
 
