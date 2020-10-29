@@ -44,8 +44,7 @@ public class PlaylistModel extends BaseModel
                 try (ResultSet result = statement.executeQuery())
                 {
                     result.next();
-                    int counter = result.getInt(1);
-                    return counter;
+                    return result.getInt(1);
                 }
             }
         }
@@ -80,8 +79,7 @@ public class PlaylistModel extends BaseModel
                 try (ResultSet result = statement.executeQuery())
                 {
                     result.next();
-                    int counter = result.getInt(1);
-                    return counter;
+                    return result.getInt(1);
                 }
             }
         }
@@ -104,7 +102,8 @@ public class PlaylistModel extends BaseModel
         String query =
                 "SELECT COUNT(NAME) " +
                 "FROM " + table + "_PLAYLIST " +
-                "WHERE NAME = '" + name + "'";
+                "WHERE NAME = '" + name + "' " +
+                "AND " + table + "_ID = " + id;
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -157,8 +156,7 @@ public class PlaylistModel extends BaseModel
                 try (ResultSet result = statement.executeQuery())
                 {
                     result.next();
-                    long counter = result.getLong(1);
-                    return counter;
+                    return result.getLong(1);
                 }
             }
         }
@@ -198,11 +196,11 @@ public class PlaylistModel extends BaseModel
                     int counter = 0;
                     while (result.next())
                     {
-                        if (counter == trackIndex - 1)
+                        if (counter == (trackIndex - 1))
                         {
-                            long trackId = result.getLong(1);
-                            return trackId;
+                            return result.getLong(1);
                         }
+                        counter++;
                     }
                 }
             }
@@ -370,7 +368,7 @@ public class PlaylistModel extends BaseModel
     public boolean addTrackToPlaylistAsync(long playlistId, long trackId, String table) throws SQLException
     {
         String query =
-                "INSERT INTO " + table + "_PLAYLIST_TRACK VALUES " +
+                "INSERT INTO " + table + "_PLAYLIST_TRACK (" + table + "_PLAYLIST_ID, TRACK_ID) VALUES " +
                 "(" + playlistId + ", " + trackId + ")";
         return this.executeUpdateQuery(query) > 0;
     }
@@ -405,7 +403,7 @@ public class PlaylistModel extends BaseModel
                 "JOIN track ON " + table + "_playlist_track.TRACK_ID = track.ID " +
                 "WHERE " + table + "_playlist." + table + "_ID = " + id +
                 " AND " + table + "_playlist.NAME = '" + name + "'";
-        
+
         ArrayList<Track> tracks = new ArrayList<Track>(this.maxTrackEachPlaylist);
 
         try (
@@ -431,9 +429,9 @@ public class PlaylistModel extends BaseModel
                 }
             }
         }
-        catch (SQLException throwables)
+        catch (SQLException e)
         {
-            throwables.printStackTrace();
+            e.printStackTrace();
         }
         return null;
     }
@@ -480,37 +478,58 @@ public class PlaylistModel extends BaseModel
     }
 
     /**
-     * delete track from playlist
-     * @param playlistId playlist id
-     * @param trackId track id
+     * Get id from table guild/user playlist track
+     * @param playlistId Playlist id
+     * @param trackIndex track index
      * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean deleteTrackFromPlaylistAsync(long playlistId, long trackId, String table) throws SQLException
+    public long getPlaylistTrackId(long playlistId, int trackIndex, String table)
     {
         String query =
-                "DELETE FROM " +table + "_PLAYLIST_TRACK " +
-                "WHERE " + table + "_PLAYLIST_ID = " + playlistId + " " +
-                "AND TRACK_ID = " + trackId;
-        return this.executeUpdateQuery(query) > 0;
+                "SELECT ID " +
+                "FROM " + table + "_PLAYLIST_TRACK " +
+                "WHERE " + table + "_PLAYLIST_ID = " + playlistId + " ";
+        try (
+                Connection connection = DriverManager.getConnection(
+                        this.url,
+                        this.username,
+                        this.password)
+        )
+        {
+            try (PreparedStatement statement = connection.prepareStatement(query))
+            {
+                try (ResultSet result = statement.executeQuery())
+                {
+                    for (int i = 0; i < trackIndex; i++)
+                    {
+                        result.next();
+                        if ((trackIndex - 1) == i)
+                        {
+                            return result.getLong(1);
+                        }
+                    }
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     /**
      * delete track from playlist
-     * @param id user id / guild id
-     * @param name playlist name
-     * @param table
-     * @param trackIndex track index to delete based on registered index by ShowPlaylistTrackCommand
+     * @param playlistTrackId user/guild_playlist_track id
+     * @param table "USER" / "GUILD"
      * @return
      */
-    public boolean deleteTrackFromPlaylistAsync(long id, String name, int trackIndex, String table) throws SQLException
+    public boolean deleteTrackFromPlaylistAsync(long playlistTrackId, String table) throws SQLException
     {
-        long playlistId = this.getPlaylistId(id, name, table);
-        long trackId = this.getTrackId(playlistId, name, trackIndex, table);
-        if (trackIndex <= trackId)
-        {
-            return this.deleteTrackFromPlaylistAsync(playlistId, trackId, table);
-        }
-        return false;
+        String query =
+                "DELETE FROM " + table + "_PLAYLIST_TRACK " +
+                "WHERE ID = " + playlistTrackId + "";
+        return this.executeUpdateQuery(query) > 0;
     }
 }
