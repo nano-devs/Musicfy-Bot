@@ -2,7 +2,6 @@ package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
-import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
@@ -28,18 +27,6 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
     {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
 
         if (event.getArgs().split(",").length != 2)
         {
@@ -64,7 +51,7 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist `" + oldName + "` not exist.",
+                    "`" + oldName + "` playlist does not exist.",
                     true);
             event.reply(embed.build());
             return;
