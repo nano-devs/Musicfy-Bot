@@ -33,7 +33,7 @@ You just need to play a song from **youtube** and use `m$recommend <number>` com
 - First time use: You will have 8 quotas.
 - Every `m$recommend` will decrease 1 quota in stocks.
 - Daily: 1 quota everyday (Priority use).
-- Claim Rewards: Vote and claim! More rewards at weekend! Thanks for supporting! :))
+- Claim Rewards: Vote and claim! More rewards at weekend! Thanks for supporting! :)) `will be implemented after the bot is approved on top.gg`
 
 ⚠ Recommendation is based on the current playing song (currently support only song from youtube). 
 Using `m$recommend` on the same song might result the same recommendation. Please use the command wisely.
