@@ -11,9 +11,14 @@ connection = mysql.connector.connect(user=user,
                                      host='127.0.0.1',
                                      database='nano')
 cursor = connection.cursor()
-insert_query = query = """
+insert_vote_query = """
     INSERT INTO vote (user_id, weekend)
     VALUES ({}, {});
+"""
+update_rewards_query = """
+    UPDATE USER
+    SET RECOMMENDATION_QUOTA = RECOMMENDATION_QUOTA + 2
+    WHERE ID = {};
 """
 
 VOTE_AUTH_TOKEN = os.environ["VOTE_AUTH_NANO"]
@@ -38,11 +43,13 @@ def vote_post():
 
     if request_type == 'upvote':
         print("Upvote", data)
-        cursor.execute(insert_query.format(user_id, int(is_weekend)))
+        cursor.execute(insert_vote_query.format(user_id, int(is_weekend)))
+        cursor.execute(update_rewards_query.format(user_id))
         connection.commit()
     else:
         print("Test", data)
-        cursor.execute(insert_query.format(user_id, int(is_weekend)))
+        cursor.execute(insert_vote_query.format(user_id, int(is_weekend)))
+        cursor.execute(update_rewards_query.format(user_id))
         connection.commit()
     
     return 'success', 200
