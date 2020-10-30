@@ -19,7 +19,7 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
         this.aliases = new String[]{"agp"};
         this.arguments = "<playlist name>";
         this.help = "Create a new guild playlist. \n" +
-                    "Playlist name can't be same with existed other guild playlist.\n";
+                    "The playlist name cannot be the same as the existing playlist in the guild.\n";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
@@ -69,6 +69,17 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
         }
 
         String name = event.getArgs().trim().replace("'", "\\'");
+
+        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), name, this.table))
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "You already have playlist with the same name.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         CompletableFuture.runAsync(() ->
         {

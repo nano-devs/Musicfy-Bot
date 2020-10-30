@@ -4,7 +4,6 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
-import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
@@ -23,7 +22,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         this.name = "play_user_playlist";
         this.aliases = new String[]{"pup"};
         this.arguments = "<playlist name>";
-        this.help = "Play all track from specific user playlist.\n";
+        this.help = "Play all track from the user's own playlist.\n";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
@@ -34,18 +33,6 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
     {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
 
         if (event.getArgs().trim().length() <= 0)
         {
@@ -64,7 +51,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's no playlist with name `" + event.getArgs().trim() + "`.",
+                    "There are no playlist with `" + event.getArgs().trim() + "` names.",
                     true);
             event.reply(embed.build());
             return;
@@ -77,7 +64,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's no track in playlist `" + event.getArgs().trim() + "`.",
+                    "There are no track in `" + event.getArgs().trim() + "` playlist.",
                     true);
             event.reply(embed.build());
         }
@@ -97,7 +84,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Success");
             embed.addField(
                     ":white_check_mark:",
-                    "Add " + addedSize + " track to queue.",
+                    "Has added " + addedSize + " track(s) to the queue.",
                     true);
             event.reply(embed.build());
         }

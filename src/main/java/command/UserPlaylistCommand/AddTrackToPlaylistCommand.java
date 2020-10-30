@@ -1,7 +1,6 @@
 package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PremiumModel;
 import database.TrackModel;
 import database.PlaylistModel;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -31,18 +30,6 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
     {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
 
         if (event.getArgs().split(",").length != 3)
         {
@@ -65,17 +52,14 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         long trackId = track.getTrackId(url);
         if (trackId <= 0)
         {
-            CompletableFuture.runAsync(() ->
+            try
             {
-                try
-                {
-                    track.addTrackAsync(title, url);
-                }
-                catch (SQLException e)
-                {
-                    e.printStackTrace();
-                }
-            });
+                track.addTrackAsync(title, url);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
         }
         trackId = track.getTrackId(url);
 
@@ -86,7 +70,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Playlist `" + playlistName + "` not exist.",
+                    "`" + playlistName + "` playlist does not exist.",
                     true);
             event.reply(embed.build());
             return;
@@ -97,7 +81,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Track for playlist have reached maximum limit.",
+                    "Track for playlist has reached the maximum limit.",
                     true);
             event.reply(embed.build());
             return;
@@ -113,7 +97,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Track `" + title + "` added to playlist `" + playlistName + "`.",
+                        "Track `" + title + "` added to `" + playlistName + "` playlist.",
                         true);
             }
             catch (SQLException e)
@@ -122,7 +106,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Can't add track `" + title + "` to playlist `" + playlistName + "`.",
+                        "Can't add track `" + title + "` to `" + playlistName + "` playlist.",
                         true);
             }
 

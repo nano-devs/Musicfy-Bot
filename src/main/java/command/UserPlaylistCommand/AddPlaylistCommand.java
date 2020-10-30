@@ -2,7 +2,6 @@ package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
-import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
@@ -30,25 +29,13 @@ public class AddPlaylistCommand extends UserPlaylistBaseCommand
     {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getAuthor().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
 
         if (event.getArgs().trim().length() == 0)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give a name to playlist.",
+                    "Please specify a name for the playlist.",
                     true);
             event.reply(embed.build());
             return;
@@ -69,6 +56,17 @@ public class AddPlaylistCommand extends UserPlaylistBaseCommand
 
         String name = event.getArgs().trim().replace("'", "\\'");
 
+        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), name, this.table))
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "You already have playlist with the same name.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
         CompletableFuture.runAsync(() ->
         {
             try
@@ -78,7 +76,7 @@ public class AddPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Playlist `" + event.getArgs().trim() + "` created.",
+                        "`" + event.getArgs().trim() + "` playlist is created.",
                         true);
             }
             catch (SQLException e)
