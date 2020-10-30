@@ -46,7 +46,8 @@ public class RecommendationCommand extends Command {
         }
 
         if (event.getArgs().isEmpty()) {
-            event.reply(":x: | Please provide a number `(1 - 24)`. Example `"+event.getClient().getPrefix()+"recommend`");
+            event.reply(":x: | Please provide a number `(1 - 24)`. Example `"
+                    +event.getClient().getPrefix()+"recommend 5` to request 5 recommendations");
             return;
         }
 
