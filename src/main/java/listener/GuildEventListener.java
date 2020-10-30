@@ -25,13 +25,13 @@ public class GuildEventListener extends ListenerAdapter {
 
         this.dblApi.setStats(jda.getGuilds().size());
 
-        // Notify owner
-        String messageToOwner = "Just left server " + event.getGuild().getName()
-                + ". Total " + jda.getGuilds().size() + " guilds";
-
-        User owner = jda.getUserById(this.commandClient.getOwnerId());
-
-        owner.openPrivateChannel().flatMap(channel -> channel.sendMessage(messageToOwner)).queue();
+        // Notify owner. development purposes
+//        String messageToOwner = "Just left server " + event.getGuild().getName()
+//                + ". Total " + jda.getGuilds().size() + " guilds";
+//
+//        User owner = jda.getUserById(this.commandClient.getOwnerId());
+//
+//        owner.openPrivateChannel().flatMap(channel -> channel.sendMessage(messageToOwner)).queue();
         super.onGuildJoin(event);
     }
 
@@ -41,13 +41,13 @@ public class GuildEventListener extends ListenerAdapter {
 
         this.dblApi.setStats(jda.getGuilds().size());
 
-        // Notify owner
-        String messageToOwner = "Joined server " + event.getGuild().getName()
-                + ". Total " + jda.getGuilds().size() + " guilds";
-
-        User owner = jda.getUserById(this.commandClient.getOwnerId());
-
-        owner.openPrivateChannel().flatMap(channel -> channel.sendMessage(messageToOwner)).queue();
+        // Notify owner. development purposes
+//        String messageToOwner = "Joined server " + event.getGuild().getName()
+//                + ". Total " + jda.getGuilds().size() + " guilds";
+//
+//        User owner = jda.getUserById(this.commandClient.getOwnerId());
+//
+//        owner.openPrivateChannel().flatMap(channel -> channel.sendMessage(messageToOwner)).queue();
 
         super.onGuildLeave(event);
     }
