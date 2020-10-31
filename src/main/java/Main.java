@@ -81,7 +81,7 @@ public class Main {
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.RenamePlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeletePlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddTrackToPlaylistCommand());
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddTrackToPlaylistCommand(youtubeClient));
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeleteTrackFromPlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistTrackCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.PlayPlaylistCommand(nano));
