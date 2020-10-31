@@ -14,9 +14,12 @@ import java.util.concurrent.CompletableFuture;
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
     private final int maxTrack = 20;
+    private final YoutubeClient client;
 
-    public AddTrackToPlaylistCommand()
+    public AddTrackToPlaylistCommand(YoutubeClient ytc)
     {
+        this.client = ytc;
+
         this.name = "add_track_to_user_playlist";
         this.aliases = new String[]{"attup"};
         this.arguments = "<playlist name>, <url>";
@@ -75,8 +78,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         YoutubeVideo video = null;
         try
         {
-            YoutubeClient client = new YoutubeClient();
-            video = client.getInfoByVideoUrl(url);
+            video = this.client.getInfoByVideoUrl(url);
 
             if (video == null)
             {
