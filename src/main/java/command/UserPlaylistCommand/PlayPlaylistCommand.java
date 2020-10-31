@@ -84,7 +84,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Success");
             embed.addField(
                     ":white_check_mark:",
-                    "Has added " + addedSize + " track(s) to the queue.",
+                    "Added " + addedSize + " track(s) to the queue.",
                     true);
             event.reply(embed.build());
         }
