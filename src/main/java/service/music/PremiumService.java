@@ -1,12 +1,11 @@
 package service.music;
 
-import YouTubeSearchApi.YoutubeClient;
-import com.jagrosh.jdautilities.command.CommandEvent;
 import database.*;
 import io.donatebot.api.DBClient;
 import io.donatebot.api.Donation;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -35,22 +34,8 @@ public class PremiumService
      * @param url track/song/video url
      * @param event command even listener
      */
-    public static void addHistory(String title, String url, CommandEvent event)
+    public static void addHistory(String title, String url, Guild guild, User user)
     {
-        if (title.trim().equals(""))
-        {
-            try
-            {
-                YoutubeClient client = new YoutubeClient();
-                title = client.getInfoByVideoUrl(url).getTitle();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-                title = "unknown";
-            }
-        }
-
         TrackModel trackModel = new TrackModel();
         try
         {
@@ -65,29 +50,15 @@ public class PremiumService
 
         PremiumModel db = new PremiumModel();
 
-        UserHistoryModel user = new UserHistoryModel();
-
-        CompletableFuture.runAsync(() ->
+        if (db.isPremium(guild.getIdLong(), "GUILD"))
         {
-            try
-            {
-                user.addUserHistoryAsync(event.getAuthor().getIdLong(), trackId);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-        });
-
-        if (db.isPremium(event.getGuild().getIdLong(), "GUILD"))
-        {
-            GuildHistoryModel guild = new GuildHistoryModel();
+            GuildHistoryModel guildHistoryModel = new GuildHistoryModel();
 
             CompletableFuture.runAsync(() ->
             {
                 try
                 {
-                    guild.addGuildHistoryAsync(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
+                    guildHistoryModel.addGuildHistoryAsync(guild.getIdLong(), user.getIdLong(), trackId);
                 }
                 catch (SQLException e)
                 {
@@ -95,6 +66,66 @@ public class PremiumService
                 }
             });
         }
+
+        UserHistoryModel userHistoryModel = new UserHistoryModel();
+
+        CompletableFuture.runAsync(() ->
+        {
+            try
+            {
+                userHistoryModel.addUserHistoryAsync(user.getIdLong(), trackId);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void addHistoryUser(User user, long trackId)
+    {
+        UserHistoryModel userModel = new UserHistoryModel();
+
+        CompletableFuture.runAsync(() ->
+        {
+            try
+            {
+                userModel.addUserHistoryAsync(user.getIdLong(), trackId);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public static void addHistoryUser(User user, String title, String url)
+    {
+        TrackModel trackModel = new TrackModel();
+        try
+        {
+            trackModel.addTrackAsync(title, url);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        long trackId = trackModel.getTrackId(url);
+
+        UserHistoryModel userModel = new UserHistoryModel();
+
+        CompletableFuture.runAsync(() ->
+        {
+            try
+            {
+                userModel.addUserHistoryAsync(user.getIdLong(), trackId);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**

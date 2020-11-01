@@ -74,7 +74,6 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             int addedSize = 0;
             for (int i = 0; i < tracks.size(); i++)
             {
-                PremiumService.addHistory(tracks.get(i).title, tracks.get(i).url, event);
                 this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getMember());
                 addedSize += 1;
                 if (musicManager.isQueueFull()) {

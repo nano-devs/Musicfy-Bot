@@ -20,7 +20,7 @@ public class PlayUrlCommand extends Command {
 
         this.name = "play_url";
         this.help = "Stands for `purl`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
-        this.aliases = new String[] {"url", "play_url", "playurl"};
+        this.aliases = new String[] {"url", "purl", "playurl"};
         this.cooldown = 2;
         this.arguments = "<url>";
         this.guildOnly = true;
@@ -63,8 +63,6 @@ public class PlayUrlCommand extends Command {
             // if not connected to any voice channel, try to join user voice channel.
             nanoClient.getMusicService().joinUserVoiceChannel(event);
         }
-
-        PremiumService.addHistory("", event.getArgs(), event);
 
         nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), args, event.getMember());
     }

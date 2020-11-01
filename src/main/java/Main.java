@@ -59,6 +59,7 @@ public class Main {
         commandClientBuilder.setActivity(Activity.listening(prefix + "help"));
 
         // Add Command & Inject Dependencies.
+        // Free Commands
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
         commandClientBuilder.addCommand(new ClaimCommand(dblApi));
@@ -86,6 +87,8 @@ public class Main {
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeleteTrackFromPlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistTrackCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.PlayPlaylistCommand(nano));
+
+        // Premium Guild Commands
 //        commandClientBuilder.addCommand(new PremiumGuildCommand());
 //        commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddPlaylistCommand());
@@ -96,6 +99,8 @@ public class Main {
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
+
+        // Owner's commands
         commandClientBuilder.addCommand(new ChangePresenceCommand());
 
         CommandClient commandClient = commandClientBuilder.build();

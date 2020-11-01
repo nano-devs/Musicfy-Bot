@@ -70,7 +70,6 @@ public class PlayCommand extends Command {
         UrlValidator urlValidator = new UrlValidator(schemes);
 
         if (urlValidator.isValid(args)) {
-            PremiumService.addHistory("", args, event);
             nanoClient.loadAndPlayUrl(musicManager, event.getTextChannel(), args, event.getMember());
         }
         else {
