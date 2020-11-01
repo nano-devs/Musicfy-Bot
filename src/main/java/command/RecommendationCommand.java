@@ -45,10 +45,30 @@ public class RecommendationCommand extends Command {
             return;
         }
 
+        // Ensure argument
+        int requestNumber = -1;
+        // if argument is empty
         if (event.getArgs().isEmpty()) {
             event.reply(":x: | Please provide a number `(1 - 24)`. Example `"
                     +event.getClient().getPrefix()+"recommend 5` to request 5 recommendations");
             return;
+        }
+        else {
+            // Check if argument is a number
+            try {
+                requestNumber = Integer.parseInt(event.getArgs());
+            } catch (Exception e) {
+                event.reply(":x: | Please provide a number `(1 - 24)`. Example `"
+                        +event.getClient().getPrefix()+"recommend 5` to request 5 recommendations");
+                return;
+            }
+
+            // if a number, then check if number is in valid range.
+            if (requestNumber <= 0 || requestNumber >= 24) {
+                event.reply(":x: | Please provide a number `(1 - 24)`. Example `"
+                        +event.getClient().getPrefix()+"recommend 5` to request 5 recommendations");
+                return;
+            }
         }
 
         GuildMusicManager musicManager = this.nanoClient.getGuildAudioPlayer(event.getGuild());
@@ -68,7 +88,7 @@ public class RecommendationCommand extends Command {
 
         // if user is not registered. make new user record and recommend.
         if (classicUser == null) {
-            recommend(event, musicManager, Integer.parseInt(event.getArgs()));
+            recommend(event, musicManager, requestNumber);
             CompletableFuture.runAsync(() -> {
                 try {
                     userModel.create(event.getAuthor().getIdLong(), 8, 0);
@@ -82,7 +102,7 @@ public class RecommendationCommand extends Command {
         // if user is registered. then Check user's daily quota (priority)
         if (classicUser.getDailyQuota() > 0) {
             // Recommend & Update quota
-            recommend(event, musicManager, Integer.parseInt(event.getArgs()));
+            recommend(event, musicManager, requestNumber);
             CompletableFuture.runAsync(() -> {
                 try {
                     userModel.updateDailyQuota(classicUser.getId(),
@@ -101,7 +121,7 @@ public class RecommendationCommand extends Command {
             return;
         }
 
-        recommend(event, musicManager, Integer.parseInt(event.getArgs()));
+        recommend(event, musicManager, requestNumber);
         // if quota is available
         CompletableFuture.runAsync(() -> {
             try {
