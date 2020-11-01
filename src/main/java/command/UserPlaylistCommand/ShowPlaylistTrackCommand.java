@@ -72,7 +72,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
             {
                 sb.append((i + 1) + ". ");
                 sb.append("**" + tracks.get(i).title + "**");
-                sb.append(" `ID :" + tracks.get(i).trackId + "`");
+//                sb.append(" `ID :" + tracks.get(i).trackId + "`");
                 sb.append("\n");
             }
             embed.setDescription(sb.toString());

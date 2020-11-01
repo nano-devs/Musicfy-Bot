@@ -46,7 +46,7 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
             {
                 output.append((i + 1) + ". ");
                 output.append("**" + playlists.get(i).name + "**");
-                output.append(" `ID: " + playlists.get(i).id + "`");
+                output.append(" `Track count: " + playlists.get(i).trackCount + "`");
                 output.append("\n");
             }
             embed.setDescription(output.toString());

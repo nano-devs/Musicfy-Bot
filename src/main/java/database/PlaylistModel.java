@@ -236,9 +236,11 @@ public class PlaylistModel extends BaseModel
     public ArrayList<Playlist> getAllPlaylist(long id, String table)
     {
         String query =
-                "SELECT ID, NAME " +
+                "SELECT " + table + "_PLAYLIST.NAME, COUNT(" + table + "_PLAYLIST_TRACK.TRACK_ID) " +
                 "FROM " + table + "_PLAYLIST " +
-                "WHERE " + table + "_ID = " + id;
+                "JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
+                "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
+                "GROUP BY USER_PLAYLIST.NAME";
 
         int countPlaylist = this.countPlaylist(id, table);
         if (countPlaylist == 0)
@@ -262,9 +264,10 @@ public class PlaylistModel extends BaseModel
                     while (result.next())
                     {
                         playlists.add(
-                                new Playlist(result.getInt(1),
-                                result.getString(2),
-                                this.maxTrackEachPlaylist)
+                                new Playlist(0,
+                                result.getString(1),
+                                this.maxTrackEachPlaylist,
+                                result.getInt(2))
                         );
                     }
                     return playlists;
@@ -303,7 +306,8 @@ public class PlaylistModel extends BaseModel
                 {
                     return new Playlist(result.getInt(1),
                             result.getString(2),
-                            this.maxTrackEachPlaylist);
+                            this.maxTrackEachPlaylist,
+                            0);
                 }
             }
         }
