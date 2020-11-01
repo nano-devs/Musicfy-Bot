@@ -49,7 +49,7 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "New name for playlist cna't be same as the old name.",
+                    "New name for playlist can not be same as the old name.",
                     true);
             event.reply(embed.build());
             return;
