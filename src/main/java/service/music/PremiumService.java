@@ -1,10 +1,12 @@
 package service.music;
 
+import YouTubeSearchApi.YoutubeClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.*;
 import io.donatebot.api.DBClient;
 import io.donatebot.api.Donation;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -35,6 +37,20 @@ public class PremiumService
      */
     public static void addHistory(String title, String url, CommandEvent event)
     {
+        if (title.trim().equals(""))
+        {
+            try
+            {
+                YoutubeClient client = new YoutubeClient();
+                title = client.getInfoByVideoUrl(url).getTitle();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                title = "unknown";
+            }
+        }
+
         TrackModel trackModel = new TrackModel();
         try
         {
@@ -44,14 +60,24 @@ public class PremiumService
         {
             e.printStackTrace();
         }
-//        CompletableFuture.runAsync(() ->
-//        {
-//
-//        });
 
         long trackId = trackModel.getTrackId(url);
 
         PremiumModel db = new PremiumModel();
+
+        UserHistoryModel user = new UserHistoryModel();
+
+        CompletableFuture.runAsync(() ->
+        {
+            try
+            {
+                user.addUserHistoryAsync(event.getAuthor().getIdLong(), trackId);
+            }
+            catch (SQLException e)
+            {
+                e.printStackTrace();
+            }
+        });
 
         if (db.isPremium(event.getGuild().getIdLong(), "GUILD"))
         {
@@ -62,23 +88,6 @@ public class PremiumService
                 try
                 {
                     guild.addGuildHistoryAsync(event.getGuild().getIdLong(), event.getAuthor().getIdLong(), trackId);
-                }
-                catch (SQLException e)
-                {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-        if (db.isPremium(event.getAuthor().getIdLong(), "USER"))
-        {
-            UserHistoryModel user = new UserHistoryModel();
-
-            CompletableFuture.runAsync(() ->
-            {
-                try
-                {
-                    user.addUserHistoryAsync(event.getAuthor().getIdLong(), trackId);
                 }
                 catch (SQLException e)
                 {
