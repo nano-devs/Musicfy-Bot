@@ -93,15 +93,6 @@ public class MusicService {
         musicManager.player.setVolume(volume);
     }
 
-    public void connectToFirstVoiceChannel(AudioManager audioManager) {
-        if (!audioManager.isConnected() && !audioManager.isAttemptingToConnect()) {
-            for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
-                audioManager.openAudioConnection(voiceChannel);
-                break;
-            }
-        }
-    }
-
     public boolean joinUserVoiceChannel(GuildMessageReceivedEvent event) {
         Member member = event.getMember();
         VoiceChannel voiceChannel = member.getVoiceState().getChannel();
