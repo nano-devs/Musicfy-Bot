@@ -45,40 +45,6 @@ public class MusicService {
         });
     }
 
-    public void loadAndPlayKeywords(AudioPlayerManager playerManager, GuildMusicManager musicManager,
-                            final TextChannel channel, final String keywords, User requester) {
-        playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
-            @Override
-            public void trackLoaded(AudioTrack track) {
-                channel.sendMessage("Adding to queue " + track.getInfo().title).queue();
-
-                track.setUserData(requester);
-
-                play(musicManager, track);
-            }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist playlist) {
-                for (AudioTrack track : playlist.getTracks()) {
-                    track.setUserData(requester);
-                    musicManager.scheduler.queue(track);
-                }
-                channel.sendMessage(String.valueOf(playlist.getTracks().size()) +
-                        " entries has been added to queue from " + playlist.getName()).queue();
-            }
-
-            @Override
-            public void noMatches() {
-                channel.sendMessage("Nothing found by " + keywords).queue();
-            }
-
-            @Override
-            public void loadFailed(FriendlyException exception) {
-                channel.sendMessage("Could not play: " + exception.getMessage()).queue();
-            }
-        });
-    }
-
     public void play(GuildMusicManager musicManager, AudioTrack track) {
         musicManager.scheduler.queue(track);
     }

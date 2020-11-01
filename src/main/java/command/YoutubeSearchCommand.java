@@ -142,9 +142,6 @@ public class YoutubeSearchCommand extends Command
                     }
                     entry -= 1;
 
-                    // process premium access
-                    PremiumService.addHistory(finalVideos.get(entry).getTitle(), finalVideos.get(entry).getUrl(), event);
-
                     // get selected video detail
                     this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getMember());
                 },

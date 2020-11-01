@@ -16,9 +16,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import service.music.GuildMusicManager;
-import service.music.MusicService;
-import service.music.MusicUtils;
+import service.music.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -69,66 +67,8 @@ public class NanoClient {
 
         musicManager.scheduler.textChannel = channel;
 
-        playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
-            @Override
-            public void trackLoaded(AudioTrack track) {
-                if (track.getDuration() > 900000) {
-                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
-                    channel.sendMessage(errorMessage).queue();
-                    return;
-                }
-                track.setUserData(requester);
-                musicManager.scheduler.queue(track);
-
-                int positionInQueue = musicManager.scheduler.getQueue().size();
-
-                if (channel != null) {
-                    EmbedBuilder embedBuilder = new EmbedBuilder();
-                    embedBuilder.setColor(requester.getColor());
-                    embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
-
-                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
-                            requester.getUser().getEffectiveAvatarUrl());
-
-                    embedBuilder.addField("Channel", track.getInfo().author, true);
-                    embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
-                    embedBuilder.addField("Position in queue", "" + positionInQueue, true);
-                    embedBuilder.addField("Estimated time until playing",
-                            musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
-
-                    channel.sendMessage(embedBuilder.build()).queue();
-                }
-            }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist playlist) {
-                int addedSize = 0;
-                for (AudioTrack track : playlist.getTracks()) {
-                    if (track.getDuration() > 900000) {
-                        continue;
-                    }
-                    track.setUserData(requester);
-                    musicManager.scheduler.queue(track);
-                    addedSize += 1;
-                    if (musicManager.isQueueFull()) {
-                        break;
-                    }
-                }
-                if (channel != null)
-                    channel.sendMessage(":white_check_mark: | " + addedSize +
-                            " entries from **"+ playlist.getName() + "** has been added to queue").queue();
-            }
-
-            @Override
-            public void noMatches() {
-                channel.sendMessage(":negative_squared_cross_mark: | Nothing found by " + trackUrl).queue();
-            }
-
-            @Override
-            public void loadFailed(FriendlyException exception) {
-                channel.sendMessage(":negative_squared_cross_mark: | Could not play: " + exception.getMessage()).queue();
-            }
-        });
+        playerManager.loadItemOrdered(musicManager, trackUrl,
+                new UrlAudioLoadResultHandler(musicManager, channel, trackUrl, requester));
     }
 
     /**
@@ -153,6 +93,8 @@ public class NanoClient {
                 }
                 track.setUserData(requester);
                 musicManager.scheduler.queue(track);
+
+                PremiumService.addHistory(track.getInfo().title, trackUrl, requester.getGuild(), requester.getUser());
 
                 int positionInQueue = musicManager.scheduler.getQueue().size();
 
@@ -193,6 +135,9 @@ public class NanoClient {
                         break;
                     }
                 }
+
+                PremiumService.addHistory(playlist.getName(), trackUrl, requester.getGuild(), requester.getUser());
+
                 if (channel != null)
                     channel.sendMessage(":white_check_mark: | " + addedSize +
                             " entries from **"+ playlist.getName() + "** has been added to queue").queue();
@@ -222,82 +167,8 @@ public class NanoClient {
 
         musicManager.scheduler.textChannel = channel;
 
-        playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords, new AudioLoadResultHandler() {
-            @Override
-            public void trackLoaded(AudioTrack track) {
-                if (track.getDuration() > 900000) {
-                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
-                    channel.sendMessage(errorMessage).queue();
-                    return;
-                }
-                track.setUserData(requester);
-
-                musicManager.scheduler.queue(track);
-
-                int positionInQueue = musicManager.scheduler.getQueue().size();
-                if (channel != null) {
-                    EmbedBuilder embedBuilder = new EmbedBuilder();
-                    embedBuilder.setColor(requester.getColor());
-                    embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
-
-                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
-                            requester.getUser().getEffectiveAvatarUrl());
-
-                    embedBuilder.addField("Channel", track.getInfo().author, true);
-                    embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
-                    embedBuilder.addField("Position in queue", "" + positionInQueue, true);
-                    embedBuilder.addField("Estimated time until playing",
-                            musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
-
-                    channel.sendMessage(embedBuilder.build()).queue();
-                }
-            }
-
-            @Override
-            public void playlistLoaded(AudioPlaylist playlist) {
-                AudioTrack track = playlist.getSelectedTrack();
-                if (track == null) {
-                    track = playlist.getTracks().get(0);
-                }
-                if (track.getDuration() > 900000) {
-                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
-                    channel.sendMessage(errorMessage).queue();
-                    return;
-                }
-                track.setUserData(requester);
-
-                musicManager.scheduler.queue(track);
-
-                if (channel != null) {
-                    int positionInQueue = musicManager.scheduler.getQueue().size();
-
-                    EmbedBuilder embedBuilder = new EmbedBuilder();
-                    embedBuilder.setColor(requester.getColor());
-                    embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
-
-                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
-                            requester.getUser().getEffectiveAvatarUrl());
-
-                    embedBuilder.addField("Channel", track.getInfo().author, true);
-                    embedBuilder.addField("Song Duration", MusicUtils.getDurationFormat(track.getDuration()), true);
-                    embedBuilder.addField("Position in queue", "" + positionInQueue, true);
-                    embedBuilder.addField("Estimated time until playing",
-                            musicManager.getEstimatedTimeUntilPlaying(positionInQueue), true);
-
-                    channel.sendMessage(embedBuilder.build()).queue();
-                }
-            }
-
-            @Override
-            public void noMatches() {
-                channel.sendMessage(":negative_squared_cross_mark: | Nothing found by " + keywords).queue();
-            }
-
-            @Override
-            public void loadFailed(FriendlyException exception) {
-                channel.sendMessage(":negative_squared_cross_mark: | Could not play: " + exception.getMessage()).queue();
-            }
-        });
+        playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords,
+                new KeywordAudioLoadResultHandler(musicManager, channel, keywords, requester));
     }
 
     public JDA getJda() {
