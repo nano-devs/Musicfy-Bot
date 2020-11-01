@@ -7,6 +7,7 @@ import command.*;
 import command.general.ClaimCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
+import command.history.UserHistoryCommand;
 import command.owner.ChangePresenceCommand;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;

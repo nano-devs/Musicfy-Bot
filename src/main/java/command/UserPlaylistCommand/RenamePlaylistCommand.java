@@ -44,6 +44,17 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
         String oldName = event.getArgs().split(",")[0].trim();
         String newName = event.getArgs().split(",")[1].trim();
 
+        if (oldName.equals(newName))
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "New name for playlist can not be same as the old name.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
         PlaylistModel db = new PlaylistModel();
 
         if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), oldName, this.table))

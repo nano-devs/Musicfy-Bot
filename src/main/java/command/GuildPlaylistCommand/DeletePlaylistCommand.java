@@ -68,8 +68,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.deletePlaylistAsync(event.getGuild().getIdLong(), event.getArgs().trim(), this.table);
-
+                db.deletePlaylistAndAllTrackFromPlaylistAsync(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table);
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",

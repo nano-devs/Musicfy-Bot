@@ -1,4 +1,4 @@
-package command;
+package command.history;
 
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
