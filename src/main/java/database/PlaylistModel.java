@@ -238,7 +238,7 @@ public class PlaylistModel extends BaseModel
         String query =
                 "SELECT " + table + "_PLAYLIST.NAME, COUNT(" + table + "_PLAYLIST_TRACK.TRACK_ID) " +
                 "FROM " + table + "_PLAYLIST " +
-                "JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
+                "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
                 "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
                 "GROUP BY USER_PLAYLIST.NAME";
 
@@ -511,6 +511,24 @@ public class PlaylistModel extends BaseModel
             e.printStackTrace();
         }
         return -1;
+    }
+
+    /**
+     * delete playlist and all track inside the playlist
+     * @param id user/guild id
+     * @param playlistName Playlist name.
+     * @param table "USER" / "GUILD"
+     * @return
+     */
+    public boolean deletePlaylistAndAllTrackFromPlaylistAsync(long id, String playlistName, String table) throws SQLException
+    {
+        String query =
+                "DELETE " + table + "_PLAYLIST, " + table + "_PLAYLIST_TRACK \n" +
+                "FROM " + table + "_PLAYLIST_TRACK \n" +
+                "JOIN " + table + "_PLAYLIST ON " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID = " + table + "_PLAYLIST.ID \n" +
+                "WHERE " + table + "_PLAYLIST.NAME = '" + playlistName + "' " +
+                "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " ";
+        return this.executeUpdateQuery(query) > 0;
     }
 
     /**
