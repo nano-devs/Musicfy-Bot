@@ -67,12 +67,12 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
         {
             embed.setTitle("`" + playlistName + "` playlist :notes:");
             StringBuilder sb = new StringBuilder();
+            sb.append("You have " + tracks.size() + " track(s) in the playlist.\n");
 
             for (int i = 0; i < tracks.size(); i++)
             {
                 sb.append((i + 1) + ". ");
                 sb.append("**" + tracks.get(i).title + "**");
-//                sb.append(" `ID :" + tracks.get(i).trackId + "`");
                 sb.append("\n");
             }
             embed.setDescription(sb.toString());
