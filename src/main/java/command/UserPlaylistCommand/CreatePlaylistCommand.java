@@ -1,28 +1,26 @@
-package command.GuildPlaylistCommand;
+package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
-import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class AddPlaylistCommand extends GuildPlaylistBaseCommand
+public class CreatePlaylistCommand extends UserPlaylistBaseCommand
 {
     private final int maxPlaylist = 3;
 
-    public AddPlaylistCommand()
+    public CreatePlaylistCommand()
     {
-        this.name = "add_guild_playlist";
-        this.aliases = new String[]{"agp"};
+        this.name = "create_user_playlist";
+        this.aliases = new String[]{"aup", "add_user_playlist", "cup"};
         this.arguments = "<playlist name>";
-        this.help = "Create a new guild playlist. \n" +
-                    "The playlist name cannot be the same as the existing playlist in the guild.\n";
+        this.help = "Create a new user playlist. \n" +
+                    "Playlist name can't be the same with your other playlist name.\n";
         this.cooldown = 2;
-        this.guildOnly = true;
-        this.category = new Category("Guild Playlist");
+        this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
     }
 
@@ -31,25 +29,13 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
     {
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
 
         if (event.getArgs().trim().length() == 0)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give a name to playlist.",
+                    "Please specify a name for the playlist.",
                     true);
             event.reply(embed.build());
             return;
@@ -57,12 +43,12 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
 
         PlaylistModel db = new PlaylistModel();
 
-        if (db.countPlaylist(event.getGuild().getIdLong(), this.table) >= this.maxPlaylist)
+        if (db.countPlaylist(event.getAuthor().getIdLong(), this.table) >= this.maxPlaylist)
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "You have reached the maximum limit for playlist allocated to each guild.",
+                    "You have reached the maximum limit for playlist allocated to each user.",
                     true);
             event.reply(embed.build());
             return;
@@ -85,12 +71,12 @@ public class AddPlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.addPlaylistAsync(event.getGuild().getIdLong(), name.trim(), this.table);
+                db.addPlaylistAsync(event.getAuthor().getIdLong(), name.trim(), this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Playlist `" + event.getArgs().trim() + "` created.",
+                        "`" + event.getArgs().trim() + "` playlist is created.",
                         true);
             }
             catch (SQLException e)

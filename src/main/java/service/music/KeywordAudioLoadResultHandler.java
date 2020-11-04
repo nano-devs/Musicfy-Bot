@@ -23,7 +23,7 @@ public class KeywordAudioLoadResultHandler implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        if (track.getDuration() > 900000) {
+        if (channel != null && track.getDuration() > 900000) {
             String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
             channel.sendMessage(errorMessage).queue();
             return;
