@@ -39,6 +39,8 @@ public class GuildMusicManager {
 
     private int maxQueueSize = 60;
 
+    private boolean inDjMode = false;
+
     /**
      * Creates a player and a track scheduler.
      * @param manager Audio player manager to use for creating the player.
@@ -148,5 +150,13 @@ public class GuildMusicManager {
 
     public boolean isQueueFull() {
         return this.scheduler.getQueue().size() >= this.maxQueueSize;
+    }
+
+    public boolean isInDjMode() {
+        return inDjMode;
+    }
+
+    public void setInDjMode(boolean djMode) {
+        this.inDjMode = djMode;
     }
 }
