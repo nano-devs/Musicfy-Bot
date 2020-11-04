@@ -33,10 +33,17 @@ public class SkipCommand extends Command {
             event.getChannel().sendMessage("Not playing anything").queue();
             return;
         }
+
+        if (event.getMember().getVoiceState().getChannel() == null) {
+            event.reply(":x: | You are not connected to a voice channel");
+        }
+
         User requester = event.getAuthor();
+
         Member nowPlayRequester = musicManager.player.getPlayingTrack().getUserData(Member.class);
         if (requester.getId().equals(nowPlayRequester.getId())) {
             musicManager.scheduler.nextTrack();
+            musicManager.skipVoteSet.clear();
             event.getMessage().addReaction("U+23ED").queue();
             return;
         }
@@ -45,6 +52,7 @@ public class SkipCommand extends Command {
         int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size();
         if (musicManager.skipVoteSet.size() > (connectedMembers - 1) / 2) {
             musicManager.scheduler.nextTrack();
+            musicManager.skipVoteSet.clear();
             event.getMessage().addReaction("U+23ED").queue();
             return;
         }
