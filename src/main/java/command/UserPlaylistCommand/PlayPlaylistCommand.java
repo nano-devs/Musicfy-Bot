@@ -5,9 +5,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
-import service.music.PremiumService;
 
 import java.util.ArrayList;
 
@@ -31,6 +31,18 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
+        VoiceChannel userVoiceChannel = event.getMember().getVoiceState().getChannel();
+        if (userVoiceChannel == null)
+        {
+            event.reply(":x: | You are not connected to any voice channel");
+            return;
+        }
+
+        if (event.getSelfMember().getVoiceState().getChannel() == null)
+        {
+            event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+        }
+
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
 
@@ -85,6 +97,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
                     ":white_check_mark:",
                     "Added " + addedSize + " track(s) to the queue.",
                     true);
+            embed.setFooter("Only song with duration less than 15 minutes added to queue");
             event.reply(embed.build());
         }
     }

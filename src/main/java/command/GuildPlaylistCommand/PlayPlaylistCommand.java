@@ -6,6 +6,7 @@ import database.Entity.Track;
 import database.PlaylistModel;
 import database.PremiumModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.PremiumService;
@@ -33,6 +34,18 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
+        VoiceChannel userVoiceChannel = event.getMember().getVoiceState().getChannel();
+        if (userVoiceChannel == null)
+        {
+            event.reply(":x: | You are not connected to any voice channel");
+            return;
+        }
+
+        if (event.getSelfMember().getVoiceState().getChannel() == null)
+        {
+            event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+        }
+
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
