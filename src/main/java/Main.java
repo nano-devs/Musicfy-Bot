@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
+import command.UserPlaylistCommand.CreatePlaylistCommand;
 import command.general.ClaimCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
@@ -79,7 +80,7 @@ public class Main {
         commandClientBuilder.addCommand(new RecommendationCommand(nano, youtubeClient));
         commandClientBuilder.addCommand(new PremiumUserCommand());
         commandClientBuilder.addCommand(new UserHistoryCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddPlaylistCommand());
+        commandClientBuilder.addCommand(new CreatePlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.RenamePlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeletePlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistCommand());
@@ -91,7 +92,7 @@ public class Main {
         // Premium Guild Commands
 //        commandClientBuilder.addCommand(new PremiumGuildCommand());
 //        commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.CreatePlaylistCommand());
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.RenamePlaylistCommand());
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeletePlaylistCommand());
 //        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistCommand());
