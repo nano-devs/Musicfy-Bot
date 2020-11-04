@@ -8,11 +8,11 @@ import service.music.HelpProcess;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class AddPlaylistCommand extends UserPlaylistBaseCommand
+public class CreatePlaylistCommand extends UserPlaylistBaseCommand
 {
     private final int maxPlaylist = 3;
 
-    public AddPlaylistCommand()
+    public CreatePlaylistCommand()
     {
         this.name = "create_user_playlist";
         this.aliases = new String[]{"aup", "add_user_playlist", "cup"};

@@ -9,17 +9,17 @@ import service.music.HelpProcess;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class AddPlaylistCommand extends GuildPlaylistBaseCommand
+public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
 {
     private final int maxPlaylist = 3;
 
-    public AddPlaylistCommand()
+    public CreatePlaylistCommand()
     {
-        this.name = "add_guild_playlist";
-        this.aliases = new String[]{"agp"};
+        this.name = "create_guild_playlist";
+        this.aliases = new String[]{"agp", "add_guild_playlist", "cgp"};
         this.arguments = "<playlist name>";
         this.help = "Create a new guild playlist. \n" +
-                    "The playlist name cannot be the same as the existing playlist in the guild.\n";
+                    "The playlist name cannot be the same as the other guild's playlist names.\n";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
