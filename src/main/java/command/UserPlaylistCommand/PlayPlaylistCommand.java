@@ -22,7 +22,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         this.name = "play_user_playlist";
         this.aliases = new String[]{"pup"};
         this.arguments = "<playlist name>";
-        this.help = "Play all track from the user's own playlist.\n";
+        this.help = "Play all track from the user's own playlist.";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);

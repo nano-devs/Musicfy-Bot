@@ -14,7 +14,7 @@ public class UserHistoryCommand extends Command
         this.name = "histu";
 //        this.aliases = new String[]{"histu", "hist u", "hist user"};
         this.guildOnly = true;
-        this.help = "Get all user history.\n";
+        this.help = "Get all user history.";
         this.cooldown = 2;
         this.category = new Category("History");
         this.help = HelpProcess.getHelp(this);

@@ -24,7 +24,7 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
         this.name = "play_guild_playlist";
         this.aliases = new String[]{"pgp"};
         this.arguments = "<playlist name>";
-        this.help = "Play all track from specific guild playlist.\n";
+        this.help = "Play all track from specific guild playlist.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");

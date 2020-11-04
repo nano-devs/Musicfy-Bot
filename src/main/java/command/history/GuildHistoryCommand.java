@@ -22,7 +22,7 @@ public class GuildHistoryCommand extends Command
         this.name = "histg";
 //        this.aliases = new String[]{"histg", "hist g", "histu guild"};
         this.guildOnly = true;
-        this.help = "Get all guild history.\n";
+        this.help = "Get all guild history.";
         this.cooldown = 2;
         this.category = new Category("History");
         this.help = HelpProcess.getHelp(this);

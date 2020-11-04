@@ -16,7 +16,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         this.name = "show_guild_playlist_track";
         this.aliases = new String[]{"sgpt"};
         this.arguments = "<playlist name>";
-        this.help = "Show all track from specific guild playlist.\n";
+        this.help = "Show all track from specific guild playlist.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
@@ -32,7 +32,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(

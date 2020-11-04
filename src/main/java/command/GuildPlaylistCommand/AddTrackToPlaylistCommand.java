@@ -20,7 +20,7 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         this.aliases = new String[]{"attgp"};
         this.arguments = "<playlist name>, <track title>, <url>";
         this.help = "Add a new track to guild playlist. \n" +
-                    "Use coma (,) as separator for each arguments.\n";
+                    "Use coma (,) as separator for each arguments.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");

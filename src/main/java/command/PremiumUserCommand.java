@@ -22,7 +22,7 @@ public class PremiumUserCommand extends Command
         this.guildOnly = false;
         this.cooldown = 2;
         this.arguments = "<mentioned user>";
-        this.help = "Become a premium user for one month.\n";
+        this.help = "Become a premium user for one month.";
         this.category = new Category("Owner");
         this.hidden = true;
     }

@@ -16,7 +16,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         this.name = "delete_guild_playlist";
         this.aliases = new String[]{"dgp"};
         this.arguments = "<playlist name>";
-        this.help = "Delete existing guild playlist.\n";
+        this.help = "Delete existing guild playlist.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");

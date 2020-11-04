@@ -13,7 +13,7 @@ public class LeaveCommand extends Command {
 
     public LeaveCommand(NanoClient nanoClient) {
         this.name = "leave";
-        this.help = "Stop playing music and leaves voice channel\n";
+        this.help = "Stop playing music and leaves voice channel";
         this.aliases = new String[]{"stop"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;

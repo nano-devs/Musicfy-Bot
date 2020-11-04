@@ -32,7 +32,7 @@ public class RecommendationCommand extends Command {
         this.category = new Category("Music");
         this.cooldown = 2;
         this.guildOnly = true;
-        this.help = "Add song recommendation (based on current playing song) to queue \n" +
+        this.help = "Add song recommendation (based on current playing song) to queue\n" +
                 ":warning: Using `m$recommend` on the same song might result the same recommendation.";
         this.help = HelpProcess.getHelp(this);
     }

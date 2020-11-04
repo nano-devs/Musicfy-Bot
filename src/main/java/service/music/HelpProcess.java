@@ -11,7 +11,7 @@ public class HelpProcess
         query.append("\n");
         if (command.getAliases() != null && command.getAliases().length > 0)
         {
-            query.append("Alias: ");
+            query.append("Alias(es): ");
             query.append("`");
             for (String alias : command.getAliases())
             {
@@ -21,7 +21,7 @@ public class HelpProcess
             query.append("`\n");
         }
         query.append("*");
-        query.append(command.getHelp().replace("\n", ""));
+        query.append(command.getHelp().trim());
         query.append("*");
         query.append("\n\n");
         return query.toString();

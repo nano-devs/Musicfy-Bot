@@ -38,7 +38,7 @@ public class Main {
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
         String dblToken = System.getenv("DBL_TOKEN");
-        String prefix = "m$";
+        String prefix = "m$$";
 
         // Initialize Dependencies
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
@@ -64,6 +64,7 @@ public class Main {
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
 //        commandClientBuilder.addCommand(new ClaimCommand(dblApi));
+        commandClientBuilder.addCommand(new DjModeCommand(nano));
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));

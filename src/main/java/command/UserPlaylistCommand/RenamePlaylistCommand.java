@@ -16,7 +16,7 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
         this.aliases = new String[]{"rup"};
         this.arguments = "<old playlist name> , <new playlist name>";
         this.help = "Rename user playlist. \n" +
-                    "Use coma (,) as separator for old and new playlist name.\n";
+                    "Use coma (,) as separator for old and new playlist name.";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);

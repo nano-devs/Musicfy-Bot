@@ -17,7 +17,7 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
         this.aliases = new String[]{"rgp"};
         this.arguments = "<old playlist name> , <new playlist name>";
         this.help = "Rename guild playlist. \n" +
-                    "Use coma (,) as separator for old and new playlist name.\n";
+                    "Use coma (,) as separator for old and new playlist name.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
@@ -31,7 +31,7 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
         embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(

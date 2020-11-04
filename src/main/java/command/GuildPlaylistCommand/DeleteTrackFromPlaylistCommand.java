@@ -17,7 +17,7 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
         this.aliases = new String[]{"dtfgp"};
         this.arguments = "<playlist name>, <track index>";
         this.help = "Delete existing track from guild playlist. \n" +
-                    "Use coma (,) as separator for each arguments.\n";
+                    "Use coma (,) as separator for each arguments.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");

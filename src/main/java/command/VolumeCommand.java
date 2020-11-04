@@ -17,7 +17,7 @@ public class VolumeCommand extends Command {
         this.aliases = new String[]{"vol", "volum", "v"};
         this.guildOnly = true;
         this.cooldown = 1;
-        this.help = "Adjust volume number.\n";
+        this.help = "Adjust volume number.";
         this.arguments = "<number>";
         this.category = new Category("Music");
         this.help = HelpProcess.getHelp(this);

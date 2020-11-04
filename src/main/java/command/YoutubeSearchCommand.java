@@ -36,7 +36,7 @@ public class YoutubeSearchCommand extends Command
         this.aliases = new String[]{"yts", "s"};
         this.guildOnly = true;
         this.cooldown = 2;
-        this.help = "Search youtube video with specific keyword.\n";
+        this.help = "Search youtube video with specific keyword.";
         this.arguments = "<keyword>";
         this.category = new Category("Music");
         this.help = HelpProcess.getHelp(this);
