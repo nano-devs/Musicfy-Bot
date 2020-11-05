@@ -51,7 +51,7 @@ public class LyricCommand extends Command
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Can't search lyric, because `query` is empty and currently no playing music.",
+                    "Can't search lyric, because `song-title` is empty and currently no playing music.",
                     true);
             event.reply(embed.build());
             return;
