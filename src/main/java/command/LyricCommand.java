@@ -30,9 +30,9 @@ public class LyricCommand extends Command
         this.client = client;
 
         this.name = "lyric";
-        this.arguments = "<query>";
+        this.arguments = "<song-title>";
         this.help = "Get lyric for music.\n" +
-                    "If `query` is empty, the title of the currently playing music will be used.\n";
+                    "If `song-title` is empty, the title of the currently playing music will be used.\n";
         this.guildOnly = true;
         this.category = new Category("Music");
         this.help = HelpProcess.getHelp(this);
