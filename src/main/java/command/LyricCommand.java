@@ -1,5 +1,6 @@
 package command;
 
+import YouTubeSearchApi.utility.Utils;
 import client.NanoClient;
 import org.json.JSONObject;
 import com.jagrosh.jdautilities.command.Command;
@@ -70,25 +71,8 @@ public class LyricCommand extends Command
         {
             try
             {
-//                String output = Utils.httpRequest("https://lyrics.tsu.sh/v1/?q=" + URLEncoder.encode(finalQuery, StandardCharsets.UTF_8.toString()));
-                URL url = new URL("https://lyrics.tsu.sh/v1/?q=" + URLEncoder.encode(finalQuery, StandardCharsets.UTF_8.toString()));
-                HttpURLConnection http = (HttpURLConnection) url.openConnection();
-                http.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
-                http.setRequestProperty("accept", "application/json");
-
-                StringBuilder output = new StringBuilder();
-                try (InputStreamReader stream = new InputStreamReader(http.getInputStream(), Charset.forName(StandardCharsets.UTF_8.name())))
-                {
-                    try (Reader reader = new BufferedReader(stream))
-                    {
-                        int c = 0;
-                        while ((c = reader.read()) != -1)
-                        {
-                            output.append((char) c);
-                        }
-                    }
-                }
-                JSONObject json = new JSONObject(output.toString());
+                String output = Utils.httpRequest("https://lyrics.tsu.sh/v1/?q=" + URLEncoder.encode(finalQuery, StandardCharsets.UTF_8.toString()));
+                JSONObject json = new JSONObject(output);
                 embed.setTitle(((JSONObject)json.get("song")).get("full_title").toString());
                 embed.setDescription(json.get("content").toString());
             }
