@@ -18,7 +18,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 public class LyricCommand extends Command
@@ -71,18 +70,22 @@ public class LyricCommand extends Command
         {
             try
             {
+//                String output = Utils.httpRequest("https://lyrics.tsu.sh/v1/?q=" + URLEncoder.encode(finalQuery, StandardCharsets.UTF_8.toString()));
                 URL url = new URL("https://lyrics.tsu.sh/v1/?q=" + URLEncoder.encode(finalQuery, StandardCharsets.UTF_8.toString()));
                 HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 http.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
                 http.setRequestProperty("accept", "application/json");
 
                 StringBuilder output = new StringBuilder();
-                try (Reader reader = new BufferedReader(new InputStreamReader(http.getInputStream(), Charset.forName(StandardCharsets.UTF_8.name()))))
+                try (InputStreamReader stream = new InputStreamReader(http.getInputStream(), Charset.forName(StandardCharsets.UTF_8.name())))
                 {
-                    int c = 0;
-                    while ((c = reader.read()) != -1)
+                    try (Reader reader = new BufferedReader(stream))
                     {
-                        output.append((char) c);
+                        int c = 0;
+                        while ((c = reader.read()) != -1)
+                        {
+                            output.append((char) c);
+                        }
                     }
                 }
                 JSONObject json = new JSONObject(output.toString());
