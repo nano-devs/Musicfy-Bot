@@ -79,6 +79,7 @@ public class Main {
         commandClientBuilder.addCommand(new ShowQueueCommand(nano));
         commandClientBuilder.addCommand(new ShuffleCommand(nano));
         commandClientBuilder.addCommand(new RecommendationCommand(nano, youtubeClient));
+        commandClientBuilder.addCommand(new LyricCommand(nano));
         commandClientBuilder.addCommand(new PremiumUserCommand());
         commandClientBuilder.addCommand(new UserHistoryCommand());
         commandClientBuilder.addCommand(new CreatePlaylistCommand());
