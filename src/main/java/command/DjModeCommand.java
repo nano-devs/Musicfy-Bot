@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 
 public class DjModeCommand extends Command {
 
@@ -29,6 +30,11 @@ public class DjModeCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
+
+        if (!MusicUtils.hasDjRole(event.getMember())) {
+            event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+            return;
+        }
 
         if (musicManager.isInDjMode()) {
             musicManager.setInDjMode(false);
