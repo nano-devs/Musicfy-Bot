@@ -3,10 +3,12 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 
 public class SkipCommand extends Command {
 
@@ -28,14 +30,22 @@ public class SkipCommand extends Command {
     protected void execute(CommandEvent event) {
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
 
-        // Check if player is currently playing audio
-        if (musicManager.player.getPlayingTrack() == null) {
-            event.getChannel().sendMessage("Not playing anything").queue();
+        if (event.getMember().getVoiceState().getChannel() == null) {
+            event.reply(":x: | You are not connected to any voice channel");
             return;
         }
 
-        if (event.getMember().getVoiceState().getChannel() == null) {
-            event.reply(":x: | You are not connected to a voice channel");
+        // Check if player is currently playing audio
+        if (musicManager.player.getPlayingTrack() == null) {
+            event.getChannel().sendMessage(":x: | Not playing anything").queue();
+            return;
+        }
+
+        if (musicManager.isInDjMode()) {
+            if (!MusicUtils.hasDjRole(event.getMember())) {
+                event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                return;
+            }
         }
 
         User requester = event.getAuthor();
@@ -57,6 +67,6 @@ public class SkipCommand extends Command {
             return;
         }
         event.getChannel().sendMessage(
-                "Vote: " + musicManager.skipVoteSet.size() + "/" + connectedMembers).queue();
+                ":white_check_mark: | Vote: " + musicManager.skipVoteSet.size() + "/" + connectedMembers).queue();
     }
 }

@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 import service.music.PremiumService;
 
 import java.util.ArrayList;
@@ -98,6 +99,13 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
         else
         {
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
+            if (musicManager.isInDjMode()) {
+                if (!MusicUtils.hasDjRole(event.getMember())) {
+                    event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                    return;
+                }
+            }
+
             int addedSize = 0;
             for (int i = 0; i < tracks.size(); i++)
             {

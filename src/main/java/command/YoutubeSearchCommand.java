@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 import service.music.PremiumService;
 
 import java.io.IOException;
@@ -120,10 +121,19 @@ public class YoutubeSearchCommand extends Command
                 {
                     if (!this.nano.getMusicService().joinUserVoiceChannel(event))
                     {
-                        event.reply("Not joined int voice channel");
+                        event.reply(":x: | You are not connected to any voice channel.");
+                        return;
                     }
 
                     GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
+
+                    if (musicManager.isInDjMode()) {
+                        if (!MusicUtils.hasDjRole(event.getMember())) {
+                            event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                            return;
+                        }
+                    }
+
                     if (musicManager.isQueueFull()) {
                         EmbedBuilder embedBuilder = new EmbedBuilder();
                         embedBuilder.setColor(event.getMember().getColor());
@@ -138,7 +148,8 @@ public class YoutubeSearchCommand extends Command
                     if ((entry > this.maxVideoResult) ||
                             (entry <= 0))
                     {
-                        event.reply("Incorrect entry number.");
+                        event.reply(":x: | Incorrect entry number.");
+                        return;
                     }
                     entry -= 1;
 

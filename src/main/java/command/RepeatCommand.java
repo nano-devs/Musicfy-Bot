@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 
 public class RepeatCommand extends Command {
 
@@ -30,8 +31,15 @@ public class RepeatCommand extends Command {
         }
 
         if (musicManager.player.getPlayingTrack() == null) {
-            event.reply("Not playing anything");
+            event.reply(":x: | Not playing anything");
             return;
+        }
+
+        if (musicManager.isInDjMode()) {
+            if (!MusicUtils.hasDjRole(event.getMember())) {
+                event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                return;
+            }
         }
 
         if (musicManager.scheduler.isInLoopState()) {
