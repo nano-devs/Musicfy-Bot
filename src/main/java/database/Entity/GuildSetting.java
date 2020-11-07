@@ -5,6 +5,11 @@ public class GuildSetting {
     private long id;
     private boolean inDjMode;
     private int defaultVolume;
+    private String customPrefix;
+    private int maxQueueLength;
+    private int maxPlaylistCount;
+    private long maxSongDuration;
+    private boolean premium;
 
     public GuildSetting(long id, boolean inDjMode) {
         this.id = id;
@@ -39,5 +44,37 @@ public class GuildSetting {
 
     public void setDefaultVolume(int defaultVolume) {
         this.defaultVolume = defaultVolume;
+    }
+
+    public String getCustomPrefix() {
+        return customPrefix;
+    }
+
+    public void setCustomPrefix(String customPrefix) {
+        this.customPrefix = customPrefix;
+    }
+
+    public int getMaxQueueLength() {
+        return maxQueueLength;
+    }
+
+    public void setMaxQueueLength(int maxQueueLength) {
+        this.maxQueueLength = maxQueueLength;
+    }
+
+    public int getMaxPlaylistCount() {
+        return maxPlaylistCount;
+    }
+
+    public void setMaxPlaylistCount(int maxPlaylistCount) {
+        this.maxPlaylistCount = maxPlaylistCount;
+    }
+
+    public long getMaxSongDuration() {
+        return maxSongDuration;
+    }
+
+    public void setMaxSongDuration(long maxSongDuration) {
+        this.maxSongDuration = maxSongDuration;
     }
 }
