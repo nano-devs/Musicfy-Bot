@@ -18,7 +18,7 @@ public class DjModeCommand extends Command {
         this.name = "dj";
         this.aliases = new String[] {"dj_mode"};
         this.help = "Enable or disable Dj mode. Musicfy will react with :headphones: if enabled or :white_check_mark:" +
-                " if disabled\n:warning: Only member with command `DJ` can use this command\n" +
+                " if disabled\n:warning: Only member with `DJ` role  can use this command\n" +
                 ":warning: If dj mode is enabled, only member with role `Dj` can request song or " +
                 "change_volume/pause/resume/skip/join/leave";
         this.guildOnly = true;

@@ -24,7 +24,7 @@ public class UserHistoryCommand extends Command
     protected void execute(CommandEvent event)
     {
         UserHistoryModel db = new UserHistoryModel();
-        String message = db.GetUserHistory(event.getAuthor().getIdLong());
+        String message = db.getUserHistory(event.getAuthor().getIdLong());
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
@@ -33,5 +33,7 @@ public class UserHistoryCommand extends Command
         embed.setDescription(message);
 
         event.replyInDm(embed.build());
+
+        event.getMessage().addReaction("\uD83C\uDFA7").queue();
     }
 }
