@@ -15,7 +15,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
         this.name = "show_user_playlist_track";
         this.aliases = new String[]{"supt"};
         this.arguments = "<playlist name>";
-        this.help = "Show all track(s) in the playlist owned by the user.\n";
+        this.help = "Show all track(s) in the playlist owned by the user.";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);

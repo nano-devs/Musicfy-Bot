@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 
 import java.util.ArrayList;
 
@@ -22,7 +23,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         this.name = "play_user_playlist";
         this.aliases = new String[]{"pup"};
         this.arguments = "<playlist name>";
-        this.help = "Play all track from the user's own playlist.\n";
+        this.help = "Play all track from the user's own playlist.";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
@@ -83,6 +84,14 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         else
         {
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
+
+            if (musicManager.isInDjMode()) {
+                if (!MusicUtils.hasDjRole(event.getMember())) {
+                    event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                    return;
+                }
+            }
+
             int addedSize = 0;
             for (int i = 0; i < tracks.size(); i++)
             {

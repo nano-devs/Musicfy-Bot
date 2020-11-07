@@ -3,8 +3,10 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 
 public class VolumeCommand extends Command {
 
@@ -17,7 +19,7 @@ public class VolumeCommand extends Command {
         this.aliases = new String[]{"vol", "volum", "v"};
         this.guildOnly = true;
         this.cooldown = 1;
-        this.help = "Adjust volume number.\n";
+        this.help = "Adjust volume number.";
         this.arguments = "<number>";
         this.category = new Category("Music");
         this.help = HelpProcess.getHelp(this);
@@ -25,7 +27,19 @@ public class VolumeCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        if (event.getMember().getVoiceState().getChannel() == null) {
+            event.reply(":x: | You are not connected to a voice channel");
+        }
+
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
+
+        if (musicManager.isInDjMode()) {
+            if (!MusicUtils.hasDjRole(event.getMember())) {
+                event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                return;
+            }
+        }
+
         try {
             // Try converting the string to integer
             int volume = Integer.parseInt(event.getArgs());

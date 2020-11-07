@@ -13,7 +13,7 @@ public class JoinCommand extends Command {
 
     public JoinCommand(NanoClient nanoClient) {
         this.name = "join";
-        this.help = "Join user's voice channel\n";
+        this.help = "Join user's voice channel";
         this.aliases = new String[]{"summon"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;

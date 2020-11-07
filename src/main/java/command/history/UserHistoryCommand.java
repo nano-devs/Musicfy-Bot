@@ -14,7 +14,7 @@ public class UserHistoryCommand extends Command
         this.name = "histu";
 //        this.aliases = new String[]{"histu", "hist u", "hist user"};
         this.guildOnly = true;
-        this.help = "Get all user history.\n";
+        this.help = "Get all user history.";
         this.cooldown = 2;
         this.category = new Category("History");
         this.help = HelpProcess.getHelp(this);
@@ -24,7 +24,7 @@ public class UserHistoryCommand extends Command
     protected void execute(CommandEvent event)
     {
         UserHistoryModel db = new UserHistoryModel();
-        String message = db.GetUserHistory(event.getAuthor().getIdLong());
+        String message = db.getUserHistory(event.getAuthor().getIdLong());
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
@@ -33,5 +33,7 @@ public class UserHistoryCommand extends Command
         embed.setDescription(message);
 
         event.replyInDm(embed.build());
+
+        event.getMessage().addReaction("\uD83C\uDFA7").queue();
     }
 }

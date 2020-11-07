@@ -19,7 +19,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
         this.aliases = new String[]{"agp", "add_guild_playlist", "cgp"};
         this.arguments = "<playlist name>";
         this.help = "Create a new guild playlist. \n" +
-                    "The playlist name cannot be the same as the other guild's playlist names.\n";
+                    "The playlist name cannot be the same as the other guild's playlist names.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");

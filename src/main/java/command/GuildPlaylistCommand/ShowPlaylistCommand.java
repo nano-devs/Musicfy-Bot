@@ -15,7 +15,7 @@ public class ShowPlaylistCommand extends GuildPlaylistBaseCommand
     {
         this.name = "show_guild_playlist";
         this.aliases = new String[]{"sgp"};
-        this.help = "Show all existed guild playlist.\n";
+        this.help = "Show all existed guild playlist.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
@@ -29,7 +29,7 @@ public class ShowPlaylistCommand extends GuildPlaylistBaseCommand
         embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(

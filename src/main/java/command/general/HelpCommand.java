@@ -24,7 +24,7 @@ public class HelpCommand extends Command
 
         this.name = "helps";
         this.aliases = new String[] { "h" };
-        this.help = "Show all commands \n";
+        this.help = "Show all commands";
         this.cooldown = 2;
     }
 

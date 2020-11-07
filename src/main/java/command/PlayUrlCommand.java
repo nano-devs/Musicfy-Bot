@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 import service.music.PremiumService;
 
 public class PlayUrlCommand extends Command {
@@ -19,7 +20,7 @@ public class PlayUrlCommand extends Command {
         this.nanoClient = nanoClient;
 
         this.name = "play_url";
-        this.help = "Stands for `purl`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.\n";
+        this.help = "Stands for `purl`, play song from a given url.\nSupported urls: Youtube, Twitch, SoundCloud, Bandcamp, Vimeo.";
         this.aliases = new String[] {"url", "purl", "playurl"};
         this.cooldown = 2;
         this.arguments = "<url>";
@@ -47,6 +48,13 @@ public class PlayUrlCommand extends Command {
         }
 
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
+        if (musicManager.isInDjMode()) {
+            if (!MusicUtils.hasDjRole(event.getMember())) {
+                event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                return;
+            }
+        }
+
         if (musicManager.isQueueFull()) {
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setColor(event.getMember().getColor());

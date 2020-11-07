@@ -7,13 +7,14 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.managers.AudioManager;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
+import service.music.MusicUtils;
 
 public class LeaveCommand extends Command {
     NanoClient nanoClient;
 
     public LeaveCommand(NanoClient nanoClient) {
         this.name = "leave";
-        this.help = "Stop playing music and leaves voice channel\n";
+        this.help = "Stop playing music and leaves voice channel";
         this.aliases = new String[]{"stop"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;
@@ -25,6 +26,10 @@ public class LeaveCommand extends Command {
     protected void execute(CommandEvent event) {
         Guild guild = event.getGuild();
 
+        if (event.getSelfMember().getVoiceState().getChannel() == null) {
+            return;
+        }
+
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
 
@@ -33,6 +38,13 @@ public class LeaveCommand extends Command {
         }
 
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(guild);
+
+        if (musicManager.isInDjMode()) {
+            if (!MusicUtils.hasDjRole(event.getMember())) {
+                event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
+                return;
+            }
+        }
 
         musicManager.player.stopTrack();
         musicManager.scheduler.getQueue().clear();

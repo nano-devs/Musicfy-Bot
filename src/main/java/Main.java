@@ -63,7 +63,8 @@ public class Main {
         // Free Commands
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
-        commandClientBuilder.addCommand(new ClaimCommand(dblApi));
+//        commandClientBuilder.addCommand(new ClaimCommand(dblApi));
+        commandClientBuilder.addCommand(new DjModeCommand(nano));
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
         commandClientBuilder.addCommand(new PlayUrlCommand(nano));

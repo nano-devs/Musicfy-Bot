@@ -24,7 +24,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         this.aliases = new String[]{"attup"};
         this.arguments = "<playlist name>, <url>";
         this.help = "Add a new track to user playlist. \n" +
-                    "Use coma (,) as separator for each arguments.\n";
+                    "Use coma (,) as separator for each arguments.";
         this.cooldown = 2;
         this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);

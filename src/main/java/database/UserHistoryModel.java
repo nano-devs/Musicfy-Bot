@@ -29,7 +29,7 @@ public class UserHistoryModel extends BaseModel
      * @param userId user id
      * @return
      */
-    public String GetUserHistory(long userId)
+    public String getUserHistory(long userId)
     {
         String query =
                 "SELECT track.TITLE, track.URL, user_history.DATE " +
