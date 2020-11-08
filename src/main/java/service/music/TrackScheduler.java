@@ -7,6 +7,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -20,12 +22,19 @@ public class TrackScheduler extends AudioEventAdapter {
     public TextChannel textChannel;
 
     /**
+     * Set of user id for the skip vote.
+     */
+    public Set<String> skipVoteSet;
+
+    /**
      * @param player The audio player this scheduler uses
      */
     public TrackScheduler(AudioPlayer player) {
         this.player = player;
         this.queue = new LinkedBlockingQueue<>();
         this.inLoopState = false;
+
+        this.skipVoteSet = new HashSet<String>();
     }
 
     /**
@@ -69,6 +78,9 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        // Reset vote skip
+        skipVoteSet.clear();
+
         // If repeat true, then re-enqueue url.
         if (inLoopState) {
             queue(track.makeClone());
@@ -100,8 +112,5 @@ public class TrackScheduler extends AudioEventAdapter {
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
         super.onTrackStuck(player, track, thresholdMs);
-
-//        System.out.println(thresholdMs);
-//        System.out.println("Stuck " + track.getInfo().title);
     }
 }

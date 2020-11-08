@@ -26,10 +26,6 @@ public class GuildMusicManager {
      * Track scheduler for the player.
      */
     public final TrackScheduler scheduler;
-    /**
-     * Set of user id for the skip vote.
-     */
-    public Set<String> skipVoteSet;
 
     private int volume;
 
@@ -41,6 +37,8 @@ public class GuildMusicManager {
 
     private boolean inDjMode = false;
 
+    private boolean pauseStatus = false;
+
     /**
      * Creates a player and a track scheduler.
      * @param manager Audio player manager to use for creating the player.
@@ -49,7 +47,6 @@ public class GuildMusicManager {
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player);
         player.addListener(scheduler);
-        skipVoteSet = new HashSet<String>();
     }
 
     /**
@@ -76,7 +73,11 @@ public class GuildMusicManager {
         embedBuilder.setAuthor(requester.getUser().getName(),
                 requester.getUser().getAvatarUrl(), requester.getUser().getAvatarUrl());
         embedBuilder.setDescription(description);
-        embedBuilder.setFooter("Source: " + player.getPlayingTrack().getInfo().author);
+
+        int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size();
+        String footerMessage = "Source: " + player.getPlayingTrack().getInfo().author
+                + " | Vote " + connectedMembers + "/" + scheduler.skipVoteSet.size();
+        embedBuilder.setFooter(footerMessage);
 
         embedBuilder.setColor(event.getMember().getColor());
 
@@ -122,6 +123,14 @@ public class GuildMusicManager {
         }
         totalDuration += player.getPlayingTrack().getDuration() - player.getPlayingTrack().getPosition();
         return MusicUtils.getDurationFormat(totalDuration);
+    }
+
+    public boolean isPauseStatus() {
+        return pauseStatus;
+    }
+
+    public void setPauseStatus(boolean pauseStatus) {
+        this.pauseStatus = pauseStatus;
     }
 
     public int getVolume() {
