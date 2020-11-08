@@ -93,7 +93,7 @@ public class ShowGuildStateCommand extends Command {
         if (queueValue.equals("")) {
             queueValue = "*Empty queue*";
         }
-        embedBuilder.addField("\uD83C\uDFB6 | The First 7 Entries in Queue", queueValue, false);
+        embedBuilder.addField("\uD83C\uDFB6 | Top 7 Entries in Queue", queueValue, false);
 
         // Footer
         int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() - 1;

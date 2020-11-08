@@ -75,15 +75,15 @@ public class MusicMessageListener extends ListenerAdapter {
                 musicService.skipTrack(musicManager, event.getChannel());
                 return;
             }
-            musicManager.skipVoteSet.add(requester.getId());
+            musicManager.scheduler.skipVoteSet.add(requester.getId());
 
             int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size();
-            if (musicManager.skipVoteSet.size() > (connectedMembers - 1) / 2) {
+            if (musicManager.scheduler.skipVoteSet.size() > (connectedMembers - 1) / 2) {
                 musicService.skipTrack(musicManager, event.getChannel());
                 return;
             }
             event.getChannel().sendMessage(
-                    "Vote: " + musicManager.skipVoteSet.size() + "/" + connectedMembers).queue();
+                    "Vote: " + musicManager.scheduler.skipVoteSet.size() + "/" + connectedMembers).queue();
         } else if (".join".equals(command[0])) {
             VoiceChannel voiceChannel = event.getMember().getVoiceState().getChannel();
             if (voiceChannel == null) {
