@@ -104,7 +104,13 @@ public class GuildMusicManager {
 
         String[] progressBar = "\u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501".split(" ");
         progressBar[currentPostIndex] = "\uD83D\uDD18";
-        return "\u25B6" + StringUtil.join(progressBar, "") + "`["
+
+        String button = ":arrow_forward:";
+        if (pauseStatus) {
+            button = ":pause_button:";
+        }
+
+        return button + StringUtil.join(progressBar, "") + "`["
                 + MusicUtils.getDurationFormat(position) + "/" + MusicUtils.getDurationFormat(duration)
                 + "]` \uD83D\uDD0A \n";
     }
