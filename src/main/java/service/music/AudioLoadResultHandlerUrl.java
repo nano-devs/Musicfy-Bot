@@ -8,14 +8,14 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class UrlAudioLoadResultHandler implements AudioLoadResultHandler {
+public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
 
     GuildMusicManager musicManager;
     TextChannel channel;
     String trackUrl;
     Member requester;
 
-    public UrlAudioLoadResultHandler(GuildMusicManager musicManager, TextChannel channel,
+    public AudioLoadResultHandlerUrl(GuildMusicManager musicManager, TextChannel channel,
                                      String trackUrl, Member requester) {
         this.musicManager = musicManager;
         this.channel = channel;

@@ -8,13 +8,13 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class KeywordAudioLoadResultHandler implements AudioLoadResultHandler {
+public class AudioLoadResultHandlerKeyword implements AudioLoadResultHandler {
     GuildMusicManager musicManager;
     TextChannel channel;
     String keywords;
     Member requester;
 
-    public KeywordAudioLoadResultHandler(GuildMusicManager musicManager, TextChannel channel, String keywords, Member requester) {
+    public AudioLoadResultHandlerKeyword(GuildMusicManager musicManager, TextChannel channel, String keywords, Member requester) {
         this.musicManager = musicManager;
         this.channel = channel;
         this.keywords = keywords;
