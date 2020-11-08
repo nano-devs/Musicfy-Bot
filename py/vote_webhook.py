@@ -15,15 +15,27 @@ insert_vote_query = """
     INSERT INTO vote (user_id, weekend)
     VALUES ({}, {});
 """
+
 update_rewards_query = """
     UPDATE USER
     SET RECOMMENDATION_QUOTA = RECOMMENDATION_QUOTA + 1
     WHERE ID = {};
 """
+
 update_rewards_weekend_query = """
     UPDATE USER
     SET RECOMMENDATION_QUOTA = RECOMMENDATION_QUOTA + 3
     WHERE ID = {};
+"""
+
+check_user_query = """
+    SELECT * FROM USER
+    WHERE ID = {};
+"""
+
+create_user_query = """
+    INSERT INTO USER (ID, RECOMMENDATION_QUOTA, DAILY_QUOTA)
+    VALUES ({}, 8, 1)
 """
 
 VOTE_AUTH_TOKEN = os.environ["VOTE_AUTH_NANO"]
@@ -48,17 +60,43 @@ def vote_post():
 
     if request_type == 'upvote':
         print("Upvote", data)
+        
+        # Vote history
         cursor.execute(insert_vote_query.format(user_id, int(is_weekend)))
-        cursor.execute(update_rewards_query.format(user_id))
+        connection.commit()
+
+        # Check if user exist
+        cursor.execute(check_user_query.format(user_id))
+        cursor.fetchall()
+        
+        # If user not exist, create new.
+        if cursor.rowcount == 0:
+            print("user does not exist")
+            cursor.execute(create_user_query.format(user_id))
+            
+        # Give more rewards if weekend
+        if not is_weekend:
+            cursor.execute(update_rewards_query.format(user_id))
+        else:
+            cursor.execute(update_rewards_weekend_query.format(user_id))
+            
         connection.commit()
     else:
         print("Test", data)
 
         # Vote history
         cursor.execute(insert_vote_query.format(user_id, int(is_weekend)))
-
+        connection.commit()
+        
+        cursor.execute(check_user_query.format(user_id))
+        cursor.fetchall()
+        
+        if cursor.rowcount == 0:
+            print("user does not exist")
+            cursor.execute(create_user_query.format(user_id))
+            
         # Give more rewards if weekend
-        if !is_weekend:
+        if not is_weekend:
             cursor.execute(update_rewards_query.format(user_id))
         else:
             cursor.execute(update_rewards_weekend_query.format(user_id))
