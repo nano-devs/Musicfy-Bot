@@ -9,15 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
@@ -34,6 +26,7 @@ public class LyricCommand extends Command
         this.help = "Get lyric for music.\n" +
                     "If `song-title` is empty, the title of the currently playing music will be used.\n";
         this.guildOnly = true;
+        this.cooldown = 2;
         this.category = new Category("Music");
         this.help = HelpProcess.getHelp(this);
     }
@@ -74,20 +67,11 @@ public class LyricCommand extends Command
                 String output = Utils.httpRequest("https://lyrics.tsu.sh/v1/?q=" + URLEncoder.encode(finalQuery, StandardCharsets.UTF_8.toString()));
                 JSONObject json = new JSONObject(output);
                 embed.setTitle(((JSONObject)json.get("song")).get("full_title").toString());
+                embed.setThumbnail(((JSONObject)json.get("song")).get("icon").toString());
                 embed.setDescription(json.get("content").toString());
             }
-            catch (MalformedURLException e)
+            catch (Exception e)
             {
-                e.printStackTrace();
-                embed.setTitle("Failed");
-                embed.addField(
-                        ":x:",
-                        "Something happen when to request lyric, please try again later.",
-                        true);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
