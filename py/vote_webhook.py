@@ -11,6 +11,7 @@ connection = mysql.connector.connect(user=user,
                                      host='127.0.0.1',
                                      database='nano')
 cursor = connection.cursor()
+
 insert_vote_query = """
     INSERT INTO vote (user_id, weekend)
     VALUES ({}, {});
