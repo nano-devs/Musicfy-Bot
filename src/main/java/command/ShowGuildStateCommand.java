@@ -51,6 +51,8 @@ public class ShowGuildStateCommand extends Command {
         // Title
         embedBuilder.setTitle("**" + event.getGuild().getName() + "**'s Queue");
 
+        embedBuilder.setThumbnail(event.getGuild().getIconUrl());
+
         // Contents
         embedBuilder.addField("\uD83C\uDFB6 | Now playing", musicManager.getNowPlayingDescription(), false);
 
@@ -94,7 +96,6 @@ public class ShowGuildStateCommand extends Command {
         embedBuilder.addField("\uD83C\uDFB6 | The First 7 Entries in Queue", queueValue, false);
 
         // Footer
-        // MIGHT BE BUGGY, CONCEPT MUST RE-CALCULATED EVERYTIME VOICE CHANNEL TRIGGER EVENT.
         int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() - 1;
         String footerValue = event.getMember().getEffectiveName() + " can skip current song | "
                 + musicManager.scheduler.skipVoteSet.size() + "/" + connectedMembers
