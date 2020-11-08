@@ -5,7 +5,6 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
 import command.UserPlaylistCommand.CreatePlaylistCommand;
-import command.general.ClaimCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
 import command.history.UserHistoryCommand;
@@ -63,7 +62,6 @@ public class Main {
         // Free Commands
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
-//        commandClientBuilder.addCommand(new ClaimCommand(dblApi));
         commandClientBuilder.addCommand(new DjModeCommand(nano));
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
@@ -76,7 +74,8 @@ public class Main {
         commandClientBuilder.addCommand(new YoutubeSearchCommand(nano, youtubeClient));
         commandClientBuilder.addCommand(new NowPlayCommand(nano));
         commandClientBuilder.addCommand(new RepeatCommand(nano));
-        commandClientBuilder.addCommand(new ShowQueueCommand(nano));
+        commandClientBuilder.addCommand(new ShowPaginatedQueueCommand(nano));
+        commandClientBuilder.addCommand(new ShowGuildStateCommand(nano));
         commandClientBuilder.addCommand(new ShuffleCommand(nano));
         commandClientBuilder.addCommand(new RecommendationCommand(nano, youtubeClient));
         commandClientBuilder.addCommand(new LyricCommand(nano));

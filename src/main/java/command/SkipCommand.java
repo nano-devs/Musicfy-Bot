@@ -53,20 +53,21 @@ public class SkipCommand extends Command {
         Member nowPlayRequester = musicManager.player.getPlayingTrack().getUserData(Member.class);
         if (requester.getId().equals(nowPlayRequester.getId())) {
             musicManager.scheduler.nextTrack();
-            musicManager.skipVoteSet.clear();
+            musicManager.scheduler.skipVoteSet.clear();
             event.getMessage().addReaction("U+23ED").queue();
             return;
         }
-        musicManager.skipVoteSet.add(requester.getId());
+        musicManager.scheduler.skipVoteSet.add(requester.getId());
 
         int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size();
-        if (musicManager.skipVoteSet.size() > (connectedMembers - 1) / 2) {
+        if (musicManager.scheduler.skipVoteSet.size() > (connectedMembers - 1) / 2) {
             musicManager.scheduler.nextTrack();
-            musicManager.skipVoteSet.clear();
+            musicManager.scheduler.skipVoteSet.clear();
             event.getMessage().addReaction("U+23ED").queue();
             return;
         }
         event.getChannel().sendMessage(
-                ":white_check_mark: | Vote: " + musicManager.skipVoteSet.size() + "/" + connectedMembers).queue();
+                ":white_check_mark: | Vote: " + musicManager.scheduler.skipVoteSet.size()
+                        + "/" + connectedMembers).queue();
     }
 }

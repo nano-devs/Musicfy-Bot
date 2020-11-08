@@ -80,8 +80,9 @@ public class RecommendationCommand extends Command {
             }
         }
 
-        if (musicManager.player.getPlayingTrack() == null) {
-            event.reply(":x: | Play a song first and try `m$recommend " + event.getArgs() + "` again :>");
+        String sourceName = musicManager.player.getPlayingTrack().getSourceManager().getSourceName();
+        if (musicManager.player.getPlayingTrack() == null && !sourceName.equals("youtube")) {
+            event.reply(":x: | Play a `youtube` song first and try `m$recommend " + event.getArgs() + "` again :>");
             return;
         }
 

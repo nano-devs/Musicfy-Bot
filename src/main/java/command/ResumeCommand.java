@@ -46,6 +46,7 @@ public class ResumeCommand extends Command {
         }
 
         musicManager.player.setPaused(false);
+        musicManager.setPauseStatus(false);
         event.getMessage().addReaction("\u25B6").queue(); // Play Button
     }
 }

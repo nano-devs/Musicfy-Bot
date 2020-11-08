@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import service.music.*;
 
 import java.util.HashMap;
@@ -68,7 +67,7 @@ public class NanoClient {
         musicManager.scheduler.textChannel = channel;
 
         playerManager.loadItemOrdered(musicManager, trackUrl,
-                new UrlAudioLoadResultHandler(musicManager, channel, trackUrl, requester));
+                new AudioLoadResultHandlerUrl(musicManager, channel, trackUrl, requester));
     }
 
     /**
@@ -168,7 +167,7 @@ public class NanoClient {
         musicManager.scheduler.textChannel = channel;
 
         playerManager.loadItemOrdered(musicManager, "ytsearch: " + keywords,
-                new KeywordAudioLoadResultHandler(musicManager, channel, keywords, requester));
+                new AudioLoadResultHandlerKeyword(musicManager, channel, keywords, requester));
     }
 
     public JDA getJda() {

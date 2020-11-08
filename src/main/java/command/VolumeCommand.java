@@ -54,6 +54,6 @@ public class VolumeCommand extends Command {
                     + "volume 25` to change volume to 25%");
             return;
         }
-        event.reply("Volume " + event.getArgs() + "%");
+        event.reply("Volume " + musicManager.player.getVolume() + "%");
     }
 }
