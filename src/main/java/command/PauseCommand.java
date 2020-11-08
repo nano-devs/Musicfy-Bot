@@ -45,7 +45,14 @@ public class PauseCommand extends Command {
             }
         }
 
-        musicManager.player.setPaused(true);
+        if (!musicManager.isPauseStatus()) {
+            musicManager.player.setPaused(true);
+            musicManager.setPauseStatus(true);
+        }
+        else {
+            musicManager.player.setPaused(false);
+            musicManager.setPauseStatus(false);
+        }
         event.getMessage().addReaction("\u23F8").queue(); // Pause button
     }
 }
