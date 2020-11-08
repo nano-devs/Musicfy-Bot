@@ -68,17 +68,43 @@ public class LyricCommand extends Command
                 JSONObject json = new JSONObject(output);
                 embed.setTitle(((JSONObject)json.get("song")).get("full_title").toString());
                 embed.setThumbnail(((JSONObject)json.get("song")).get("icon").toString());
-                embed.setDescription(json.get("content").toString());
+
+                String lyric = json.get("content").toString();
+                if (lyric.length() > 2048)
+                {
+                    String[] lines = lyric.split("\n");
+                    StringBuilder sb = new StringBuilder();
+                    for (String line : lines)
+                    {
+                        if ((sb.length() + line.length()) < 2048)
+                        {
+                            sb.append(line + "\n");
+                        }
+                        else
+                        {
+                            embed.setDescription(sb.toString());
+                            event.reply(embed.build());
+                            sb.delete(0, sb.capacity());
+                            sb.append(line);
+                        }
+                    }
+                }
+                else
+                {
+                    embed.setDescription(lyric);
+                }
+                event.reply(embed.build());
             }
             catch (Exception e)
             {
+                e.printStackTrace();
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
                         "Can't find lyric.",
                         true);
+                event.reply(embed.build());
             }
-            event.reply(embed.build());
         });
     }
 }
