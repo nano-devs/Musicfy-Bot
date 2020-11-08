@@ -76,7 +76,7 @@ public class GuildMusicManager {
 
         int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size();
         String footerMessage = "Source: " + player.getPlayingTrack().getInfo().author
-                + " | Vote " + connectedMembers + "/" + scheduler.skipVoteSet.size();
+                + " | Vote " + scheduler.skipVoteSet.size() + "/" + connectedMembers;
         embedBuilder.setFooter(footerMessage);
 
         embedBuilder.setColor(event.getMember().getColor());
