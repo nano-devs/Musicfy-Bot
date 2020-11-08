@@ -105,9 +105,9 @@ public class GuildMusicManager {
         String[] progressBar = "\u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501 \u2501".split(" ");
         progressBar[currentPostIndex] = "\uD83D\uDD18";
 
-        String button = ":arrow_forward:";
+        String button = ":pause_button:";
         if (pauseStatus) {
-            button = ":pause_button:";
+            button = ":arrow_forward:";
         }
 
         return button + StringUtil.join(progressBar, "") + "`["
