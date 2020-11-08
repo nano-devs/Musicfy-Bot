@@ -162,7 +162,7 @@ public class ShowQueueCommand extends Command {
         // MIGHT BE BUGGY, CONCEPT MUST RE-CALCULATED EVERYTIME VOICE CHANNEL TRIGGER EVENT.
         int connectedMembers = event.getGuild().getAudioManager().getConnectedChannel().getMembers().size() - 1;
         String footerValue = event.getMember().getEffectiveName() + " can skip current song | "
-                + musicManager.skipVoteSet.size() + "/" + connectedMembers
+                + musicManager.scheduler.skipVoteSet.size() + "/" + connectedMembers
                 + " skip votes";
         embedBuilder.setFooter(footerValue);
 
