@@ -3,7 +3,7 @@ package command.UserPlaylistCommand;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.util.ArrayList;
@@ -26,8 +26,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
     {
         String playlistName = event.getArgs().trim();
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
 
         if (playlistName.length() <= 0)
         {

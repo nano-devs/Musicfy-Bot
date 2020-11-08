@@ -12,6 +12,7 @@ import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.MusicUtils;
 
+import java.awt.*;
 import java.util.concurrent.TimeUnit;
 
 public class ShowPaginatedQueueCommand extends Command {
@@ -100,7 +101,7 @@ public class ShowPaginatedQueueCommand extends Command {
             paginatorBuilder.setItems("**Empty queue**");
         }
 
-        paginatorBuilder.setColor(event.getMember().getColor());
+        paginatorBuilder.setColor(new Color(211, 0, 137));
 
         paginatorBuilder.setUsers(event.getAuthor());
 

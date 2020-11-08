@@ -32,7 +32,6 @@ public class PremiumService
      * Add played music to history database
      * @param title track/song/video title
      * @param url track/song/video url
-     * @param event command even listener
      */
     public static void addHistory(String title, String url, Guild guild, User user)
     {

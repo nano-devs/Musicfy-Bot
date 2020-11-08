@@ -4,14 +4,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 import org.jsoup.internal.StringUtil;
 
-import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
 /**
@@ -68,7 +63,7 @@ public class GuildMusicManager {
         description += getProgressBar() + "\n";
         Member requester = player.getPlayingTrack().getUserData(Member.class);
 
-        EmbedBuilder embedBuilder = new EmbedBuilder();
+        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
         embedBuilder.setTitle(announcement);
         embedBuilder.setAuthor(requester.getUser().getName(),
                 requester.getUser().getAvatarUrl(), requester.getUser().getAvatarUrl());
@@ -78,8 +73,6 @@ public class GuildMusicManager {
         String footerMessage = "Source: " + player.getPlayingTrack().getInfo().author
                 + " | Vote " + scheduler.skipVoteSet.size() + "/" + connectedMembers;
         embedBuilder.setFooter(footerMessage);
-
-        embedBuilder.setColor(event.getMember().getColor());
 
         event.getChannel().sendMessage(embedBuilder.build()).queue();
     }

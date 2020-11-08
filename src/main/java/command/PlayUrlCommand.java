@@ -7,10 +7,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
-import service.music.GuildMusicManager;
-import service.music.HelpProcess;
-import service.music.MusicUtils;
-import service.music.PremiumService;
+import service.music.*;
 
 public class PlayUrlCommand extends Command {
 
@@ -39,8 +36,7 @@ public class PlayUrlCommand extends Command {
 
         String args = event.getArgs();
         if (args.isEmpty()) {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setColor(event.getMember().getColor());
+            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
             embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
                     + event.getClient().getPrefix() + this.name + " " + this.arguments, true);
             event.reply(embedBuilder.build());
@@ -56,8 +52,7 @@ public class PlayUrlCommand extends Command {
         }
 
         if (musicManager.isQueueFull()) {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setColor(event.getMember().getColor());
+            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
             embedBuilder.addField(":x: | Queue is full", "Maximum queue length is 60.", true);
             event.reply(embedBuilder.build());
             return;

@@ -2,7 +2,8 @@ package command.general;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 public class InviteCommand extends Command {
@@ -19,7 +20,7 @@ public class InviteCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         String inviteLink = "https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot";
-        EmbedBuilder embedBuilder = new EmbedBuilder();
+        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
         embedBuilder.setAuthor("Invite " + event.getSelfUser().getName(),
                 event.getAuthor().getEffectiveAvatarUrl(),
                 event.getAuthor().getEffectiveAvatarUrl());

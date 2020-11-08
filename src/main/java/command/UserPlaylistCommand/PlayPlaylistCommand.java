@@ -4,8 +4,8 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.MusicUtils;
@@ -44,8 +44,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
         }
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
 
         if (event.getArgs().trim().length() <= 0)
         {

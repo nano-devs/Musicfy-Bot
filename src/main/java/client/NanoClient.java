@@ -10,7 +10,6 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import database.Entity.ClassicUser;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -98,8 +97,7 @@ public class NanoClient {
                 int positionInQueue = musicManager.scheduler.getQueue().size();
 
                 if (channel != null) {
-                    EmbedBuilder embedBuilder = new EmbedBuilder();
-                    embedBuilder.setColor(requester.getColor());
+                    CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
                     embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
                     embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
@@ -202,13 +200,12 @@ public class NanoClient {
         this.waiter = waiter;
     }
 
-    public EmbedBuilder getEmbeddedVoteLink(ClassicUser classicUser, CommandEvent event) {
+    public CustomEmbedBuilder getEmbeddedVoteLink(ClassicUser classicUser, CommandEvent event) {
         String voteUrl = "";
         String message = "[Vote]() & use **" + event.getClient().getPrefix() +
                 "claim** command to claim rewards :>\n" + voteUrl;
 
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
         embedBuilder.setTitle(":headphones: | Thank you for using " + event.getSelfUser().getName() + "!");
         embedBuilder.setAuthor(event.getAuthor().getName() + " Stocks",
                 event.getAuthor().getEffectiveAvatarUrl(),

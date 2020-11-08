@@ -5,7 +5,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.ClassicUser;
 import database.UserModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -49,7 +49,7 @@ public class VoteCommand extends Command {
             classicUser.setDailyQuota(1);
         }
 
-        EmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
+        CustomEmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
         event.reply(embedBuilder.build());
     }
 }

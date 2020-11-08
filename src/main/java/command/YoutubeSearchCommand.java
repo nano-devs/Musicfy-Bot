@@ -6,13 +6,10 @@ import YouTubeSearchApi.exception.NoResultFoundException;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import service.music.GuildMusicManager;
-import service.music.HelpProcess;
-import service.music.MusicUtils;
-import service.music.PremiumService;
+import service.music.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,8 +45,7 @@ public class YoutubeSearchCommand extends Command
     {
         String keywords = event.getArgs();
         if (keywords.isEmpty()) {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setColor(event.getMember().getColor());
+            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
             embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
                     + event.getClient().getPrefix() + this.name + " " + this.arguments, true);
             event.reply(embedBuilder.build());
@@ -70,8 +66,7 @@ public class YoutubeSearchCommand extends Command
         catch (IOException | NoResultFoundException e)
         {
             e.printStackTrace();
-            EmbedBuilder temp = new EmbedBuilder();
-            temp.setColor(event.getMember().getColor());
+            CustomEmbedBuilder temp = new CustomEmbedBuilder();
             temp.setTitle("Failed");
             temp.addField(
                     ":x:",
@@ -81,14 +76,18 @@ public class YoutubeSearchCommand extends Command
             return;
         }
 
+        if (videos.size() < 1) {
+            event.reply(":x: | No result found...");
+            return;
+        }
+
         // create embed message
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         embed.setTitle("Song selection | Reply the song number to continue");
         embed.setFooter("Song selection | Type the number to continue");
         embed.setDescription("");
 
-        for (int i = 0; i < this.maxVideoResult; i++)
+        for (int i = 0; i < videos.size(); i++)
         {
             YoutubeVideo video = videos.get(i);
             if (i == 0)
@@ -135,8 +134,7 @@ public class YoutubeSearchCommand extends Command
                     }
 
                     if (musicManager.isQueueFull()) {
-                        EmbedBuilder embedBuilder = new EmbedBuilder();
-                        embedBuilder.setColor(event.getMember().getColor());
+                        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
                         embedBuilder.addField(":x: | Queue is full", "Maximum queue length is 60.", true);
                         event.reply(embedBuilder.build());
                         return;
@@ -154,7 +152,8 @@ public class YoutubeSearchCommand extends Command
                     entry -= 1;
 
                     // get selected video detail
-                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(), finalVideos.get(entry).getUrl(), event.getMember());
+                    this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(),
+                            finalVideos.get(entry).getUrl(), event.getMember());
                 },
                 10, TimeUnit.SECONDS, () ->
                         msg.get().delete().queue()

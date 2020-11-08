@@ -46,8 +46,7 @@ public class MusicUtils {
     }
 
     public static EmbedBuilder getDjModeEmbeddedWarning(Member member) {
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(member.getColor());
+        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
         embedBuilder.setAuthor(member.getUser().getName(),
                 member.getUser().getAvatarUrl(), member.getUser().getAvatarUrl());
         embedBuilder.addField(":warning: Dj mode is on.",

@@ -3,7 +3,7 @@ package command.history;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.UserHistoryModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 public class UserHistoryCommand extends Command
@@ -26,8 +26,7 @@ public class UserHistoryCommand extends Command
         UserHistoryModel db = new UserHistoryModel();
         String message = db.getUserHistory(event.getAuthor().getIdLong());
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         embed.setTitle(":calendar_spiral: Your history");
         embed.setThumbnail(event.getAuthor().getAvatarUrl());
         embed.setDescription(message);

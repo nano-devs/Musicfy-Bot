@@ -8,7 +8,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.ClassicUser;
 import database.UserModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
@@ -125,7 +125,7 @@ public class RecommendationCommand extends Command {
 
         // if Daily Quota not available & Claimed quota is not available
         if (classicUser.getRecommendationQuota() < 1) {
-            EmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
+            CustomEmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
             event.reply(embedBuilder.build());
             return;
         }

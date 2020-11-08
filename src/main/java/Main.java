@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
 import command.UserPlaylistCommand.CreatePlaylistCommand;
+import command.general.HelpCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
 import command.history.UserHistoryCommand;
@@ -53,10 +54,10 @@ public class Main {
         commandClientBuilder.setPrefix(prefix);
         commandClientBuilder.setAlternativePrefix("@mention");
         commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
-        commandClientBuilder.setHelpWord("help");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
         commandClientBuilder.setCoOwnerIds("456130311365984267");
         commandClientBuilder.setActivity(Activity.listening(prefix + "help"));
+        commandClientBuilder.useHelpBuilder(false);
 
         // Add Command & Inject Dependencies.
         // Free Commands
@@ -122,6 +123,7 @@ public class Main {
         try {
             JDA jda = builder.build();
             nano.setJda(jda);
+            commandClient.addCommand(new HelpCommand(commandClient, jda));
         } catch (LoginException e) {
             e.printStackTrace();
         }

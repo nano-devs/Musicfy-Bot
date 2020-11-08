@@ -4,11 +4,8 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.GuildHistoryModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
-
-import java.awt.*;
-import java.util.concurrent.CompletableFuture;
 
 public class GuildHistoryCommand extends Command
 {
@@ -34,8 +31,7 @@ public class GuildHistoryCommand extends Command
         GuildHistoryModel db = new GuildHistoryModel();
         String message = db.GetGuildHistory(event.getGuild().getIdLong(), event.getJDA());
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         embed.setTitle(":calendar_spiral: Your " + event.getGuild().getName() + " guild history");
         embed.setThumbnail(event.getGuild().getIconUrl());
         embed.setDescription(message);

@@ -4,8 +4,8 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
@@ -42,11 +42,10 @@ public class ShowGuildStateCommand extends Command {
         event.reply(getRichEmbeddedQueue(event, musicManager).build());
     }
 
-    private EmbedBuilder getRichEmbeddedQueue(CommandEvent event, GuildMusicManager musicManager) {
+    private CustomEmbedBuilder getRichEmbeddedQueue(CommandEvent event, GuildMusicManager musicManager) {
 
         // Build embedded message
-        EmbedBuilder embedBuilder = new EmbedBuilder();
-        embedBuilder.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
 
         // Title
         embedBuilder.setTitle("**" + event.getGuild().getName() + "**'s Queue");

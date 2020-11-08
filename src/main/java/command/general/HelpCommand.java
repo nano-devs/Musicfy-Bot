@@ -1,117 +1,75 @@
 package command.general;
 
-import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.jagrosh.jdautilities.menu.Paginator;
-import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import service.music.CustomEmbedBuilder;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
-public class HelpCommand extends Command
-{
-    private final NanoClient nano;
-    private final List<Command> commandList;
-    private Paginator.Builder paginate;
+public class HelpCommand extends Command {
 
-    public HelpCommand(NanoClient nano, List<Command> command)
-    {
-        this.nano = nano;
-        this.commandList = command;
-        this.create();
+    MessageEmbed messageEmbed;
 
-        this.name = "helps";
-        this.aliases = new String[] { "h" };
-        this.help = "Show all commands";
+    public HelpCommand(CommandClient commandClient, JDA jda) {
+        this.name = "help";
+        this.aliases = new String[] { "helps" };
+        this.help = "Shows help & all commands";
         this.cooldown = 2;
+        this.category = new Category("General");
+        this.guildOnly = false;
+
+        this.messageEmbed = this.createHelpMessageEmbed(commandClient, jda);
     }
 
-    private void create()
-    {
-        this.paginate = new Paginator.Builder();
-        this.paginate.setColumns(1);
-        this.paginate.setItemsPerPage(10);
-        this.paginate.showPageNumbers(true);
-        this.paginate.waitOnSinglePage(false);
-        this.paginate.setFinalAction(
-                message ->
-                {
-                    try
-                    {
-                        message.clearReactions().queue();
-                    }
-                    catch (PermissionException e)
-                    {
-                        message.delete().queue();
-                    }
-                }
-        );
-        paginate.setEventWaiter(this.nano.getWaiter());
-        paginate.setTimeout(1, TimeUnit.MINUTES);
-    }
+    private MessageEmbed createHelpMessageEmbed(CommandClient commandClient, JDA jda) {
+        List<Command> commands = commandClient.getCommands();
 
-    private String split(String[] str)
-    {
-        String msg = str[0];
+        EmbedBuilder embedBuilder = new CustomEmbedBuilder();
 
-        if (str.length > 1)
-        {
-            for (int i = 1; i < str.length; i++)
-            {
-                msg += ", " + str[i];
+        // Theme Color: RGB(211, 0, 137)
+        embedBuilder.setTitle("Musicfy Commands");
+        embedBuilder.setDescription("Prefix: `" + commandClient.getPrefix() +
+                "` | Alternative prefix: `" + commandClient.getAltPrefix() + "` the bot.");
+
+        Map<String, String> dictionary = new HashMap<>();
+
+        for (Command command : commands) {
+            String currentCategoryName = "**" + command.getCategory().getName() + "**";
+            String categoryValue = "`" + command.getName() + "`, ";
+
+            if (currentCategoryName.equals("Owner"))
+                continue;
+
+            if (!dictionary.containsKey(currentCategoryName)) {
+                dictionary.put(currentCategoryName, categoryValue);
+                continue;
             }
+            dictionary.put(currentCategoryName, dictionary.get(currentCategoryName) + categoryValue);
         }
 
-        return msg;
+        for (String key : dictionary.keySet()) {
+            String values = dictionary.get(key);
+            embedBuilder.addField(key, values.substring(0, values.length() - 2), false);
+        }
+
+        embedBuilder.addField("Detail",
+                "For more detail try `" + commandClient.getPrefix() + "help <command-name>`", false);
+
+        embedBuilder.setFooter("If you need additional help, contact Made Y#8195",
+                jda.getSelfUser().getEffectiveAvatarUrl());
+
+        return embedBuilder.build();
     }
 
     @Override
-    protected void execute(CommandEvent event)
-    {
-        this.paginate.setUsers(event.getAuthor());
-        this.paginate.setColor(new Color(0, 127, 255));
-        this.paginate.setText("Help");
-
-        Category category = this.commandList.get(0).getCategory();
-
-        this.paginate.addItems("#__***" + category.getName() + "***__\n");
-
-        for (Command command : this.commandList)
-        {
-            if (command.isOwnerCommand())
-            {
-                continue;
-            }
-
-            if (command.getCategory() == null)
-            {
-                this.paginate.addItems("\n#__***Uncategorized***__\n");
-            }
-            else if (!category.equals(command.getCategory()))
-            {
-                category = command.getCategory();
-                this.paginate.addItems("#__***" + category.getName() + "***__\n");
-            }
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("Command: `" + command.getName() + "`\n");
-
-            if (command.getAliases() != null && command.getAliases().length > 0)
-            {
-                sb.append("Alias : `" + this.split(command.getAliases()) + "`\n");
-            }
-
-            if (command.getArguments() !=  null)
-            {
-                sb.append("Arguments : `" + command.getArguments() + "`\n");
-            }
-
-            sb.append(command.getHelp() + "\n");
-            this.paginate.addItems(sb.toString());
-        }
-
-        this.paginate.build().display(event.getChannel());
+    protected void execute(CommandEvent event) {
+        event.reply(this.messageEmbed);
     }
 }

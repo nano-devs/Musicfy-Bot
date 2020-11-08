@@ -4,7 +4,6 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -38,8 +37,7 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
         int positionInQueue = musicManager.scheduler.getQueue().size();
 
         if (channel != null) {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setColor(requester.getColor());
+            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
             embedBuilder.setDescription("\uD83C\uDFB5 [" + track.getInfo().title + "](" + track.getInfo().uri + ")");
 
             embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
@@ -73,8 +71,7 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
         PremiumService.addHistory(playlist.getName(), trackUrl, requester.getGuild(), requester.getUser());
 
         if (channel != null) {
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setColor(requester.getColor());
+            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
 
             embedBuilder.setDescription(":white_check_mark: | " + addedSize +
                     " entries from **" + playlist.getName() + "** has been added to queue");
