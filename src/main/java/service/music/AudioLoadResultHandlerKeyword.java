@@ -85,6 +85,7 @@ public class AudioLoadResultHandlerKeyword implements AudioLoadResultHandler {
 
                 channel.sendMessage(embedBuilder.build()).queue();
             }
+            return;
         }
 
         if (channel != null) {
