@@ -74,6 +74,7 @@ public class LyricCommand extends Command
             {
                 embed.clear();
                 embed.setTitle("Failed");
+                embed.setColor(event.getMember().getColor());
                 embed.addField(
                         ":x:",
                         "Can't find lyric.",
