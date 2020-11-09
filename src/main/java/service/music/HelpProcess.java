@@ -12,13 +12,14 @@ public class HelpProcess
         if (command.getAliases() != null && command.getAliases().length > 0)
         {
             query.append("Alias(es): ");
-            query.append("`");
+
             for (String alias : command.getAliases())
             {
+                query.append("`");
                 query.append(prefix + alias);
-                query.append(" ");
+                query.append("` ");
             }
-            query.append("`\n\n");
+            query.append("\n\n");
         }
         query.append("*");
         query.append(command.getHelp().trim());
