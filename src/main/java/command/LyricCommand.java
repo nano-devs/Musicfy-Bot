@@ -5,10 +5,11 @@ import client.NanoClient;
 import org.json.JSONObject;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
+import java.awt.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
@@ -34,8 +35,7 @@ public class LyricCommand extends Command
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         GuildMusicManager musicManager = this.client.getGuildAudioPlayer(event.getGuild());
         String query = "";
 
@@ -74,7 +74,7 @@ public class LyricCommand extends Command
             {
                 embed.clear();
                 embed.setTitle("Failed");
-                embed.setColor(event.getMember().getColor());
+                embed.setColor(new Color(211, 0, 137));
                 embed.addField(
                         ":x:",
                         "Can't find lyric.",
