@@ -28,13 +28,14 @@ public class RecommendationCommand extends Command {
         this.youtubeClient = youtubeClient;
 
         this.name = "recommend";
-        this.arguments = "<number>";
-        this.aliases = new String[] {"play_recommendation", "pr", "play_r"};
+        this.arguments = "<a number in range 1-24>";
+        this.aliases = new String[] {"play_recommendation", "pr", "play_r", "rec"};
         this.category = new Category("Music");
         this.cooldown = 2;
         this.guildOnly = true;
-        this.help = "Add song recommendation (based on current playing song) to queue\n" +
-                ":warning: Using `m$recommend` on the same song might result the same recommendation.";
+        this.help = "Add song recommendation (based on currently playing song) to queue\n" +
+                ":warning: Using this command twice or multiple times on the same song " +
+                "might result the same recommendation.";
         this.help = HelpProcess.getHelp(this);
     }
 

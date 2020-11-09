@@ -17,7 +17,7 @@ public class ShowGuildStateCommand extends Command {
         this.nanoClient = nanoClient;
 
         this.name = "guild_state";
-        this.help = "Show song queue & current guild voice state";
+        this.help = "Show current audio player state and top 7 tracks in queue";
         this.aliases = new String[]{"show_guild_state", "gs", "state"};
         this.guildOnly = true;
         this.cooldown = 2;
