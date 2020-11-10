@@ -79,7 +79,7 @@ public abstract class BaseModel
         }
         catch (SQLException e)
         {
-            if (!e.getMessage().equals("Unhandled user-defined exception condition"))
+            if (!e.getMessage().contains("Unhandled user-defined exception condition"))
             {
                 throw new SQLException(e);
             }
