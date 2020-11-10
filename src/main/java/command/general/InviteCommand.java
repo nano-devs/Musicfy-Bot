@@ -2,7 +2,6 @@ package command.general;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 

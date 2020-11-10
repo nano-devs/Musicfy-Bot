@@ -14,8 +14,8 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
 
     public CreatePlaylistCommand()
     {
-        this.name = "create_user_playlist";
-        this.aliases = new String[]{"aup", "add_user_playlist", "cup"};
+        this.name = "create_new_playlist";
+        this.aliases = new String[]{"cnp"};
         this.arguments = "<playlist name>";
         this.help = "Create a new user playlist. \n" +
                     "Playlist name can't be the same with your other playlist name.";

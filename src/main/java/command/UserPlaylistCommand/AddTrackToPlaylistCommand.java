@@ -20,8 +20,8 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
     {
         this.client = ytc;
 
-        this.name = "add_track_to_user_playlist";
-        this.aliases = new String[]{"attup"};
+        this.name = "add_track_to_my_playlist";
+        this.aliases = new String[]{"attmp"};
         this.arguments = "<playlist name>, <url>";
         this.help = "Add a new track to user playlist. \n" +
                     "Use coma (,) as separator for each arguments.";
@@ -41,7 +41,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.addField(
                     ":warning:",
                     "Invalid given arguments.\n" +
-                            "This command need 3 arguments: <playlist name>, <url>.\n" +
+                            "This command need 2 arguments: <playlist name>, <url>.\n" +
                             "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
