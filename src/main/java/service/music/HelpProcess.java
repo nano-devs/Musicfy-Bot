@@ -1,7 +1,6 @@
-package service.general;
+package service.music;
 
 import com.jagrosh.jdautilities.command.Command;
-import service.music.CustomEmbedBuilder;
 
 public class HelpProcess
 {
