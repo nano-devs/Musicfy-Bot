@@ -1,18 +1,24 @@
 package service.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.GuildSettingsProvider;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import database.Entity.GuildSetting;
 import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.internal.StringUtil;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
 /**
  * Holder for both the player and a track scheduler for one guild.
  */
-public class GuildMusicManager {
+public class GuildMusicManager extends GuildSetting implements GuildSettingsProvider {
     /**
      * Audio player for the guild.
      */
@@ -28,20 +34,22 @@ public class GuildMusicManager {
 
     private ScheduledFuture<?> waitingFuture;
 
-    private int maxQueueSize = 60;
-
-    private boolean inDjMode = false;
-
     private boolean pauseStatus = false;
+
+    private final Set<String> prefixes;
 
     /**
      * Creates a player and a track scheduler.
      * @param manager Audio player manager to use for creating the player.
      */
     public GuildMusicManager(AudioPlayerManager manager) {
+        super();
+
         player = manager.createPlayer();
         scheduler = new TrackScheduler(player);
         player.addListener(scheduler);
+
+        prefixes = new HashSet<>();
     }
 
     /**
@@ -157,14 +165,13 @@ public class GuildMusicManager {
     }
 
     public boolean isQueueFull() {
-        return this.scheduler.getQueue().size() >= this.maxQueueSize;
+        return this.scheduler.getQueue().size() >= this.maxQueueLength;
     }
 
-    public boolean isInDjMode() {
-        return inDjMode;
-    }
-
-    public void setInDjMode(boolean djMode) {
-        this.inDjMode = djMode;
+    @Nullable
+    @Override
+    public Collection<String> getPrefixes() {
+        prefixes.add(this.customPrefix);
+        return prefixes;
     }
 }
