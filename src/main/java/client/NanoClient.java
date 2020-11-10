@@ -1,6 +1,7 @@
 package client;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -14,12 +15,14 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.Nullable;
 import service.music.*;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NanoClient {
+public class NanoClient implements GuildSettingsManager {
     private JDA jda;
 
     private final Map<Long, GuildMusicManager> musicManagers;
@@ -46,6 +49,16 @@ public class NanoClient {
         if (musicManager == null) {
             musicManager = new GuildMusicManager(playerManager);
             musicManagers.put(guildId, musicManager);
+
+            try {
+                musicManager.loadSetting(guildId);
+
+                if (!musicManager.canLoadSetting()) {
+                    musicManager.loadDefaultSetting(guildId);
+                }
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
 
         guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
@@ -216,5 +229,11 @@ public class NanoClient {
         embedBuilder.setFooter("Have a nice dayy~");
 
         return embedBuilder;
+    }
+
+    @Nullable
+    @Override
+    public Object getSettings(Guild guild) {
+        return this.getGuildAudioPlayer(guild);
     }
 }
