@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import command.*;
 import command.UserPlaylistCommand.CreatePlaylistCommand;
+import command.general.CustomPrefixCommand;
 import command.general.HelpCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
@@ -58,11 +59,13 @@ public class Main {
         commandClientBuilder.setCoOwnerIds("456130311365984267");
         commandClientBuilder.setActivity(Activity.listening(prefix + "help"));
         commandClientBuilder.useHelpBuilder(false);
+        commandClientBuilder.setGuildSettingsManager(nano);
 
         // Add Command & Inject Dependencies.
         // Free Commands
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
+        commandClientBuilder.addCommand(new CustomPrefixCommand());
         commandClientBuilder.addCommand(new DjModeCommand(nano));
         commandClientBuilder.addCommand(new JoinCommand(nano));
         commandClientBuilder.addCommand(new LeaveCommand(nano));
