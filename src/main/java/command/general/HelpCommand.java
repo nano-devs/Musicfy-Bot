@@ -7,8 +7,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import service.music.CustomEmbedBuilder;
+import service.music.HelpProcess;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,21 +16,23 @@ import java.util.Map;
 public class HelpCommand extends Command {
 
     MessageEmbed messageEmbed;
+    Map<String, Command> commandMap;
 
     public HelpCommand(CommandClient commandClient, JDA jda) {
         this.name = "help";
         this.aliases = new String[] { "helps" };
         this.help = "Shows help & all commands";
-        this.cooldown = 2;
+        this.cooldown = 3;
         this.category = new Category("General");
         this.guildOnly = false;
 
+        this.commandMap = new HashMap<>();
         this.messageEmbed = this.createHelpMessageEmbed(commandClient, jda);
     }
 
     private MessageEmbed createHelpMessageEmbed(CommandClient commandClient, JDA jda) {
-        List<Command> commands = commandClient.getCommands();
 
+        List<Command> commands = commandClient.getCommands();
         EmbedBuilder embedBuilder = new CustomEmbedBuilder();
 
         // Theme Color: RGB(211, 0, 137)
@@ -38,12 +40,20 @@ public class HelpCommand extends Command {
         embedBuilder.setDescription("Prefix: `" + commandClient.getPrefix() +
                 "` | Alternative prefix: `" + commandClient.getAltPrefix() + "` the bot.");
 
+        // Temporary memory
         Map<String, String> dictionary = new HashMap<>();
 
         for (Command command : commands) {
             String currentCategoryName = "**" + command.getCategory().getName() + "**";
             String categoryValue = "`" + command.getName() + "`, ";
 
+            // Use memory to access the command in the future.
+            commandMap.put(command.getName(), command);
+            for (String alias : command.getAliases()) {
+                commandMap.put(alias, command);
+            }
+
+            // Use the temporary memory for Main Embed
             if (currentCategoryName.equals("Owner"))
                 continue;
 
@@ -51,6 +61,8 @@ public class HelpCommand extends Command {
                 dictionary.put(currentCategoryName, categoryValue);
                 continue;
             }
+
+            // Append command name to temporary memory
             dictionary.put(currentCategoryName, dictionary.get(currentCategoryName) + categoryValue);
         }
 
@@ -70,6 +82,25 @@ public class HelpCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        if (!event.getArgs().isEmpty()) {
+            String commandName = event.getArgs();
+
+            if (!commandMap.containsKey(commandName)) {
+                event.reply(":x: | Command with name `" + commandName +
+                        "` does not exist.. please use `" + event.getClient().getPrefix() +
+                        "help` to get the list of command names");
+                return;
+            }
+
+            Command requestedCommand = commandMap.get(commandName);
+
+            event.reply(HelpProcess.getCommandHelpDetail(
+                    requestedCommand,
+                    event.getClient().getPrefix(),
+                    event.getClient().getAltPrefix()).build());
+
+            return;
+        }
         event.reply(this.messageEmbed);
     }
 }

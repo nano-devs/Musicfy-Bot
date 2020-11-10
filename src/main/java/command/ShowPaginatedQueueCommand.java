@@ -21,7 +21,7 @@ public class ShowPaginatedQueueCommand extends Command {
 
     public ShowPaginatedQueueCommand(NanoClient nanoClient) {
         this.name = "queue";
-        this.help = "Show song queue & current guild voice state";
+        this.help = "Show paginated song queue";
         this.aliases = new String[]{"show_queue", "q", "sq", "pq"};
         this.guildOnly = true;
         this.nanoClient = nanoClient;
