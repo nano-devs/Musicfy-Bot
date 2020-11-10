@@ -74,7 +74,7 @@ public class HelpCommand extends Command {
         embedBuilder.addField("Detail",
                 "For more detail try `" + commandClient.getPrefix() + "help <command-name>`", false);
 
-        embedBuilder.setFooter("If you need additional help, contact Made Y#8195",
+        embedBuilder.setFooter("For additional help, contact Made Y#8195",
                 jda.getSelfUser().getEffectiveAvatarUrl());
 
         return embedBuilder.build();
