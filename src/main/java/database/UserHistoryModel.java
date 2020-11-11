@@ -70,7 +70,7 @@ public class UserHistoryModel extends BaseModel
                         output.append("(" + result.getString(2) +")\n");
                         counter++;
 
-                        if (history.length() + output.length() < 2048)
+                        if (history.length() + output.length() < 1900)
                         {
                             history += output;
                         }
