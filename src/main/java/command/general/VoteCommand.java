@@ -7,6 +7,7 @@ import database.Entity.ClassicUser;
 import database.UserModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
+import service.music.MusicService;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
@@ -49,7 +50,8 @@ public class VoteCommand extends Command {
             classicUser.setDailyQuota(1);
         }
 
-        CustomEmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
+        CustomEmbedBuilder embedBuilder = MusicService.getEmbeddedVoteLink(classicUser, event);
+        
         event.reply(embedBuilder.build());
     }
 }
