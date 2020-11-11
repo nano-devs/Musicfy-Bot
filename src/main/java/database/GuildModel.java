@@ -10,12 +10,9 @@ public class GuildModel extends BaseModel {
         super();
     }
 
-    public void createNew(long id, boolean inDjMode, int defaultVolume, String customPrefix, int maxQueueLength,
-                          int maxPlaylistCount, int maxSongDuration) throws SQLException {
-        String query = "INSERT INTO GUILD (GUILD_ID, DJ_MODE, DEFAULT_VOLUME, CUSTOM_PREFIX, " +
-                "MAX_QUEUE_LENGTH, MAX_PLAYLIST_COUNT, MAX_SONG_DURATION) " +
-                "VALUES (" + id + ", " + inDjMode + ", " + defaultVolume + ", '" + customPrefix + "', " +
-                maxQueueLength + ", " + maxPlaylistCount + ", " + maxSongDuration + ")";
+    public void createNew(long id, boolean inDjMode, int defaultVolume, String customPrefix) throws SQLException {
+        String query = "INSERT INTO GUILD (GUILD_ID, DJ_MODE, DEFAULT_VOLUME, CUSTOM_PREFIX,) " +
+                "VALUES (" + id + ", " + inDjMode + ", " + defaultVolume + ", '" + customPrefix + "', )";
         this.executeUpdateQuery(query);
     }
 
@@ -28,7 +25,9 @@ public class GuildModel extends BaseModel {
     public GuildSetting read(long id) throws SQLException {
         GuildSetting guildSetting = null;
 
-        String query = "SELECT * FROM GUILD WHERE ID = " + id;
+        String query = "SELECT * FROM GUILD JOIN GUILD_SETTINGS " +
+                "ON GUILD.GUILD_SETTINGS_ID = GUILD_SETTINGS.GUILD_SETTINGS_ID " +
+                "WHERE GUILD_ID = " + id;
         try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password)) {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 try (ResultSet result = statement.executeQuery()) {

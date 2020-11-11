@@ -63,7 +63,7 @@ public class RecommendationCommand extends Command {
             }
 
             // if a number, then check if number is in valid range.
-            if (requestNumber <= 0 || requestNumber >= 24) {
+            if (requestNumber <= 0 || requestNumber > 24) {
                 event.reply(":x: | Please provide a number `(1 - 24)`. Example `"
                         +event.getClient().getPrefix()+"recommend 5` to request 5 recommendations");
                 return;

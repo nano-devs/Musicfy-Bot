@@ -57,7 +57,7 @@ public class Main {
         commandClientBuilder.setEmojis("\uD83D\uDC4C", "\u26A0", "\u2717");
         commandClientBuilder.setOwnerId("213866895806300161"); // Mandatory
         commandClientBuilder.setCoOwnerIds("456130311365984267");
-        commandClientBuilder.setActivity(Activity.listening(prefix + "help"));
+        commandClientBuilder.setActivity(Activity.listening("m$help"));
         commandClientBuilder.useHelpBuilder(false);
         commandClientBuilder.setGuildSettingsManager(nano);
 
@@ -111,6 +111,9 @@ public class Main {
 
         CommandClient commandClient = commandClientBuilder.build();
 
+        // Help command
+        commandClient.addCommand(new HelpCommand(commandClient));
+
         // JDA Builder
         JDABuilder builder = JDABuilder.createDefault(botToken);
 
@@ -126,7 +129,6 @@ public class Main {
         try {
             JDA jda = builder.build();
             nano.setJda(jda);
-            commandClient.addCommand(new HelpCommand(commandClient, jda));
         } catch (LoginException e) {
             e.printStackTrace();
         }

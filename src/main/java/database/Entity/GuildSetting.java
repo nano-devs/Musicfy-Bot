@@ -127,7 +127,10 @@ public class GuildSetting extends GuildModel {
     }
 
     public void loadSetting(long id) throws SQLException {
-        String query = "SELECT * FROM GUILD WHERE GUILD_ID = " + id;
+        String query = "SELECT * FROM GUILD JOIN GUILD_SETTINGS " +
+                "ON GUILD.GUILD_SETTINGS_ID = GUILD_SETTINGS.GUILD_SETTINGS_ID " +
+                "WHERE GUILD_ID = " + id;
+
         try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password)) {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 try (ResultSet result = statement.executeQuery()) {
@@ -147,8 +150,18 @@ public class GuildSetting extends GuildModel {
         }
     }
 
-    public void savePrefix(long id) throws SQLException {
+    public void saveCurrentPrefix(long id) throws SQLException {
         String query = "UPDATE GUILD SET CUSTOM_PREFIX = '" + this.customPrefix + "' WHERE GUILD_ID = " + id;
+        this.executeUpdateQuery(query);
+    }
+
+    public void saveCurrentVolume(long id) throws SQLException {
+        String query = "UPDATE GUILD SET DEFAULT_VOLUME = " + this.defaultVolume + " WHERE GUILD_ID = " + id;
+        this.executeUpdateQuery(query);
+    }
+
+    public void saveCurrentDjMode(long id) throws SQLException {
+        String query = "UPDATE GUILD SET DJ_MODE = " + this.isInDjMode() + " WHERE GUILD_ID = " + id;
         this.executeUpdateQuery(query);
     }
 }
