@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.TrackModel;
 import database.PlaylistModel;
 import service.music.CustomEmbedBuilder;
+import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -13,7 +14,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
-    private final int maxTrack = 20;
     private final YoutubeClient client;
 
     public AddTrackToPlaylistCommand(YoutubeClient ytc)
@@ -63,7 +63,10 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        if (db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table) >= this.maxTrack)
+        GuildMusicManager musicManager = event.getClient().getSettingsFor(event.getGuild());
+        int userPlaylistTrackCount = db.countPlaylistTrack(
+                db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table);
+        if (userPlaylistTrackCount >= musicManager.getMaxPlaylistTrackCount())
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -74,7 +77,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        YoutubeVideo video = null;
+        YoutubeVideo video;
         try
         {
             video = this.client.getInfoByVideoUrl(url);
