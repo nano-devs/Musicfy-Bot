@@ -24,7 +24,7 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        if (channel != null && track.getDuration() > 900000) {
+        if (channel != null && track.getDuration() > musicManager.getMaxSongDuration()) {
             String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
             channel.sendMessage(errorMessage).queue();
             return;
@@ -57,7 +57,7 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
     public void playlistLoaded(AudioPlaylist playlist) {
         int addedSize = 0;
         for (AudioTrack track : playlist.getTracks()) {
-            if (track.getDuration() > 900000) {
+            if (track.getDuration() > musicManager.getMaxSongDuration()) {
                 continue;
             }
             track.setUserData(requester);
