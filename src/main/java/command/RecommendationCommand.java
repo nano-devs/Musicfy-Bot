@@ -98,7 +98,7 @@ public class RecommendationCommand extends Command {
             recommend(event, musicManager, requestNumber);
             CompletableFuture.runAsync(() -> {
                 try {
-                    userModel.create(event.getAuthor().getIdLong(), 8, 0);
+                    userModel.create(event.getAuthor().getIdLong(), 5, 0);
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
                 }
