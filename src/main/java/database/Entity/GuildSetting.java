@@ -11,7 +11,7 @@ public class GuildSetting extends GuildModel {
     protected int defaultVolume;
     protected String customPrefix;
     protected int maxQueueLength;
-    protected int maxPlaylistCount;
+    protected int maxPlaylistTrackCount;
     protected int maxSongDuration;
     protected boolean premium;
 
@@ -35,13 +35,13 @@ public class GuildSetting extends GuildModel {
     }
 
     public GuildSetting(long id, boolean inDjMode, int defaultVolume, String customPrefix, int maxQueueLength,
-                        int maxPlaylistCount, int maxSongDuration) {
+                        int maxPlaylistTrackCount, int maxSongDuration) {
         this.id = id;
         this.inDjMode = inDjMode;
         this.defaultVolume = defaultVolume;
         this.customPrefix = customPrefix;
         this.maxQueueLength = maxQueueLength;
-        this.maxPlaylistCount = maxPlaylistCount;
+        this.maxPlaylistTrackCount = maxPlaylistTrackCount;
         this.maxSongDuration = maxSongDuration;
         this.canLoadSetting = false;
     }
@@ -82,12 +82,12 @@ public class GuildSetting extends GuildModel {
         this.maxQueueLength = maxQueueLength;
     }
 
-    public int getMaxPlaylistCount() {
-        return maxPlaylistCount;
+    public int getMaxPlaylistTrackCount() {
+        return maxPlaylistTrackCount;
     }
 
-    public void setMaxPlaylistCount(int maxPlaylistCount) {
-        this.maxPlaylistCount = maxPlaylistCount;
+    public void setMaxPlaylistTrackCount(int maxPlaylistTrackCount) {
+        this.maxPlaylistTrackCount = maxPlaylistTrackCount;
     }
 
     public int getMaxSongDuration() {
@@ -115,7 +115,7 @@ public class GuildSetting extends GuildModel {
         this.defaultVolume = 100;
         this.customPrefix = null;
         this.maxQueueLength = 60;
-        this.maxPlaylistCount = 20;
+        this.maxPlaylistTrackCount = 20;
         this.maxSongDuration = 900000;
         this.canLoadSetting = false;
 
@@ -140,7 +140,7 @@ public class GuildSetting extends GuildModel {
                         this.defaultVolume = result.getInt("DEFAULT_VOLUME");
                         this.customPrefix = result.getString("CUSTOM_PREFIX");
                         this.maxQueueLength = result.getInt("MAX_QUEUE_LENGTH");
-                        this.maxPlaylistCount = result.getInt("MAX_PLAYLIST_COUNT");
+                        this.maxPlaylistTrackCount = result.getInt("MAX_PLAYLIST_TRACK_COUNT");
                         this.maxSongDuration = result.getInt("MAX_SONG_DURATION");
 
                         this.canLoadSetting = true;

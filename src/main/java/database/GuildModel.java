@@ -36,7 +36,7 @@ public class GuildModel extends BaseModel {
                         int defaultVolume = result.getInt("DEFAULT_VOLUME");
                         String customPrefix = result.getString("CUSTOM_PREFIX");
                         int maxQueueLength = result.getInt("MAX_QUEUE_LENGTH");
-                        int maxPlaylistCount = result.getInt("MAX_PLAYLIST_COUNT");
+                        int maxPlaylistCount = result.getInt("MAX_PLAYLIST_TRACK_COUNT");
                         int maxSongDuration = result.getInt("MAX_SONG_DURATION");
                         guildSetting = new GuildSetting(id, djMode, defaultVolume, customPrefix,
                                 maxQueueLength, maxPlaylistCount, maxSongDuration);
