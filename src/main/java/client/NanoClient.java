@@ -96,8 +96,10 @@ public class NanoClient implements GuildSettingsManager {
             @Override
             public void trackLoaded(AudioTrack track) {
                 if (track.getDuration() > musicManager.getMaxSongDuration()) {
-                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
-                    channel.sendMessage(errorMessage).queue();
+                    if (channel != null) {
+                        String errorMessage = ":negative_squared_cross_mark: | Cannot load song with duration longer than 1 hour";
+                        channel.sendMessage(errorMessage).queue();
+                    }
                     return;
                 }
                 track.setUserData(requester);
