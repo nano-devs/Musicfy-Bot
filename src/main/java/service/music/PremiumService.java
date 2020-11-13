@@ -45,7 +45,7 @@ public class PremiumService
             {
                 try
                 {
-                    guildHistoryModel.addGuildHistoryAsync(guild.getIdLong(), user.getIdLong(), url, title);
+                    guildHistoryModel.addGuildHistory(guild.getIdLong(), user.getIdLong(), url, title);
                 }
                 catch (SQLException e)
                 {
@@ -60,7 +60,7 @@ public class PremiumService
         {
             try
             {
-                userHistoryModel.addUserHistoryAsync(user.getIdLong(), url, title);
+                userHistoryModel.addUserHistory(user.getIdLong(), url, title);
             }
             catch (SQLException e)
             {

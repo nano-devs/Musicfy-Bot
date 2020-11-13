@@ -20,7 +20,7 @@ public class GuildHistoryModel extends BaseModel
      * @param title Track title.
      * @return
      */
-    public boolean addGuildHistoryAsync(long guidId, long userId, String url, String title) throws SQLException
+    public boolean addGuildHistory(long guidId, long userId, String url, String title) throws SQLException
     {
         String query =
                 "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, URL, TITLE) " +

@@ -17,7 +17,7 @@ public class UserHistoryModel extends BaseModel
      * @param title Track title.
      * @return true if success to insert data to database.
      */
-    public boolean addUserHistoryAsync(long userId, String url, String title) throws SQLException
+    public boolean addUserHistory(long userId, String url, String title) throws SQLException
     {
         String query =
                 "INSERT INTO USER_HISTORY (USER_ID, URL, TITLE) " +
