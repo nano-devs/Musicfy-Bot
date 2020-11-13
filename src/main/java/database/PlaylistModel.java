@@ -121,7 +121,7 @@ public class PlaylistModel extends BaseModel
     public ArrayList<Playlist> getAllPlaylist(long id, String table)
     {
         String query =
-                "SELECT " + table + "_PLAYLIST.NAME, COUNT(" + table + "_PLAYLIST_TRACK.TRACK_ID) " +
+                "SELECT " + table + "_PLAYLIST.NAME, COUNT(" + table + "_PLAYLIST_TRACK.URL) " +
                 "FROM " + table + "_PLAYLIST " +
                 "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
                 "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
@@ -272,12 +272,10 @@ public class PlaylistModel extends BaseModel
     public ArrayList<Track> getTrackListFromPlaylist(long id, String name, String table)
     {
         String query =
-                "SELECT " + table + "_playlist.ID, track.ID, track.TITLE, track.URL " +
-                "FROM " + table + "_playlist " +
-                "JOIN " + table + "_playlist_track ON " + table + "_playlist.ID = " + table + "_playlist_track." + table + "_PLAYLIST_ID " +
-                "JOIN track ON " + table + "_playlist_track.TRACK_ID = track.ID " +
-                "WHERE " + table + "_playlist." + table + "_ID = " + id +
-                " AND " + table + "_playlist.NAME = '" + name + "'";
+                "SELECT " + table + "_PLAYLIST_TRACK.URL, " + table + "_PLAYLIST_TRACK.TITLE \n" +
+                "FROM  " + table + "_PLAYLIST_TRACK \n" +
+                "JOIN " + table + "_PLAYLIST ON " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID = " + table + "_PLAYLIST.ID \n" +
+                "WHERE " + table + "_PLAYLIST." + table + "_ID = " + id + " AND " + table + "_PLAYLIST.NAME = '" + name + "'";
 
         ArrayList<Track> tracks = new ArrayList<Track>(this.maxTrackEachPlaylist);
 
@@ -320,7 +318,7 @@ public class PlaylistModel extends BaseModel
     public int countPlaylistTrack(long playlistId, String table)
     {
         String query =
-                "SELECT COUNT(TRACK_ID) " +
+                "SELECT COUNT(URL) " +
                 "FROM " + table + "_PLAYLIST_TRACK " +
                 "WHERE " + table + "_PLAYLIST_ID = " + playlistId;
 
@@ -441,7 +439,7 @@ public class PlaylistModel extends BaseModel
     {
         String query =
                 "DELETE FROM " + table + "_PLAYLIST_TRACK " +
-                "WHERE ID = " + playlistTrackId + "";
+                "WHERE ID = " + playlistTrackId + " ";
 
         return this.executeUpdateQuery(query) > 0;
     }
