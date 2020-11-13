@@ -5,7 +5,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 
 public class GuildPlaylistBaseCommand extends Command
 {
-    public final String table;
+    protected final String table;
+    protected final int maxTrack = 5;
+    protected final int maxPlaylist = 5;
 
     public GuildPlaylistBaseCommand()
     {
