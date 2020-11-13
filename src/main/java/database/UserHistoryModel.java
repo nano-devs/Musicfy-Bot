@@ -13,14 +13,15 @@ public class UserHistoryModel extends BaseModel
     /**
      * Add played track by user to history database
      * @param userId User id that issued the command
-     * @param trackId Track id that the user play
+     * @param url Track url.
+     * @param title Track title.
      * @return true if success to insert data to database.
      */
-    public boolean addUserHistoryAsync(long userId, long trackId) throws SQLException
+    public boolean addUserHistoryAsync(long userId, String url, String title) throws SQLException
     {
         String query =
-                "INSERT INTO USER_HISTORY (USER_ID, TRACK_ID) " +
-                "VALUES (" + userId + ", " + trackId + ")";
+                "INSERT INTO USER_HISTORY (USER_ID, URL, TITLE) " +
+                "VALUES (" + userId + ", " + url + ", " + title + ")";
         return this.executeUpdateQuery(query) > 0;
     }
 
@@ -32,11 +33,11 @@ public class UserHistoryModel extends BaseModel
     public String getUserHistory(long userId)
     {
         String query =
-                "SELECT track.TITLE, track.URL, user_history.DATE " +
-                "FROM user_history left join track on user_history.TRACK_ID = track.ID " +
+                "SELECT TITLE, URL, DATE " +
+                "FROM USER_HISTORY " +
                 "WHERE USER_ID = " + userId +
-                " GROUP BY user_history.DATE " +
-                " ORDER by DATE DESC ";
+                " GROUP BY DATE " +
+                "ORDER by DATE DESC ";
 
         try (
                 Connection connection = DriverManager.getConnection(

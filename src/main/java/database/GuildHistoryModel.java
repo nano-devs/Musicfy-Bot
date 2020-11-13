@@ -15,14 +15,16 @@ public class GuildHistoryModel extends BaseModel
     /**
      * Add played track by guild member to database
      * @param guidId Guild id that the user reside in.
-     * @param trackId Track id that the user play
+     * @param userId User id
+     * @param url Track url.
+     * @param title Track title.
      * @return
      */
-    public boolean addGuildHistoryAsync(long guidId, long userId, long trackId) throws SQLException
+    public boolean addGuildHistoryAsync(long guidId, long userId, String url, String title) throws SQLException
     {
         String query =
-                "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, TRACK_ID) " +
-                "VALUES (" + guidId + ", " + userId + ", " + trackId + ")";
+                "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, URL, TITLE) " +
+                "VALUES (" + guidId + ", " + userId + ", " + url + ", " + title + ")";
         return this.executeUpdateQuery(query) > 0;
     }
 
@@ -35,11 +37,11 @@ public class GuildHistoryModel extends BaseModel
     public String GetGuildHistory(long guildId, JDA client)
     {
         String query =
-                "SELECT guild_history.USER_ID, track.TITLE, track.URL, guild_history.DATE " +
-                "FROM guild_history left join track on guild_history.TRACK_ID = track.ID " +
+                "SELECT USER_ID, TITLE, URL, DATE " +
+                "FROM GUILD_HISTORY " +
                 "WHERE GUILD_ID = " + guildId +
-                " GROUP BY guild_history.DATE " +
-                " ORDER by guild_history.DATE DESC";
+                " GROUP BY DATE " +
+                "ORDER by DATE DESC";
 
         try (
                 Connection connection = DriverManager.getConnection(
