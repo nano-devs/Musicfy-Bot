@@ -77,7 +77,7 @@ public class GuildHistoryModel extends BaseModel
                         output.append("(" + result.getString(3) +")\n");
                         counter++;
 
-                        if (history.length() + output.length() < 2048)
+                        if (history.length() + output.length() < 1900)
                         {
                             history += output;
                         }
