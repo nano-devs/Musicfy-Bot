@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.TrackModel;
 import database.PlaylistModel;
 import service.music.CustomEmbedBuilder;
+import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -13,15 +14,15 @@ import java.util.concurrent.CompletableFuture;
 
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
-    private final int maxTrack = 20;
+    private final int maxTrack = 5;
     private final YoutubeClient client;
 
     public AddTrackToPlaylistCommand(YoutubeClient ytc)
     {
         this.client = ytc;
 
-        this.name = "add_track_to_user_playlist";
-        this.aliases = new String[]{"attup"};
+        this.name = "add_track_to_my_playlist";
+        this.aliases = new String[]{"attmp"};
         this.arguments = "<playlist name>, <url>";
         this.help = "Add a new track to user playlist. \n" +
                     "Use coma (,) as separator for each arguments.";
@@ -41,7 +42,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.addField(
                     ":warning:",
                     "Invalid given arguments.\n" +
-                            "This command need 3 arguments: <playlist name>, <url>.\n" +
+                            "This command need 2 arguments: <playlist name>, <url>.\n" +
                             "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
@@ -63,7 +64,9 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        if (db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table) >= this.maxTrack)
+        int userPlaylistTrackCount = db.countPlaylistTrack(
+                db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table);
+        if (userPlaylistTrackCount >= this.maxTrack)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -74,7 +77,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        YoutubeVideo video = null;
+        YoutubeVideo video;
         try
         {
             video = this.client.getInfoByVideoUrl(url);

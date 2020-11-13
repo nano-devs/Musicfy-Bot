@@ -8,11 +8,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.ClassicUser;
 import database.UserModel;
-import service.music.CustomEmbedBuilder;
+import service.music.*;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import service.music.GuildMusicManager;
-import service.music.HelpProcess;
-import service.music.MusicUtils;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -66,7 +63,7 @@ public class RecommendationCommand extends Command {
             }
 
             // if a number, then check if number is in valid range.
-            if (requestNumber <= 0 || requestNumber >= 24) {
+            if (requestNumber <= 0 || requestNumber > 24) {
                 event.reply(":x: | Please provide a number `(1 - 24)`. Example `"
                         +event.getClient().getPrefix()+"recommend 5` to request 5 recommendations");
                 return;
@@ -101,7 +98,7 @@ public class RecommendationCommand extends Command {
             recommend(event, musicManager, requestNumber);
             CompletableFuture.runAsync(() -> {
                 try {
-                    userModel.create(event.getAuthor().getIdLong(), 8, 0);
+                    userModel.create(event.getAuthor().getIdLong(), 5, 0);
                 } catch (SQLException sqlException) {
                     sqlException.printStackTrace();
                 }
@@ -126,7 +123,7 @@ public class RecommendationCommand extends Command {
 
         // if Daily Quota not available & Claimed quota is not available
         if (classicUser.getRecommendationQuota() < 1) {
-            CustomEmbedBuilder embedBuilder = this.nanoClient.getEmbeddedVoteLink(classicUser, event);
+            CustomEmbedBuilder embedBuilder = MusicService.getEmbeddedVoteLink(classicUser, event);
             event.reply(embedBuilder.build());
             return;
         }

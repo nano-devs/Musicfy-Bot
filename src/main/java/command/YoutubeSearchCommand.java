@@ -101,7 +101,7 @@ public class YoutubeSearchCommand extends Command
                     "(" + video.getUrl() + ")";
 
             if (!video.getDuration().equals(""))
-                output += "[" + video.getDuration() + "]";
+                output += " [" + video.getDuration() + "]";
 
             // add video data to embed
             embed.appendDescription(output + "\n");

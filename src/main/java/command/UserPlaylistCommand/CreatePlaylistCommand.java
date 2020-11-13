@@ -10,12 +10,12 @@ import java.util.concurrent.CompletableFuture;
 
 public class CreatePlaylistCommand extends UserPlaylistBaseCommand
 {
-    private final int maxPlaylist = 3;
+    private final int maxPlaylist = 5;
 
     public CreatePlaylistCommand()
     {
-        this.name = "create_user_playlist";
-        this.aliases = new String[]{"aup", "add_user_playlist", "cup"};
+        this.name = "create_new_playlist";
+        this.aliases = new String[]{"cnp"};
         this.arguments = "<playlist name>";
         this.help = "Create a new user playlist. \n" +
                     "Playlist name can't be the same with your other playlist name.";

@@ -1,6 +1,6 @@
 package client;
 
-import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
@@ -9,17 +9,18 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import database.Entity.ClassicUser;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.Nullable;
 import service.music.*;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NanoClient {
+public class NanoClient implements GuildSettingsManager {
     private JDA jda;
 
     private final Map<Long, GuildMusicManager> musicManagers;
@@ -46,6 +47,16 @@ public class NanoClient {
         if (musicManager == null) {
             musicManager = new GuildMusicManager(playerManager);
             musicManagers.put(guildId, musicManager);
+
+            try {
+                musicManager.loadSetting(guildId);
+
+                if (!musicManager.canLoadSetting()) {
+                    musicManager.loadDefaultSetting(guildId);
+                }
+            } catch (SQLException sqlException) {
+                sqlException.printStackTrace();
+            }
         }
 
         guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
@@ -84,9 +95,11 @@ public class NanoClient {
         playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack track) {
-                if (track.getDuration() > 900000) {
-                    String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
-                    channel.sendMessage(errorMessage).queue();
+                if (track.getDuration() > musicManager.getMaxSongDuration()) {
+                    if (channel != null) {
+                        String errorMessage = ":negative_squared_cross_mark: | Cannot load song with duration longer than 1 hour";
+                        channel.sendMessage(errorMessage).queue();
+                    }
                     return;
                 }
                 track.setUserData(requester);
@@ -122,7 +135,7 @@ public class NanoClient {
                         index += 1;
                         continue;
                     }
-                    if (track.getDuration() > 900000) {
+                    if (track.getDuration() > musicManager.getMaxSongDuration()) {
                         continue;
                     }
                     track.setUserData(requester);
@@ -135,9 +148,18 @@ public class NanoClient {
 
                 PremiumService.addHistory(playlist.getName(), trackUrl, requester.getGuild(), requester.getUser());
 
-                if (channel != null)
-                    channel.sendMessage(":white_check_mark: | " + addedSize +
-                            " entries from **"+ playlist.getName() + "** has been added to queue").queue();
+                if (channel != null) {
+                    CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+
+                    embedBuilder.setDescription(":white_check_mark: | " + addedSize +
+                            " entries from **" + playlist.getName() + "** has been added to queue");
+
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
+
+                    embedBuilder.setFooter("Only song with duration less than 1 hour added to queue");
+                    channel.sendMessage(embedBuilder.build()).queue();
+                }
             }
 
             @Override
@@ -200,21 +222,9 @@ public class NanoClient {
         this.waiter = waiter;
     }
 
-    public CustomEmbedBuilder getEmbeddedVoteLink(ClassicUser classicUser, CommandEvent event) {
-        String voteUrl = "";
-        String message = "[Vote]() & use **" + event.getClient().getPrefix() +
-                "claim** command to claim rewards :>\n" + voteUrl;
-
-        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
-        embedBuilder.setTitle(":headphones: | Thank you for using " + event.getSelfUser().getName() + "!");
-        embedBuilder.setAuthor(event.getAuthor().getName() + " Stocks",
-                event.getAuthor().getEffectiveAvatarUrl(),
-                event.getAuthor().getEffectiveAvatarUrl());
-        embedBuilder.addField("Daily Quota", String.valueOf(classicUser.getDailyQuota()), true);
-        embedBuilder.addField("Claimed Reward", String.valueOf(classicUser.getRecommendationQuota()), true);
-        embedBuilder.addField("Increase your stocks :chart_with_upwards_trend: ", message, false);
-        embedBuilder.setFooter("Have a nice dayy~");
-
-        return embedBuilder;
+    @Nullable
+    @Override
+    public Object getSettings(Guild guild) {
+        return this.getGuildAudioPlayer(guild);
     }
 }

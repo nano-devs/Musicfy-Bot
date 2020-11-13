@@ -3,7 +3,6 @@ package command;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -35,7 +34,9 @@ public class PlayUrlCommand extends Command {
         }
 
         String args = event.getArgs();
-        if (args.isEmpty()) {
+        String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
+        UrlValidator urlValidator = new UrlValidator(schemes);
+        if (args.isEmpty() || !urlValidator.isValid(args)) {
             CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
             embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
                     + event.getClient().getPrefix() + this.name + " " + this.arguments, true);

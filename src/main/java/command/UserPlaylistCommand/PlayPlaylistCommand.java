@@ -20,8 +20,8 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
     {
         this.nano = nano;
 
-        this.name = "play_user_playlist";
-        this.aliases = new String[]{"pup"};
+        this.name = "play_my_playlist";
+        this.aliases = new String[]{"pmp"};
         this.arguments = "<playlist name>";
         this.help = "Play all track from the user's own playlist.";
         this.cooldown = 2;

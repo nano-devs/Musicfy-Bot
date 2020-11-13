@@ -24,9 +24,11 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
 
     @Override
     public void trackLoaded(AudioTrack track) {
-        if (channel != null && track.getDuration() > 900000) {
-            String errorMessage = ":negative_squared_cross_mark: | cannot load song with duration longer than 15 minutes";
-            channel.sendMessage(errorMessage).queue();
+        if (track.getDuration() > musicManager.getMaxSongDuration()) {
+            if (channel != null) {
+                String errorMessage = ":negative_squared_cross_mark: | Cannot load song with duration longer than 1 hour";
+                channel.sendMessage(errorMessage).queue();
+            }
             return;
         }
         track.setUserData(requester);
@@ -57,7 +59,7 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
     public void playlistLoaded(AudioPlaylist playlist) {
         int addedSize = 0;
         for (AudioTrack track : playlist.getTracks()) {
-            if (track.getDuration() > 900000) {
+            if (track.getDuration() > musicManager.getMaxSongDuration()) {
                 continue;
             }
             track.setUserData(requester);
@@ -79,7 +81,7 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
             embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
                     requester.getUser().getEffectiveAvatarUrl());
 
-            embedBuilder.setFooter("Only song with duration less than 15 minutes added to queue");
+            embedBuilder.setFooter("Only song with duration less than 1 hour added to queue");
             channel.sendMessage(embedBuilder.build()).queue();
         }
     }

@@ -86,5 +86,4 @@ public abstract class BaseModel
         }
         return -1;
     }
-
 }

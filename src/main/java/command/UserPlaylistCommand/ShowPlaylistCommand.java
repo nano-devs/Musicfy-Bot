@@ -12,8 +12,8 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
 {
     public ShowPlaylistCommand()
     {
-        this.name = "show_user_playlist";
-        this.aliases = new String[]{"sup"};
+        this.name = "my_playlists";
+        this.aliases = new String[]{"playlists", "mps", "playlist", "mp"};
         this.help = "Show all playlists owned by the user.";
         this.cooldown = 2;
         this.category = new Category("User Playlist");

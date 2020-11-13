@@ -12,8 +12,8 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
 {
     public DeleteTrackFromPlaylistCommand()
     {
-        this.name = "delete_track_from_user_playlist";
-        this.aliases = new String[]{"dtfup"};
+        this.name = "delete_track_from_my_playlist";
+        this.aliases = new String[]{"dtfmp"};
         this.arguments = "<playlist name>, <track index>";
         this.help = "Delete existing track from user playlist. \n" +
                     "Use coma (,) as separator for each arguments.";

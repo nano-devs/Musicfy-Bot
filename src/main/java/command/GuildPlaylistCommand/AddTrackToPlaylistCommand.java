@@ -5,6 +5,7 @@ import database.PlaylistModel;
 import database.PremiumModel;
 import database.TrackModel;
 import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -93,7 +94,10 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (db.countPlaylistTrack(db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table), this.table) >= this.maxTrack)
+        GuildMusicManager musicManager = event.getClient().getSettingsFor(event.getGuild());
+        int guildPlaylistTrackCount = db.countPlaylistTrack(
+                db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table), this.table);
+        if (guildPlaylistTrackCount >= musicManager.getMaxPlaylistTrackCount())
         {
             embed.setTitle("Failed");
             embed.addField(

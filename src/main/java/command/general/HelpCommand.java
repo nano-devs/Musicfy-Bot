@@ -3,10 +3,9 @@ package command.general;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import service.music.CustomEmbedBuilder;
+import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.util.HashMap;
@@ -15,30 +14,49 @@ import java.util.Map;
 
 public class HelpCommand extends Command {
 
-    MessageEmbed messageEmbed;
     Map<String, Command> commandMap;
 
-    public HelpCommand(CommandClient commandClient, JDA jda) {
+    public HelpCommand(CommandClient commandClient) {
         this.name = "help";
+        this.arguments = "<command-name> (this argument is optional)";
         this.aliases = new String[] { "helps" };
         this.help = "Shows help & all commands";
-        this.cooldown = 3;
+        this.cooldown = 4;
         this.category = new Category("General");
         this.guildOnly = false;
 
         this.commandMap = new HashMap<>();
-        this.messageEmbed = this.createHelpMessageEmbed(commandClient, jda);
+
+        this.initCommandMap(commandClient);
     }
 
-    private MessageEmbed createHelpMessageEmbed(CommandClient commandClient, JDA jda) {
-
+    private void initCommandMap(CommandClient commandClient) {
         List<Command> commands = commandClient.getCommands();
-        EmbedBuilder embedBuilder = new CustomEmbedBuilder();
+
+        for (Command command : commands) {
+            // Use memory to access the command in the future.
+            commandMap.put(command.getName(), command);
+            for (String alias : command.getAliases()) {
+                commandMap.put(alias, command);
+            }
+        }
+        commandMap.put("help", this);
+    }
+
+    private CustomEmbedBuilder getHelpEmbedBuilder(CommandClient commandClient, JDA jda, GuildMusicManager musicManager) {
+        List<Command> commands = commandClient.getCommands();
+        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+
+        String customPrefix = "\nCustom Prefix: `" + musicManager.getCustomPrefix() + "`";
+
+        if (musicManager.getCustomPrefix() == null || musicManager.getCustomPrefix().equals("null")) {
+            customPrefix = "\nCustom Prefix: None, please use `set_prefix` command to add custom prefix";
+        }
 
         // Theme Color: RGB(211, 0, 137)
         embedBuilder.setTitle("Musicfy Commands");
         embedBuilder.setDescription("Prefix: `" + commandClient.getPrefix() +
-                "` | Alternative prefix: `" + commandClient.getAltPrefix() + "` the bot.");
+                "` | Alternative prefix: `" + commandClient.getAltPrefix() + "` the bot." + customPrefix);
 
         // Temporary memory
         Map<String, String> dictionary = new HashMap<>();
@@ -46,12 +64,6 @@ public class HelpCommand extends Command {
         for (Command command : commands) {
             String currentCategoryName = "**" + command.getCategory().getName() + "**";
             String categoryValue = "`" + command.getName() + "`, ";
-
-            // Use memory to access the command in the future.
-            commandMap.put(command.getName(), command);
-            for (String alias : command.getAliases()) {
-                commandMap.put(alias, command);
-            }
 
             // Use the temporary memory for Main Embed
             if (currentCategoryName.equals("Owner"))
@@ -74,10 +86,10 @@ public class HelpCommand extends Command {
         embedBuilder.addField("Detail",
                 "For more detail try `" + commandClient.getPrefix() + "help <command-name>`", false);
 
-        embedBuilder.setFooter("If you need additional help, contact Made Y#8195",
+        embedBuilder.setFooter("For additional help, contact Made Y#8195",
                 jda.getSelfUser().getEffectiveAvatarUrl());
 
-        return embedBuilder.build();
+        return embedBuilder;
     }
 
     @Override
@@ -101,6 +113,8 @@ public class HelpCommand extends Command {
 
             return;
         }
-        event.reply(this.messageEmbed);
+
+        event.reply(this.getHelpEmbedBuilder(event.getClient(), event.getJDA(),
+                event.getClient().getSettingsFor(event.getGuild())).build());
     }
 }

@@ -6,6 +6,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import database.Entity.ClassicUser;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.managers.AudioManager;
@@ -103,5 +104,23 @@ public class MusicService {
             return false;
         }
         return true;
+    }
+
+    public static CustomEmbedBuilder getEmbeddedVoteLink(ClassicUser classicUser, CommandEvent event) {
+        String voteUrl = "";
+        String message = "[Vote]() & use **" + event.getClient().getPrefix() +
+                "claim** command to claim rewards :>\n" + voteUrl;
+
+        CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+        embedBuilder.setTitle(":headphones: | Thank you for using " + event.getSelfUser().getName() + "!");
+        embedBuilder.setAuthor(event.getAuthor().getName() + " Stocks",
+                event.getAuthor().getEffectiveAvatarUrl(),
+                event.getAuthor().getEffectiveAvatarUrl());
+        embedBuilder.addField("Daily Quota", String.valueOf(classicUser.getDailyQuota()), true);
+        embedBuilder.addField("Claimed Reward", String.valueOf(classicUser.getRecommendationQuota()), true);
+        embedBuilder.addField("Increase your stocks :chart_with_upwards_trend: ", message, false);
+        embedBuilder.setFooter("Have a nice dayy~");
+
+        return embedBuilder;
     }
 }

@@ -6,12 +6,6 @@ import mysql.connector
 user = os.environ['MYSQL_USER']
 password = ''
 
-connection = mysql.connector.connect(user=user,
-                                     password=password,
-                                     host='127.0.0.1',
-                                     database='nano')
-cursor = connection.cursor()
-
 insert_vote_query = """
     INSERT INTO vote (user_id, weekend)
     VALUES ({}, {});
@@ -36,7 +30,7 @@ check_user_query = """
 
 create_user_query = """
     INSERT INTO USER (ID, RECOMMENDATION_QUOTA, DAILY_QUOTA)
-    VALUES ({}, 8, 1)
+    VALUES ({}, 5, 1)
 """
 
 VOTE_AUTH_TOKEN = os.environ["VOTE_AUTH_NANO"]
@@ -50,6 +44,12 @@ def vote_post():
     # Invalid Authorization code
     if headers["Authorization"] != VOTE_AUTH_TOKEN:
         return 'error', 401
+
+    connection = mysql.connector.connect(user=user,
+                                     password=password,
+                                     host='127.0.0.1',
+                                     database='nano')
+    cursor = connection.cursor()
     
     data = flask.request.get_json(force=True)
 
@@ -104,11 +104,11 @@ def vote_post():
             
         connection.commit()
     
+    cursor.close()
+    connection.close()
+    
     return 'success', 200
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000")
     print("End")
-    
-cursor.close()
-connection.close()

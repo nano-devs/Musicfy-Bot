@@ -12,8 +12,8 @@ public class DeletePlaylistCommand extends UserPlaylistBaseCommand
 {
     public DeletePlaylistCommand()
     {
-        this.name = "delete_user_playlist";
-        this.aliases = new String[]{"dup"};
+        this.name = "delete_my_playlist";
+        this.aliases = new String[]{"dmp"};
         this.arguments = "<playlist name>";
         this.help = "Delete the existing user playlist.";
         this.cooldown = 2;
