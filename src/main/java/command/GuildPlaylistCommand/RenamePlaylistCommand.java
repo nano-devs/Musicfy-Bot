@@ -74,7 +74,7 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.renamePlaylistAsync(event.getGuild().getIdLong(), oldName, newName, this.table);
+                db.renamePlaylist(event.getGuild().getIdLong(), oldName, newName, this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
