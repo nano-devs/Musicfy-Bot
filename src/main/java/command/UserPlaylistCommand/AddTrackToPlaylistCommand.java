@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
+    private final int maxTrack = 5;
     private final YoutubeClient client;
 
     public AddTrackToPlaylistCommand(YoutubeClient ytc)
@@ -63,10 +64,9 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        GuildMusicManager musicManager = event.getClient().getSettingsFor(event.getGuild());
         int userPlaylistTrackCount = db.countPlaylistTrack(
                 db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table);
-        if (userPlaylistTrackCount >= musicManager.getMaxPlaylistTrackCount())
+        if (userPlaylistTrackCount >= this.maxTrack)
         {
             embed.setTitle("Failed");
             embed.addField(

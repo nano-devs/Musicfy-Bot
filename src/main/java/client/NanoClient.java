@@ -148,9 +148,18 @@ public class NanoClient implements GuildSettingsManager {
 
                 PremiumService.addHistory(playlist.getName(), trackUrl, requester.getGuild(), requester.getUser());
 
-                if (channel != null)
-                    channel.sendMessage(":white_check_mark: | " + addedSize +
-                            " entries from **"+ playlist.getName() + "** has been added to queue").queue();
+                if (channel != null) {
+                    CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+
+                    embedBuilder.setDescription(":white_check_mark: | " + addedSize +
+                            " entries from **" + playlist.getName() + "** has been added to queue");
+
+                    embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
+                            requester.getUser().getEffectiveAvatarUrl());
+
+                    embedBuilder.setFooter("Only song with duration less than 1 hour added to queue");
+                    channel.sendMessage(embedBuilder.build()).queue();
+                }
             }
 
             @Override

@@ -81,7 +81,7 @@ public class AudioLoadResultHandlerUrl implements AudioLoadResultHandler {
             embedBuilder.setAuthor("Added to queue", requester.getUser().getEffectiveAvatarUrl(),
                     requester.getUser().getEffectiveAvatarUrl());
 
-            embedBuilder.setFooter("Only song with duration less than 15 minutes added to queue");
+            embedBuilder.setFooter("Only song with duration less than 1 hour added to queue");
             channel.sendMessage(embedBuilder.build()).queue();
         }
     }

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
 {
-    private final int maxPlaylist = 3;
+    private final int maxPlaylist = 5;
 
     public CreatePlaylistCommand()
     {
