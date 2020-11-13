@@ -3,10 +3,8 @@ package command.UserPlaylistCommand;
 import YouTubeSearchApi.YoutubeClient;
 import YouTubeSearchApi.entity.YoutubeVideo;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.TrackModel;
 import database.PlaylistModel;
 import service.music.CustomEmbedBuilder;
-import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -14,7 +12,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
-    private final int maxTrack = 5;
     private final YoutubeClient client;
 
     public AddTrackToPlaylistCommand(YoutubeClient ytc)
@@ -42,8 +39,8 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.addField(
                     ":warning:",
                     "Invalid given arguments.\n" +
-                            "This command need 2 arguments: <playlist name>, <url>.\n" +
-                            "Use coma (,) as separator for each arguments.",
+                          "This command need 2 arguments: <playlist name>, <url>.\n" +
+                          "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;
@@ -53,6 +50,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         String url = event.getArgs().split(",")[1].trim();
 
         PlaylistModel db = new PlaylistModel();
+
         if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Attention");
@@ -66,6 +64,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 
         int userPlaylistTrackCount = db.countPlaylistTrack(
                 db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table);
+
         if (userPlaylistTrackCount >= this.maxTrack)
         {
             embed.setTitle("Failed");
@@ -104,34 +103,17 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        TrackModel track = new TrackModel();
-        long trackId = track.getTrackId(url);
-        if (trackId <= 0)
-        {
-            try
-            {
-                track.addTrackAsync(video.getTitle(), url);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        trackId = track.getTrackId(url);
-
-        long finalTrackId = trackId;
-        YoutubeVideo finalVideo = video;
-
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.addTrackToPlaylistAsync(event.getAuthor().getIdLong(), playlistName, finalTrackId, this.table);
+                long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
+                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle(), this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Track `" + finalVideo.getTitle() + "` added to `" + playlistName + "` playlist.",
+                        "Track `" + video.getTitle() + "` added to `" + playlistName + "` playlist.",
                         true);
             }
             catch (SQLException e)
@@ -140,10 +122,9 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Can't add track `" + finalVideo.getTitle() + "` to `" + playlistName + "` playlist.",
+                        "Can't add track `" + video.getTitle() + "` to `" + playlistName + "` playlist.",
                         true);
             }
-
             event.reply(embed.build());
         });
     }
