@@ -10,8 +10,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class CreatePlaylistCommand extends UserPlaylistBaseCommand
 {
-    private final int maxPlaylist = 5;
-
     public CreatePlaylistCommand()
     {
         this.name = "create_new_playlist";
@@ -70,7 +68,7 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.addPlaylistAsync(event.getAuthor().getIdLong(), name.trim(), this.table);
+                db.createPlaylist(event.getAuthor().getIdLong(), name.trim(), this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
