@@ -71,7 +71,7 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.renamePlaylistAsync(event.getAuthor().getIdLong(), oldName, newName, this.table);
+                db.renamePlaylist(event.getAuthor().getIdLong(), oldName, newName, this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
