@@ -85,7 +85,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.addPlaylistAsync(event.getGuild().getIdLong(), name.trim(), this.table);
+                db.createPlaylist(event.getGuild().getIdLong(), name.trim(), this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
