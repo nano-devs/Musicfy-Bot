@@ -46,7 +46,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give playlist name to delete.",
+                    "Please provide playlist name to delete.",
                     true);
             event.reply(embed.build());
             return;
