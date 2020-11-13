@@ -1,11 +1,11 @@
 package command.GuildPlaylistCommand;
 
+import YouTubeSearchApi.YoutubeClient;
+import YouTubeSearchApi.entity.YoutubeVideo;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
 import database.PremiumModel;
-import database.TrackModel;
 import net.dv8tion.jda.api.EmbedBuilder;
-import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -13,13 +13,15 @@ import java.util.concurrent.CompletableFuture;
 
 public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
 {
-    private final int maxTrack = 20;
+    private final YoutubeClient client;
 
-    public AddTrackToPlaylistCommand()
+    public AddTrackToPlaylistCommand(YoutubeClient ytc)
     {
+        this.client = ytc;
+
         this.name = "add_track_to_guild_playlist";
         this.aliases = new String[]{"attgp"};
-        this.arguments = "<playlist name>, <track title>, <url>";
+        this.arguments = "<playlist name>, <url>";
         this.help = "Add a new track to guild playlist. \n" +
                     "Use coma (,) as separator for each arguments.";
         this.cooldown = 2;
@@ -46,40 +48,21 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (event.getArgs().split(",").length != 3)
+        if (event.getArgs().split(",").length != 2)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
                     "Invalid given arguments.\n" +
-                            "This command need 3 arguments: <playlist name>, <track title>, <url>.\n" +
-                            "Use coma (,) as separator for each arguments.",
+                          "This command need 2 arguments: <playlist name>, <url>.\n" +
+                          "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;
         }
 
         String playlistName = event.getArgs().split(",")[0].trim();
-        String title = event.getArgs().split(",")[1].trim();
-        String url = event.getArgs().split(",")[2].trim();
-
-        TrackModel track = new TrackModel();
-        long trackId = track.getTrackId(url);
-        if (trackId <= 0)
-        {
-            CompletableFuture.runAsync(() ->
-            {
-                try
-                {
-                    track.addTrackAsync(title, url);
-                }
-                catch (SQLException e)
-                {
-                    e.printStackTrace();
-                }
-            });
-        }
-        trackId = track.getTrackId(url);
+        String url = event.getArgs().split(",")[1].trim();
 
         PlaylistModel db = new PlaylistModel();
 
@@ -88,48 +71,73 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Playlist `" + playlistName + "` not exist.",
+                    "`" + playlistName + "` playlist does not exist.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        GuildMusicManager musicManager = event.getClient().getSettingsFor(event.getGuild());
         int guildPlaylistTrackCount = db.countPlaylistTrack(
                 db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table), this.table);
-        if (guildPlaylistTrackCount >= musicManager.getMaxPlaylistTrackCount())
+
+        if (guildPlaylistTrackCount >= this.maxTrack)
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Track for playlist have reached maximum limit.",
+                    "Track for playlist has reached maximum limit.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        long finalTrackId = trackId;
+        YoutubeVideo video;
+        try
+        {
+            video = this.client.getInfoByVideoUrl(url);
+
+            if (video == null)
+            {
+                embed.setTitle("Attention");
+                embed.addField(
+                        ":warning:",
+                        "The given url is not valid.",
+                        true);
+                event.reply(embed.build());
+                return;
+            }
+        }
+        catch (Exception e)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "The given url is not valid.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.addTrackToPlaylistAsync(event.getGuild().getIdLong(), playlistName, finalTrackId, this.table);
+                long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table);
+                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle(), this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Track `" + title + "` added to playlist `" + playlistName + "`.",
+                        "Track `" + video.getTitle() + "` added to `" + playlistName + "` playlist.",
                         true);
             }
             catch (SQLException e)
             {
                 e.printStackTrace();
-
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Can't add track `" + title + "` to playlist `" + playlistName + "`.",
+                        "Can't add track `" + video.getTitle() + "` to `" + playlistName + "` playlist.",
                         true);
             }
             event.reply(embed.build());
