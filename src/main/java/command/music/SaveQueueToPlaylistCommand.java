@@ -15,9 +15,9 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
 {
     public SaveQueueToPlaylistCommand()
     {
-        this.name = "save_queue_to_playlist";
+        this.name = "savequeue";
         this.arguments = "<playlist name>";
-        this.aliases = new String[] { "sqtp" };
+        this.aliases = new String[] { "save_queue_to_playlist", "sqtp" };
         this.help = "Add all tracks in queue to a new user playlist.\n";
         this.guildOnly = true;
         this.cooldown = 2;
@@ -79,22 +79,6 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        int loop = Math.min(musicManager.scheduler.getQueue().size(), this.maxTrack);
-        int index = 0;
-        String[] url = new String[loop];
-        String[] title = new String[loop];
-
-        for (AudioTrack track : musicManager.scheduler.getQueue())
-        {
-            if (index >= loop)
-            {
-                break;
-            }
-            url[index]= track.getInfo().uri;
-            title[index] = track.getInfo().title;
-            index++;
-        }
-
         try
         {
             db.createPlaylist(event.getAuthor().getIdLong(), playlistName);
@@ -118,13 +102,15 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.addTrackToPlaylist(playlistId, url, title);
+                db.addTrackToPlaylist(playlistId, musicManager.scheduler.getQueue(),
+                        musicManager.getMaxPlaylistTrackCount());
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
                         "`" + playlistName + "` playlist is created " +
-                              "and " + url.length + " track(s) from the queue have been added to the playlist.",
+                              "and " + musicManager.scheduler.getQueue().size() +
+                              " track(s) from the queue have been added to the playlist.",
                         true);
             }
             catch (SQLException e)
