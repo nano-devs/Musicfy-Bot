@@ -66,7 +66,7 @@ public class HelpCommand extends Command {
             String categoryValue = "`" + command.getName() + "`, ";
 
             // Use the temporary memory for Main Embed
-            if (currentCategoryName.equals("Owner"))
+            if (currentCategoryName.equals("**Owner**"))
                 continue;
 
             if (!dictionary.containsKey(currentCategoryName)) {

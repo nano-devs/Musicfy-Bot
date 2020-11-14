@@ -26,6 +26,7 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" or "GUILD"
      * @return
      */
+    @Deprecated
     public boolean isPlaylistNameAvailable(long id, String name, String table)
     {
         String query =

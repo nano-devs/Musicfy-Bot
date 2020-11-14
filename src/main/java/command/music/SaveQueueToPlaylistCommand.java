@@ -15,9 +15,9 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
 {
     public SaveQueueToPlaylistCommand()
     {
-        this.name = "save_queue_to_playlist";
+        this.name = "savequeue";
         this.arguments = "<playlist name>";
-        this.aliases = new String[] { "sqtp" };
+        this.aliases = new String[] { "save_queue_to_playlist", "sqtp" };
         this.help = "Add all tracks in queue to a new user playlist.\n";
         this.guildOnly = true;
         this.cooldown = 2;
@@ -47,7 +47,7 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "No tracks in queue.",
+                    "Queue is empty.",
                     true);
             event.reply(embed.build());
             return;
@@ -70,31 +70,52 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
 
         if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName))
         {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "You already have playlist with the same name.",
-                    true);
-            event.reply(embed.build());
+            long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName);
+            int playlistTrackCount = db.countPlaylistTrack(playlistId);
+            int addLimit = musicManager.getMaxPlaylistTrackCount() - playlistTrackCount;
+
+            if (addLimit <= 0)
+            {
+                embed.setTitle("Failed");
+                embed.addField(
+                        ":x:",
+                        "Cannot save to playlist `" + playlistName + "`, playlist is full.",
+                        true);
+                return;
+            }
+
+            CompletableFuture.runAsync(() ->
+            {
+                try
+                {
+                    db.addTrackToPlaylist(playlistId, musicManager.scheduler.getQueue(), addLimit);
+
+                    embed.setTitle("Success");
+                    embed.addField(
+                            ":white_check_mark:",
+                            "`" + playlistName + "` playlist is created " +
+                                    "and " + musicManager.scheduler.getQueue().size() +
+                                    " track(s) from the queue have been added to the playlist.",
+                            true);
+                }
+                catch (SQLException e)
+                {
+                    e.printStackTrace();
+
+                    embed.setTitle("Failed");
+                    embed.addField(
+                            ":x:",
+                            "`" + playlistName + "` playlist is created " +
+                                    "but unable to add tracks from queue.",
+                            true);
+                }
+
+                event.reply(embed.build());
+            });
             return;
         }
 
-        int loop = Math.min(musicManager.scheduler.getQueue().size(), this.maxTrack);
-        int index = 0;
-        String[] url = new String[loop];
-        String[] title = new String[loop];
-
-        for (AudioTrack track : musicManager.scheduler.getQueue())
-        {
-            if (index >= loop)
-            {
-                break;
-            }
-            url[index]= track.getInfo().uri;
-            title[index] = track.getInfo().title;
-            index++;
-        }
-
+        // if not exists yet, create new and add.
         try
         {
             db.createPlaylist(event.getAuthor().getIdLong(), playlistName);
@@ -106,7 +127,7 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's already playlist with name `" + playlistName + "`.",
+                    "Playlist `" + playlistName + "` already exists.",
                     true);
             event.reply(embed.build());
             return;
@@ -118,13 +139,15 @@ public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.addTrackToPlaylist(playlistId, url, title);
+                db.addTrackToPlaylist(playlistId, musicManager.scheduler.getQueue(),
+                        musicManager.getMaxPlaylistTrackCount());
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
                         "`" + playlistName + "` playlist is created " +
-                              "and " + url.length + " track(s) from the queue have been added to the playlist.",
+                              "and " + musicManager.scheduler.getQueue().size() +
+                              " track(s) from the queue have been added to the playlist.",
                         true);
             }
             catch (SQLException e)
