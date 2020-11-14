@@ -102,12 +102,13 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             event.reply(embed.build());
             return;
         }
+        
+        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
                 db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle(), this.table);
 
                 embed.setTitle("Success");

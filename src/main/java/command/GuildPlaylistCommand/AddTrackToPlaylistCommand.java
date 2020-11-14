@@ -118,11 +118,12 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
+        long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table);
+
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table);
                 db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle(), this.table);
 
                 embed.setTitle("Success");
