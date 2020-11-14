@@ -263,6 +263,27 @@ public class PlaylistModel extends BaseModel
     }
 
     /**
+     * add multiple track to playlist
+     * @param playlistId playlist id
+     * @param url List of track url.
+     * @param title List of track title.
+     * @param table "USER" / "GUILD"
+     * @return
+     */
+    public boolean addTrackToPlaylist(long playlistId, String[] url, String[] title, String table) throws SQLException
+    {
+        String query = "";
+        for (int i = 0; i < url.length; i++)
+        {
+            query +=
+                    "INSERT INTO " + table + "_PLAYLIST_TRACK (" + table + "_PLAYLIST_ID, URL, TITLE) VALUES " +
+                    "(" + playlistId + ", '" + url[i] + "', '" + title[i] + "');\n";
+        }
+
+        return this.executeUpdateQuery(query) > 0;
+    }
+
+    /**
      * get all track from playlist
      * @param id user id / guild id
      * @param name playlist name
