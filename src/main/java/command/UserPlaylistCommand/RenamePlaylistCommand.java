@@ -1,7 +1,7 @@
 package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
@@ -54,9 +54,9 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        PlaylistModel db = new PlaylistModel();
+        UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), oldName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), oldName) == false)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -71,7 +71,7 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.renamePlaylist(event.getAuthor().getIdLong(), oldName, newName, this.table);
+                db.renamePlaylist(event.getAuthor().getIdLong(), oldName, newName);
 
                 embed.setTitle("Success");
                 embed.addField(
