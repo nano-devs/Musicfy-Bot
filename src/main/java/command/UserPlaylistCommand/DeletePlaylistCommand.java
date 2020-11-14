@@ -1,7 +1,7 @@
 package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
@@ -38,9 +38,9 @@ public class DeletePlaylistCommand extends UserPlaylistBaseCommand
         }
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
-        PlaylistModel db = new PlaylistModel();
+        UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -55,7 +55,8 @@ public class DeletePlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.deletePlaylistAndAllTrackFromPlaylistAsync(event.getAuthor().getIdLong(), playlistName, this.table);
+                db.deletePlaylist(event.getAuthor().getIdLong(), playlistName);
+
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",

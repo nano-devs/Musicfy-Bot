@@ -219,6 +219,22 @@ public class UserPlaylistModel extends BaseModel
      * @param playlistName Playlist name.
      * @return true if playlist deleted.
      */
+    public boolean deletePlaylist(long userId, String playlistName) throws SQLException
+    {
+        String query =
+                "DELETE FROM USER_PLAYLIST \n" +
+                "WHERE USER_PLAYLIST.NAME = '" + playlistName + "' " +
+                "AND USER_PLAYLIST.USER_ID = " + userId + ";";
+
+        return this.executeUpdateQuery(query) > 0;
+    }
+
+    /**
+     * delete playlist and all track inside the playlist
+     * @param userId user id
+     * @param playlistName Playlist name.
+     * @return true if playlist deleted.
+     */
     public boolean deletePlaylistAndAllTrackFromPlaylistAsync(long userId, String playlistName) throws SQLException
     {
         String query =
