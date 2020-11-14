@@ -61,9 +61,9 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        String playlistName = event.getArgs().split(",")[0].trim();
+        String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
         String url = event.getArgs().split(",")[1].trim();
-
+        
         PlaylistModel db = new PlaylistModel();
 
         if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
