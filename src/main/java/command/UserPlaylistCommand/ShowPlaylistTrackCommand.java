@@ -3,6 +3,7 @@ package command.UserPlaylistCommand;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
 import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
@@ -33,15 +34,15 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give the name of the playlist.",
+                    "Please provide the name of the playlist.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        PlaylistModel db = new PlaylistModel();
+        UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -52,7 +53,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), playlistName, this.table);
+        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), playlistName);
 
         if (tracks.size() <= 0)
         {
