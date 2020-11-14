@@ -41,7 +41,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
 
         UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
+        if (!db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(

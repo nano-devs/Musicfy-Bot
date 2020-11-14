@@ -1,10 +1,12 @@
 package database;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import database.Entity.Playlist;
 import database.Entity.Track;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
 
 public class UserPlaylistModel extends BaseModel
 {
@@ -30,11 +32,7 @@ public class UserPlaylistModel extends BaseModel
                 "WHERE NAME = '" + playlistName + "' " +
                 "AND USER_ID = " + userId;
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password)
         )
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
@@ -82,12 +80,7 @@ public class UserPlaylistModel extends BaseModel
                 "WHERE USER_ID = " + userId + " " +
                 "AND NAME = '" + playlistName + "'";
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -128,12 +121,7 @@ public class UserPlaylistModel extends BaseModel
 
         ArrayList<Playlist> playlists = new ArrayList<>(countPlaylist);
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -230,29 +218,6 @@ public class UserPlaylistModel extends BaseModel
     }
 
     /**
-     * delete playlist and all track inside the playlist
-     * @param userId user id
-     * @param playlistName Playlist name.
-     * @return true if playlist deleted.
-     */
-    @Deprecated
-    public boolean deletePlaylistAndAllTrackFromPlaylistAsync(long userId, String playlistName) throws SQLException
-    {
-        String query =
-                "DELETE USER_PLAYLIST, USER_PLAYLIST_TRACK \n" +
-                "FROM USER_PLAYLIST \n" +
-                "LEFT JOIN USER_PLAYLIST_TRACK ON USER_PLAYLIST_TRACK.USER_PLAYLIST_ID = USER_PLAYLIST.ID \n" +
-                "WHERE USER_PLAYLIST.NAME = '" + playlistName + "' " +
-                "AND USER_PLAYLIST.USER_ID = " + userId + " ";
-
-        return this.executeUpdateQuery(query) > 0;
-    }
-
-
-
-
-
-    /**
      * add track to playlist
      * @param playlistId playlist id
      * @param url Track url.
@@ -271,19 +236,26 @@ public class UserPlaylistModel extends BaseModel
     /**
      * add multiple track to playlist
      * @param playlistId playlist id
-     * @param url List of track url.
-     * @param title List of track title.
+     * @param queue queue from music manager.
+     * @param addLimit add limit.
      * @return true if track successfully added to playlist.
      */
-    public boolean addTrackToPlaylist(long playlistId, String[] url, String[] title) throws SQLException
+    public boolean addTrackToPlaylist(long playlistId, BlockingQueue<AudioTrack> queue, int addLimit) throws SQLException
     {
-        String query = "";
-        for (int i = 0; i < url.length; i++)
+        String query = "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES \n";
+
+        int counter = 0;
+        for (AudioTrack track : queue)
         {
-            query +=
-                    "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES " +
-                    "(" + playlistId + ", '" + url[i] + "', '" + title[i] + "');\n";
+            query += "(" + playlistId + ", '" + track.getInfo().uri + "', '" + track.getInfo().title + "'),\n";
+
+            counter += 1;
+            if (counter >= addLimit)
+                break;
         }
+
+        // Removes the last `,` and add semicolon.
+        query = query.substring(0, query.length() - 2) + ";";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -304,12 +276,7 @@ public class UserPlaylistModel extends BaseModel
 
         ArrayList<Track> tracks = new ArrayList<>(this.maxTrackEachPlaylist);
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -346,12 +313,7 @@ public class UserPlaylistModel extends BaseModel
                 "FROM USER_PLAYLIST_TRACK " +
                 "WHERE USER_PLAYLIST_ID = " + playlistId;
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -380,12 +342,7 @@ public class UserPlaylistModel extends BaseModel
 
         ArrayList<Track> tracks = new ArrayList<>(this.maxTrackEachPlaylist);
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -423,12 +380,7 @@ public class UserPlaylistModel extends BaseModel
                 "FROM USER_PLAYLIST_TRACK " +
                 "WHERE USER_PLAYLIST_ID = " + playlistId + " ";
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {

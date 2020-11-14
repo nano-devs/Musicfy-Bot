@@ -40,7 +40,7 @@ public class DeletePlaylistCommand extends UserPlaylistBaseCommand
         String playlistName = event.getArgs().trim().replace("'", "\\'");
         UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
+        if (!db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
