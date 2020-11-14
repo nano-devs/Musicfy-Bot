@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class PlaylistModel extends BaseModel
 {
-    private final int maxPlaylist;
-    private final int maxTrackEachPlaylist;
+    protected final int maxPlaylist;
+    protected final int maxTrackEachPlaylist;
 
     public PlaylistModel()
     {
