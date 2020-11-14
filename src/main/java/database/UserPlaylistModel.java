@@ -32,11 +32,7 @@ public class UserPlaylistModel extends BaseModel
                 "WHERE NAME = '" + playlistName + "' " +
                 "AND USER_ID = " + userId;
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password)
         )
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
@@ -84,12 +80,7 @@ public class UserPlaylistModel extends BaseModel
                 "WHERE USER_ID = " + userId + " " +
                 "AND NAME = '" + playlistName + "'";
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -130,12 +121,7 @@ public class UserPlaylistModel extends BaseModel
 
         ArrayList<Playlist> playlists = new ArrayList<>(countPlaylist);
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -256,19 +242,22 @@ public class UserPlaylistModel extends BaseModel
      */
     public boolean addTrackToPlaylist(long playlistId, BlockingQueue<AudioTrack> queue, int addLimit) throws SQLException
     {
-        String query = "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES ";
+        String query = "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES \n";
 
         int counter = 0;
         for (AudioTrack track : queue)
         {
-            query += "(" + playlistId + ", '" + track.getInfo().uri + "', '" + track.getInfo().title + "')\n";
+            query += "(" + playlistId + ", '" + track.getInfo().uri + "', '" + track.getInfo().title + "'),\n";
 
             counter += 1;
             if (counter >= addLimit)
                 break;
         }
 
-        return this.executeUpdateQuery(query + ";") > 0;
+        // Removes the last `,` and add semicolon.
+        query = query.substring(0, query.length() - 2) + ";";
+
+        return this.executeUpdateQuery(query) > 0;
     }
 
     /**
