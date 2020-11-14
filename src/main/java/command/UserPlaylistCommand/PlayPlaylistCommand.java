@@ -79,7 +79,6 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
                     ":x:",
                     "There are no track in `" + playlistName + "` playlist.",
                     true);
-            event.reply(embed.build());
         }
         else
         {
@@ -93,9 +92,8 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             }
 
             int addedSize = 0;
-            for (int i = 0; i < tracks.size(); i++)
-            {
-                this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getMember());
+            for (Track track : tracks) {
+                this.nano.loadAndPlayUrl(musicManager, null, track.url, event.getMember());
                 addedSize += 1;
                 if (musicManager.isQueueFull()) {
                     break;
@@ -107,7 +105,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
                     "Add " + addedSize + " track(s) to the queue.",
                     true);
             embed.setFooter("Only song with duration less than 1 hour added to queue");
-            event.reply(embed.build());
         }
+        event.reply(embed.build());
     }
 }
