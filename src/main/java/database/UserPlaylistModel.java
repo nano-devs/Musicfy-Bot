@@ -6,33 +6,29 @@ import database.Entity.Track;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class PlaylistModel extends BaseModel
+public class UserPlaylistModel extends BaseModel
 {
-    protected final int maxPlaylist;
     protected final int maxTrackEachPlaylist;
 
-    public PlaylistModel()
+    public UserPlaylistModel()
     {
         super();
-
-        this.maxPlaylist = 3;
         this.maxTrackEachPlaylist = 20;
     }
 
     /**
-     * Check if the playlist name is available or not.
-     * @param id user id/ guild id
-     * @param name playlist name
-     * @param table "USER" or "GUILD"
-     * @return
+     * Check if the availability of playlist name.
+     * @param userId user id
+     * @param playlistName playlist name
+     * @return true if playlist name is exist.
      */
-    public boolean isPlaylistNameAvailable(long id, String name, String table)
+    public boolean isPlaylistNameExist(long userId, String playlistName)
     {
         String query =
                 "SELECT COUNT(NAME) " +
-                "FROM " + table + "_PLAYLIST " +
-                "WHERE NAME = '" + name + "' " +
-                "AND " + table + "_ID = " + id;
+                "FROM USER_PLAYLIST " +
+                "WHERE NAME = '" + playlistName + "' " +
+                "AND USER_ID = " + userId;
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -46,8 +42,7 @@ public class PlaylistModel extends BaseModel
                 try (ResultSet result = statement.executeQuery())
                 {
                     result.next();
-                    int counter = result.getInt(1);
-                    return counter == 0;
+                    return result.getInt(1) == 1;
                 }
             }
         }
@@ -60,34 +55,32 @@ public class PlaylistModel extends BaseModel
 
     /**
      * create new playlist
-     * @param id user id / guild id
-     * @param name playlist name
-     * @param table "USER" / "GUILD"
-     * @return
+     * @param userId user id
+     * @param playlistName playlist name
+     * @return true if playlist successfully created.
      */
-    public boolean createPlaylist(long id, String name, String table) throws SQLException
+    public boolean createPlaylist(long userId, String playlistName) throws SQLException
     {
         String query =
-                "INSERT INTO " + table + "_PLAYLIST (" + table + "_ID, NAME) " +
-                "VALUES (" + id + ", '" + name + "')";
+                "INSERT INTO USER_PLAYLIST (USER_ID, NAME) " +
+                "VALUES (" + userId + ", '" + playlistName + "')";
 
         return this.executeUpdateQuery(query) > 0;
     }
 
     /**
      * get playlist id
-     * @param id user id / guild id
-     * @param name playlist name
-     * @param table "USER" / "GUILD"
-     * @return
+     * @param userId user id
+     * @param playlistName playlist name
+     * @return playlist id
      */
-    public long getPlaylistId(long id, String name, String table)
+    public long getPlaylistId(long userId, String playlistName)
     {
         String query =
                 "SELECT ID " +
-                "FROM " + table + "_PLAYLIST " +
-                "WHERE " + table + "_ID = " + id + " " +
-                "AND NAME = '" + name + "'";
+                "FROM USER_PLAYLIST " +
+                "WHERE USER_ID = " + userId + " " +
+                "AND NAME = '" + playlistName + "'";
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -113,28 +106,27 @@ public class PlaylistModel extends BaseModel
     }
 
     /**
-     * get all playlist from user/guild
-     * @param id user id/ guild id
-     * @param table "USER" / "GUILD"
-     * @return
+     * get all playlist from user playlist
+     * @param userId user id
+     * @return array of playlist
      */
-    public ArrayList<Playlist> getAllPlaylist(long id, String table)
+    public ArrayList<Playlist> getAllPlaylist(long userId)
     {
         String query =
-                "SELECT " + table + "_PLAYLIST.NAME, COUNT(" + table + "_PLAYLIST_TRACK.URL) " +
-                "FROM " + table + "_PLAYLIST " +
-                "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
-                "WHERE " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
+                "SELECT USER_PLAYLIST.NAME, COUNT(USER_PLAYLIST_TRACK.URL) " +
+                "FROM USER_PLAYLIST " +
+                "LEFT JOIN USER_PLAYLIST_TRACK ON USER_PLAYLIST.ID = USER_PLAYLIST_TRACK.USER_PLAYLIST_ID " +
+                "WHERE USER_PLAYLIST.USER_ID = " + userId + " " +
                 "GROUP BY USER_PLAYLIST.NAME";
 
-        int countPlaylist = this.countPlaylist(id, table);
+        int countPlaylist = this.countPlaylist(userId);
 
         if (countPlaylist == 0)
         {
             return null;
         }
 
-        ArrayList<Playlist> playlists = new ArrayList<Playlist>(countPlaylist);
+        ArrayList<Playlist> playlists = new ArrayList<>(countPlaylist);
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -153,7 +145,7 @@ public class PlaylistModel extends BaseModel
                                 new Playlist(
                                         0,
                                         result.getString(1),
-                                        this.maxTrackEachPlaylist,
+                                        0,
                                         result.getInt(2))
                         );
                     }
@@ -169,17 +161,16 @@ public class PlaylistModel extends BaseModel
     }
 
     /**
-     * Count playlist number for user/guild
-     * @param id user id/ guild id
-     * @param table "USER" / "GUILD"
-     * @return
+     * Count playlist for user
+     * @param userId user id
+     * @return number of user playlist
      */
-    public int countPlaylist(long id, String table)
+    public int countPlaylist(long userId)
     {
         String query =
                 "SELECT COUNT(ID) " +
-                "FROM " + table + "_PLAYLIST " +
-                "WHERE " + table + "_ID = " + id;
+                "FROM USER_PLAYLIST " +
+                "WHERE USER_ID = " + userId;
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -206,18 +197,17 @@ public class PlaylistModel extends BaseModel
 
     /**
      * rename playlist name
-     * @param id user id / guild id
+     * @param userId user id
      * @param oldName old playlist name
      * @param newName new playlist name
-     * @param table "USER" / "GUILD"
-     * @return
+     * @return true if playlist renamed
      */
-    public boolean renamePlaylist(long id, String oldName, String newName, String table) throws SQLException
+    public boolean renamePlaylist(long userId, String oldName, String newName) throws SQLException
     {
         String query =
-                "UPDATE " + table + "_PLAYLIST " +
+                "UPDATE USER_PLAYLIST " +
                 "SET NAME = '" + newName + "' " +
-                "WHERE " + table + "_ID = " + id +
+                "WHERE USER_ID = " + userId +
                 " AND NAME = '" + oldName + "'";
 
         return this.executeUpdateQuery(query) > 0;
@@ -225,19 +215,35 @@ public class PlaylistModel extends BaseModel
 
     /**
      * delete playlist and all track inside the playlist
-     * @param id user/guild id
+     * @param userId user id
      * @param playlistName Playlist name.
-     * @param table "USER" / "GUILD"
-     * @return
+     * @return true if playlist deleted.
      */
-    public boolean deletePlaylistAndAllTrackFromPlaylistAsync(long id, String playlistName, String table) throws SQLException
+    public boolean deletePlaylist(long userId, String playlistName) throws SQLException
     {
         String query =
-                "DELETE " + table + "_PLAYLIST, " + table + "_PLAYLIST_TRACK \n" +
-                "FROM " + table + "_PLAYLIST \n" +
-                "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID = " + table + "_PLAYLIST.ID \n" +
-                "WHERE " + table + "_PLAYLIST.NAME = '" + playlistName + "' " +
-                "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " ";
+                "DELETE FROM USER_PLAYLIST \n" +
+                "WHERE USER_PLAYLIST.NAME = '" + playlistName + "' " +
+                "AND USER_PLAYLIST.USER_ID = " + userId + ";";
+
+        return this.executeUpdateQuery(query) > 0;
+    }
+
+    /**
+     * delete playlist and all track inside the playlist
+     * @param userId user id
+     * @param playlistName Playlist name.
+     * @return true if playlist deleted.
+     */
+    @Deprecated
+    public boolean deletePlaylistAndAllTrackFromPlaylistAsync(long userId, String playlistName) throws SQLException
+    {
+        String query =
+                "DELETE USER_PLAYLIST, USER_PLAYLIST_TRACK \n" +
+                "FROM USER_PLAYLIST \n" +
+                "LEFT JOIN USER_PLAYLIST_TRACK ON USER_PLAYLIST_TRACK.USER_PLAYLIST_ID = USER_PLAYLIST.ID \n" +
+                "WHERE USER_PLAYLIST.NAME = '" + playlistName + "' " +
+                "AND USER_PLAYLIST.USER_ID = " + userId + " ";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -251,13 +257,12 @@ public class PlaylistModel extends BaseModel
      * @param playlistId playlist id
      * @param url Track url.
      * @param title Track title.
-     * @param table "USER" / "GUILD"
-     * @return
+     * @return true if track successfully added to playlist.
      */
-    public boolean addTrackToPlaylist(long playlistId, String url, String title, String table) throws SQLException
+    public boolean addTrackToPlaylist(long playlistId, String url, String title) throws SQLException
     {
         String query =
-                "INSERT INTO " + table + "_PLAYLIST_TRACK (" + table + "_PLAYLIST_ID, URL, TITLE) VALUES " +
+                "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES " +
                 "(" + playlistId + ", '" + url + "', '" + title + "')";
 
         return this.executeUpdateQuery(query) > 0;
@@ -268,38 +273,36 @@ public class PlaylistModel extends BaseModel
      * @param playlistId playlist id
      * @param url List of track url.
      * @param title List of track title.
-     * @param table "USER" / "GUILD"
-     * @return
+     * @return true if track successfully added to playlist.
      */
-    public boolean addTrackToPlaylist(long playlistId, String[] url, String[] title, String table) throws SQLException
+    public boolean addTrackToPlaylist(long playlistId, String[] url, String[] title) throws SQLException
     {
         String query = "";
         for (int i = 0; i < url.length; i++)
         {
             query +=
-                    "INSERT INTO " + table + "_PLAYLIST_TRACK (" + table + "_PLAYLIST_ID, URL, TITLE) VALUES " +
+                    "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES " +
                     "(" + playlistId + ", '" + url[i] + "', '" + title[i] + "');\n";
         }
-        System.out.println(query);
+
         return this.executeUpdateQuery(query) > 0;
     }
 
     /**
      * get all track from playlist
-     * @param id user id / guild id
-     * @param name playlist name
-     * @param table "USER" / "GUILD"
-     * @return
+     * @param userId user id
+     * @param playlistName playlist name
+     * @return array of track
      */
-    public ArrayList<Track> getTrackListFromPlaylist(long id, String name, String table)
+    public ArrayList<Track> getTrackListFromPlaylist(long userId, String playlistName)
     {
         String query =
-                "SELECT " + table + "_PLAYLIST_TRACK.URL, " + table + "_PLAYLIST_TRACK.TITLE \n" +
-                "FROM  " + table + "_PLAYLIST_TRACK \n" +
-                "JOIN " + table + "_PLAYLIST ON " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID = " + table + "_PLAYLIST.ID \n" +
-                "WHERE " + table + "_PLAYLIST." + table + "_ID = " + id + " AND " + table + "_PLAYLIST.NAME = '" + name + "'";
+                "SELECT USER_PLAYLIST_TRACK.URL, USER_PLAYLIST_TRACK.TITLE \n" +
+                "FROM  USER_PLAYLIST_TRACK \n" +
+                "JOIN USER_PLAYLIST ON USER_PLAYLIST_TRACK.USER_PLAYLIST_ID = USER_PLAYLIST.ID \n" +
+                "WHERE USER_PLAYLIST.USER_ID = " + userId + " AND USER_PLAYLIST.NAME = '" + playlistName + "'";
 
-        ArrayList<Track> tracks = new ArrayList<Track>(this.maxTrackEachPlaylist);
+        ArrayList<Track> tracks = new ArrayList<>(this.maxTrackEachPlaylist);
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -316,8 +319,8 @@ public class PlaylistModel extends BaseModel
                     {
                         tracks.add(
                                 new Track(0,
-                                        result.getString(2),
-                                        result.getString(1))
+                                result.getString(2),
+                                result.getString(1))
                         );
                     }
                     return tracks;
@@ -334,15 +337,14 @@ public class PlaylistModel extends BaseModel
     /**
      * Count number of track in playlist.
      * @param playlistId playlist id
-     * @param table "USER" / "GUILD"
-     * @return
+     * @return number of track in specific playlist
      */
-    public int countPlaylistTrack(long playlistId, String table)
+    public int countPlaylistTrack(long playlistId)
     {
         String query =
                 "SELECT COUNT(URL) " +
-                "FROM " + table + "_PLAYLIST_TRACK " +
-                "WHERE " + table + "_PLAYLIST_ID = " + playlistId;
+                "FROM USER_PLAYLIST_TRACK " +
+                "WHERE USER_PLAYLIST_ID = " + playlistId;
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -409,18 +411,17 @@ public class PlaylistModel extends BaseModel
     }
 
     /**
-     * Get id from table guild/user playlist track
+     * Get id from table user playlist track
      * @param playlistId Playlist id
      * @param trackIndex track index
-     * @param table "USER" / "GUILD"
-     * @return
+     * @return playlist track id
      */
-    public long getPlaylistTrackId(long playlistId, int trackIndex, String table)
+    public long getPlaylistTrackId(long playlistId, int trackIndex)
     {
         String query =
                 "SELECT ID " +
-                "FROM " + table + "_PLAYLIST_TRACK " +
-                "WHERE " + table + "_PLAYLIST_ID = " + playlistId + " ";
+                "FROM USER_PLAYLIST_TRACK " +
+                "WHERE USER_PLAYLIST_ID = " + playlistId + " ";
 
         try (
                 Connection connection = DriverManager.getConnection(
@@ -453,14 +454,13 @@ public class PlaylistModel extends BaseModel
 
     /**
      * delete track from playlist
-     * @param playlistTrackId user/guild_playlist_track id
-     * @param table "USER" / "GUILD"
-     * @return
+     * @param playlistTrackId user_playlist_track id
+     * @return true if track from playlist deleted.
      */
-    public boolean deleteTrackFromPlaylistAsync(long playlistTrackId, String table) throws SQLException
+    public boolean deleteTrackFromPlaylistAsync(long playlistTrackId) throws SQLException
     {
         String query =
-                "DELETE FROM " + table + "_PLAYLIST_TRACK " +
+                "DELETE FROM USER_PLAYLIST_TRACK " +
                 "WHERE ID = " + playlistTrackId + " ";
 
         return this.executeUpdateQuery(query) > 0;

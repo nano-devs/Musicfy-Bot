@@ -35,7 +35,7 @@ public class CustomPrefixCommand extends Command {
         }
 
         if (prefix.contains("$")) {
-            event.reply(":x: | Cannot use prefix that contains `$` and whitespaces");
+            event.reply(":x: | Cannot use prefix that contains `$` or whitespaces");
             return;
         }
 

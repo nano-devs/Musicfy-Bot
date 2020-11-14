@@ -35,18 +35,6 @@ public class PremiumService
      */
     public static void addHistory(String title, String url, Guild guild, User user)
     {
-        TrackModel trackModel = new TrackModel();
-        try
-        {
-            trackModel.addTrackAsync(title, url);
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
-        long trackId = trackModel.getTrackId(url);
-
         PremiumModel db = new PremiumModel();
 
         if (db.isPremium(guild.getIdLong(), "GUILD"))
@@ -57,7 +45,7 @@ public class PremiumService
             {
                 try
                 {
-                    guildHistoryModel.addGuildHistoryAsync(guild.getIdLong(), user.getIdLong(), trackId);
+                    guildHistoryModel.addGuildHistory(guild.getIdLong(), user.getIdLong(), url, title);
                 }
                 catch (SQLException e)
                 {
@@ -72,53 +60,7 @@ public class PremiumService
         {
             try
             {
-                userHistoryModel.addUserHistoryAsync(user.getIdLong(), trackId);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public static void addHistoryUser(User user, long trackId)
-    {
-        UserHistoryModel userModel = new UserHistoryModel();
-
-        CompletableFuture.runAsync(() ->
-        {
-            try
-            {
-                userModel.addUserHistoryAsync(user.getIdLong(), trackId);
-            }
-            catch (SQLException e)
-            {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public static void addHistoryUser(User user, String title, String url)
-    {
-        TrackModel trackModel = new TrackModel();
-        try
-        {
-            trackModel.addTrackAsync(title, url);
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
-        long trackId = trackModel.getTrackId(url);
-
-        UserHistoryModel userModel = new UserHistoryModel();
-
-        CompletableFuture.runAsync(() ->
-        {
-            try
-            {
-                userModel.addUserHistoryAsync(user.getIdLong(), trackId);
+                userHistoryModel.addUserHistory(user.getIdLong(), url, title);
             }
             catch (SQLException e)
             {
