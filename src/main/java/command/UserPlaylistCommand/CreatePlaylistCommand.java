@@ -1,7 +1,7 @@
 package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
@@ -38,9 +38,9 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        PlaylistModel db = new PlaylistModel();
+        UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.countPlaylist(event.getAuthor().getIdLong(), this.table) >= this.maxPlaylist)
+        if (db.countPlaylist(event.getAuthor().getIdLong()) >= this.maxPlaylist)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -53,7 +53,7 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
 
-        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -68,7 +68,7 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.createPlaylist(event.getAuthor().getIdLong(), playlistName, this.table);
+                db.createPlaylist(event.getAuthor().getIdLong(), playlistName);
 
                 embed.setTitle("Success");
                 embed.addField(
