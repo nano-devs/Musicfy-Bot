@@ -68,9 +68,9 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        String name = event.getArgs().trim().replace("'", "\\'");
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
 
-        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), name, this.table))
+        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -85,12 +85,12 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.createPlaylist(event.getGuild().getIdLong(), name.trim(), this.table);
+                db.createPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Playlist `" + event.getArgs().trim() + "` created.",
+                        "Playlist `" + playlistName + "` created.",
                         true);
             }
             catch (SQLException e)
@@ -100,7 +100,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "There's already playlist with name `" + event.getArgs().trim() + "`.",
+                        "There's already playlist with name `" + playlistName + "`.",
                         true);
             }
 

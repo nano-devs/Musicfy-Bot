@@ -51,9 +51,9 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        String name = event.getArgs().trim().replace("'", "\\'");
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
 
-        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), name, this.table))
+        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -68,12 +68,12 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
         {
             try
             {
-                db.createPlaylist(event.getAuthor().getIdLong(), name.trim(), this.table);
+                db.createPlaylist(event.getAuthor().getIdLong(), playlistName, this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "`" + event.getArgs().trim() + "` playlist is created.",
+                        "`" + playlistName + "` playlist is created.",
                         true);
             }
             catch (SQLException e)
@@ -83,7 +83,7 @@ public class CreatePlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "There's already playlist with name `" + event.getArgs().trim() + "`.",
+                        "There's already playlist with name `" + playlistName + "`.",
                         true);
             }
 
