@@ -257,7 +257,7 @@ public class PlaylistModel extends BaseModel
     {
         String query =
                 "INSERT INTO " + table + "_PLAYLIST_TRACK (" + table + "_PLAYLIST_ID, URL, TITLE) VALUES " +
-                "(" + playlistId + ", " + url + ", " + title + ")";
+                "(" + playlistId + ", '" + url + "', '" + title + "')";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -293,9 +293,9 @@ public class PlaylistModel extends BaseModel
                     while (result.next())
                     {
                         tracks.add(
-                                new Track(result.getInt(2),
-                                        result.getString(3),
-                                        result.getString(4))
+                                new Track(0,
+                                        result.getString(2),
+                                        result.getString(1))
                         );
                     }
                     return tracks;
