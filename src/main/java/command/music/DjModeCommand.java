@@ -1,4 +1,4 @@
-package command;
+package command.music;
 
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;

@@ -1,31 +1,24 @@
-package command;
+package command.music;
 
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.MusicUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-
-public class ShuffleCommand extends Command {
+public class PauseCommand extends Command {
 
     NanoClient nanoClient;
 
-    public ShuffleCommand(NanoClient nanoClient) {
+    public PauseCommand(NanoClient nanoClient) {
         this.nanoClient = nanoClient;
 
-        this.name = "shuffle";
-        this.aliases = new String[] {"shuffle_queue"};
-        this.help = "Shuffles song queue";
+        this.name = "pause";
         this.guildOnly = true;
-        this.cooldown = 2;
+        this.cooldown = 1;
+        this.help = "Pause current playing song";
         this.category = new Category("Music");
         this.help = HelpProcess.getHelp(this);
     }
@@ -39,7 +32,9 @@ public class ShuffleCommand extends Command {
         }
 
         GuildMusicManager musicManager = this.nanoClient.getGuildAudioPlayer(event.getGuild());
-        if (musicManager.scheduler.getQueue().size() <= 0) {
+
+        if (musicManager.player.getPlayingTrack() == null) {
+            event.reply(":x: | Not currently playing anything.");
             return;
         }
 
@@ -50,19 +45,14 @@ public class ShuffleCommand extends Command {
             }
         }
 
-        // Get current queue
-        BlockingQueue<AudioTrack> queue = musicManager.scheduler.getQueue();
-
-        // Add songs to List
-        List<AudioTrack> tracks = new ArrayList<>();
-        tracks.addAll(queue);
-
-        Collections.shuffle(tracks);
-
-        // Replace current queue
-        musicManager.scheduler.getQueue().clear();
-        musicManager.scheduler.getQueue().addAll(tracks);
-
-        event.getMessage().addReaction(event.getClient().getSuccess()).queue();
+        if (!musicManager.isPauseStatus()) {
+            musicManager.player.setPaused(true);
+            musicManager.setPauseStatus(true);
+        }
+        else {
+            musicManager.player.setPaused(false);
+            musicManager.setPauseStatus(false);
+        }
+        event.getMessage().addReaction("\u23F8").queue(); // Pause button
     }
 }

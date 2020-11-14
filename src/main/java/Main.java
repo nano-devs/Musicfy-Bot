@@ -10,6 +10,7 @@ import command.general.HelpCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
 import command.history.UserHistoryCommand;
+import command.music.*;
 import command.owner.ChangePresenceCommand;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;
@@ -93,6 +94,7 @@ public class Main {
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeleteTrackFromPlaylistCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistTrackCommand());
         commandClientBuilder.addCommand(new command.UserPlaylistCommand.PlayPlaylistCommand(nano));
+        commandClientBuilder.addCommand(new command.UserPlaylistCommand.SaveQueueToPlaylist());
 
         // Premium Guild Commands
 //        commandClientBuilder.addCommand(new PremiumGuildCommand());

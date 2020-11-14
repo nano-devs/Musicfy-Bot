@@ -1,4 +1,4 @@
-package command;
+package command.music;
 
 import YouTubeSearchApi.YoutubeClient;
 import YouTubeSearchApi.entity.YoutubePlaylist;

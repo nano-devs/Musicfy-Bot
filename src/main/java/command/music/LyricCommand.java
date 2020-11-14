@@ -1,4 +1,4 @@
-package command;
+package command.music;
 
 import YouTubeSearchApi.utility.Utils;
 import client.NanoClient;
