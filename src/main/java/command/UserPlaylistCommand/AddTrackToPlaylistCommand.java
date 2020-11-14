@@ -130,7 +130,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Track `" + finalVideo.getTitle() + "` added to `" + playlistName + "` playlist.",
+                        "Added `" + finalVideo.getTitle() + "` to playlist `" + playlistName + "`.",
                         true);
             }
             catch (SQLException e)
@@ -139,7 +139,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Can't add track `" + finalVideo.getTitle() + "` to `" + playlistName + "` playlist.",
+                        "Can't add track `" + finalVideo.getTitle() + "` to playlist `" + playlistName + "`.",
                         true);
             }
 

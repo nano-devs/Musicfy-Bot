@@ -32,18 +32,6 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        VoiceChannel userVoiceChannel = event.getMember().getVoiceState().getChannel();
-        if (userVoiceChannel == null)
-        {
-            event.reply(":x: | You are not connected to any voice channel");
-            return;
-        }
-
-        if (event.getSelfMember().getVoiceState().getChannel() == null)
-        {
-            event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
-        }
-
         CustomEmbedBuilder embed = new CustomEmbedBuilder();
 
         if (event.getArgs().trim().length() <= 0)
@@ -51,7 +39,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give playlist name you want to to play.",
+                    "Invalid argument, please provide the playlist name that you want to play.",
                     true);
             return;
         }
@@ -63,7 +51,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There are no playlist with `" + event.getArgs().trim() + "` names.",
+                    "Playlist `" + event.getArgs().trim() + "` does not exist.",
                     true);
             event.reply(embed.build());
             return;
@@ -76,12 +64,24 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There are no track in `" + event.getArgs().trim() + "` playlist.",
+                    "Playlist `" + event.getArgs().trim() + "` is empty.",
                     true);
             event.reply(embed.build());
         }
         else
         {
+            VoiceChannel userVoiceChannel = event.getMember().getVoiceState().getChannel();
+            if (userVoiceChannel == null)
+            {
+                event.reply(":x: | You are not connected to any voice channel");
+                return;
+            }
+
+            if (event.getSelfMember().getVoiceState().getChannel() == null)
+            {
+                event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+            }
+
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
 
             if (musicManager.isInDjMode()) {
@@ -103,9 +103,9 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Success");
             embed.addField(
                     ":white_check_mark:",
-                    "Added " + addedSize + " track(s) to the queue.",
+                    "Added " + addedSize + " song(s) to queue.",
                     true);
-            embed.setFooter("Only song with duration less than 15 minutes added to queue");
+            embed.setFooter("Only song with duration less than 1 hour has been added to queue");
             event.reply(embed.build());
         }
     }
