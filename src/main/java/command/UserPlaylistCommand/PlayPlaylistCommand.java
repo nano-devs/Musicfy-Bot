@@ -41,7 +41,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
 
         if (event.getSelfMember().getVoiceState().getChannel() == null)
         {
-            event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+            this.nano.getMusicService().joinUserVoiceChannel(event);
         }
 
         CustomEmbedBuilder embed = new CustomEmbedBuilder();
