@@ -58,7 +58,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
 
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
+        if (!db.isPlaylistNameExist(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
         {
             embed.setTitle("Failed");
             embed.addField(

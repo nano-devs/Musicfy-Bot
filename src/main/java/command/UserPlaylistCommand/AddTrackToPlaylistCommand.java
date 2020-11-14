@@ -6,7 +6,6 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import database.TrackModel;
 import database.PlaylistModel;
 import service.music.CustomEmbedBuilder;
-import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -53,12 +52,12 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         String url = event.getArgs().split(",")[1].trim();
 
         PlaylistModel db = new PlaylistModel();
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (!db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "`" + playlistName + "` playlist does not exist.",
+                    "playlist `" + playlistName + "` does not exist.",
                     true);
             event.reply(embed.build());
             return;
@@ -71,7 +70,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Track for playlist has reached the maximum limit.",
+                    "Track count for playlist "+ playlistName +" has reached the maximum limit.",
                     true);
             event.reply(embed.build());
             return;

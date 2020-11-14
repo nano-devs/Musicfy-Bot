@@ -83,12 +83,12 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
 
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Playlist `" + playlistName + "` not exist.",
+                    "Playlist `" + playlistName + "` does not exist.",
                     true);
             event.reply(embed.build());
             return;

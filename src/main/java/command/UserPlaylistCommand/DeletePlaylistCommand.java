@@ -38,12 +38,12 @@ public class DeletePlaylistCommand extends UserPlaylistBaseCommand
         }
 
         PlaylistModel db = new PlaylistModel();
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
+        if (!db.isPlaylistNameExist(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "`" + event.getArgs().trim() + "` playlist does not exist.",
+                    "Playlist `" + event.getArgs().trim() + "` does not exist.",
                     true);
             event.reply(embed.build());
             return;
@@ -57,7 +57,7 @@ public class DeletePlaylistCommand extends UserPlaylistBaseCommand
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "`" + event.getArgs().trim() + "` playlist deleted.",
+                        "Playlist `" + event.getArgs().trim() + "` deleted.",
                         true);
             }
             catch (SQLException e)

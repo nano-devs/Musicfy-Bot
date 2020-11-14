@@ -53,12 +53,12 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         }
 
         PlaylistModel db = new PlaylistModel();
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist `" + event.getArgs().trim() + "` not exist.",
+                    "Playlist `" + event.getArgs().trim() + "` does not exist.",
                     true);
             event.reply(embed.build());
             return;

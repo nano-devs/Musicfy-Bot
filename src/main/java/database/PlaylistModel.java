@@ -8,14 +8,12 @@ import java.util.ArrayList;
 
 public class PlaylistModel extends BaseModel
 {
-    private final int maxPlaylist;
     private final int maxTrackEachPlaylist;
 
     public PlaylistModel()
     {
         super();
 
-        this.maxPlaylist = 3;
         this.maxTrackEachPlaylist = 20;
     }
 
@@ -97,28 +95,21 @@ public class PlaylistModel extends BaseModel
      * @param table "USER" or "GUILD"
      * @return
      */
-    public boolean isPlaylistNameAvailable(long id, String name, String table)
+    public boolean isPlaylistNameExist(long id, String name, String table)
     {
         String query =
-                "SELECT COUNT(NAME) " +
+                "SELECT * " +
                 "FROM " + table + "_PLAYLIST " +
                 "WHERE NAME = '" + name + "' " +
                 "AND " + table + "_ID = " + id;
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
                 try (ResultSet result = statement.executeQuery())
                 {
-                    result.next();
-                    int counter = result.getInt(1);
-                    return counter == 0;
+                    return result.next();
                 }
             }
         }
@@ -239,7 +230,7 @@ public class PlaylistModel extends BaseModel
                 "SELECT " + table + "_PLAYLIST.NAME, COUNT(" + table + "_PLAYLIST_TRACK.TRACK_ID) " +
                 "FROM " + table + "_PLAYLIST " +
                 "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
-                "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
+                "WHERE " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
                 "GROUP BY USER_PLAYLIST.NAME";
 
         int countPlaylist = this.countPlaylist(id, table);
@@ -522,12 +513,9 @@ public class PlaylistModel extends BaseModel
      */
     public boolean deletePlaylistAndAllTrackFromPlaylistAsync(long id, String playlistName, String table) throws SQLException
     {
-        String query =
-                "DELETE " + table + "_PLAYLIST, " + table + "_PLAYLIST_TRACK \n" +
-                "FROM " + table + "_PLAYLIST_TRACK \n" +
-                "JOIN " + table + "_PLAYLIST ON " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID = " + table + "_PLAYLIST.ID \n" +
-                "WHERE " + table + "_PLAYLIST.NAME = '" + playlistName + "' " +
-                "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " ";
+        String query = "DELETE FROM " + table + "_PLAYLIST\n" +
+                "WHERE " + table + "_PLAYLIST.USER_ID = " + id + " \n" +
+                "AND " + table + "_PLAYLIST.NAME = '" + playlistName + "'";
         return this.executeUpdateQuery(query) > 0;
     }
 

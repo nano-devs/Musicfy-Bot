@@ -56,7 +56,7 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
 
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), oldName, this.table))
+        if (!db.isPlaylistNameExist(event.getAuthor().getIdLong(), oldName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(

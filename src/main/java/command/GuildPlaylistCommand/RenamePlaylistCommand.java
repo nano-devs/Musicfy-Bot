@@ -60,12 +60,12 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
 
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), oldName, this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), oldName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist `" + oldName + "` not exist.",
+                    "Playlist `" + oldName + "` does not exist.",
                     true);
             return;
         }

@@ -70,7 +70,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
 
         String name = event.getArgs().trim().replace("'", "\\'");
 
-        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), name, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), name, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(

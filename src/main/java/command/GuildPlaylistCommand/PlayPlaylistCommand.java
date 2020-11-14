@@ -73,12 +73,12 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
 
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's no playlist with name `" + event.getArgs().trim() + "`.",
+                    "There is no playlist with name `" + event.getArgs().trim() + "`.",
                     true);
             event.reply(embed.build());
             return;
