@@ -4,12 +4,14 @@ import YouTubeSearchApi.YoutubeClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
@@ -43,9 +45,20 @@ public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
             return;
         }
 
-        PlaylistModel playlistModel = new PlaylistModel();
+        if (musicManager.scheduler.getQueue().size() == 0)
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "No tracks in queue.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
 
-        if (playlistModel.countPlaylist(event.getAuthor().getIdLong(), this.table) >= this.maxPlaylist)
+        UserPlaylistModel db = new UserPlaylistModel();
+
+        if (db.countPlaylist(event.getAuthor().getIdLong()) >= this.maxPlaylist)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -58,7 +71,7 @@ public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
 
-        if (!playlistModel.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -69,48 +82,25 @@ public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
             return;
         }
 
-        if (musicManager.scheduler.getQueue().size() == 0)
-        {
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "No tracks in queue.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
-
-        try
-        {
-            playlistModel.createPlaylist(event.getAuthor().getIdLong(), playlistName, this.table);
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-
-            embed.setTitle("Failed");
-            embed.addField(
-                    ":x:",
-                    "There's already playlist with name `" + playlistName + "`.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
-
         int loop = Math.min(musicManager.scheduler.getQueue().size(), this.maxTrack);
-        AudioTrack[] queue = (AudioTrack[]) musicManager.scheduler.getQueue().toArray();
-        ArrayList<String> url = new ArrayList<>();
-        ArrayList<String> title = new ArrayList<>();
+        int index = 0;
+        String[] url = new String[loop];
+        String[] title = new String[loop];
 
-        for (int i = 0; i < loop; i++)
+        for (AudioTrack track : musicManager.scheduler.getQueue())
         {
-            url.add(queue[i].getInfo().uri);
-            title.add(queue[i].getInfo().title);
+            if (index >= loop)
+            {
+                break;
+            }
+            url[index]= track.getInfo().uri;
+            title[index] = track.getInfo().title;
+            index++;
         }
 
         try
         {
-            playlistModel.createPlaylist(event.getAuthor().getIdLong(), playlistName, this.table);
+            db.createPlaylist(event.getAuthor().getIdLong(), playlistName);
         }
         catch (SQLException e)
         {
@@ -121,22 +111,23 @@ public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
                     ":x:",
                     "There's already playlist with name `" + playlistName + "`.",
                     true);
+            event.reply(embed.build());
             return;
         }
 
-        long playlitsId = playlistModel.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
+        long playlitsId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName);
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                playlistModel.addTrackToPlaylist(playlitsId, (String[])url.toArray(), (String[])title.toArray(), this.table);
+                db.addTrackToPlaylist(playlitsId, url, title);
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
                         "`" + playlistName + "` playlist is created " +
-                              "and " + this.maxTrack + " track(s) from the queue have been added to the playlist.",
+                              "and " + url.length + " track(s) from the queue have been added to the playlist.",
                         true);
             }
             catch (SQLException e)
