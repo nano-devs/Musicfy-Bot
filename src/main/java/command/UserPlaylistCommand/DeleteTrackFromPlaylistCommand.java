@@ -33,14 +33,14 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
             embed.addField(
                     ":warning:",
                     "Invalid given arguments.\n" +
-                            "This command need 2 arguments: <playlist name>, <track index>.\n" +
-                            "Use coma (,) as separator for each arguments.",
+                          "This command need 2 arguments: <playlist name>, <track index>.\n" +
+                          "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        String playlistName = event.getArgs().split(",")[0].trim();
+        String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
         int index = Integer.parseInt(event.getArgs().split(",")[1].trim());
 
         PlaylistModel db = new PlaylistModel();

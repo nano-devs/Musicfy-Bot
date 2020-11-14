@@ -71,27 +71,28 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
+        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's no playlist with name `" + event.getArgs().trim() + "`.",
+                    "There's no playlist with name `" + playlistName + "`.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), event.getArgs().trim(), this.table);
+        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
 
         if (tracks.size() <= 0)
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's no track in playlist `" + event.getArgs().trim() + "`.",
+                    "There's no track in playlist `" + playlistName + "`.",
                     true);
             event.reply(embed.build());
         }
@@ -117,8 +118,9 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
             embed.setTitle("Success");
             embed.addField(
                     ":white_check_mark:",
-                    "Add " + addedSize + " track to queue.",
+                    "Add " + addedSize + " track(s) to the queue.",
                     true);
+            embed.setFooter("Only song with duration less than 1 hour added to queue");
             event.reply(embed.build());
         }
     }

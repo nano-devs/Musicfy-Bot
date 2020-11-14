@@ -48,14 +48,14 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
             embed.addField(
                     ":warning:",
                     "Invalid given arguments.\n" +
-                            "This command need 2 arguments: <playlist name>, <track index>.\n" +
-                            "Use coma (,) as separator for each arguments.",
+                          "This command need 2 arguments: <playlist name>, <track index>.\n" +
+                          "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        String playlistName = event.getArgs().split(",")[0].trim();
+        String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
         int index = Integer.parseInt(event.getArgs().split(",")[1].trim());
 
         PlaylistModel db = new PlaylistModel();
@@ -66,7 +66,7 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist is empty, no track to delete.",
+                    "`" + playlistName + "` playlist is empty, no track to delete.",
                     true);
             event.reply(embed.build());
             return;
@@ -95,7 +95,7 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Track deleted from playlist `" + playlistName + "`",
+                        "Track deleted from `" + playlistName + "` playlist.",
                         true);
             }
             catch (SQLException e)
@@ -105,7 +105,7 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Can't delete track from playlist `" + playlistName + "`.",
+                        "Can't delete track from `" + playlistName + "` playlist.",
                         true);
             }
 

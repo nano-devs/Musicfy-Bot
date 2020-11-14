@@ -24,7 +24,7 @@ public class ShowPlaylistTrackCommand extends UserPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        String playlistName = event.getArgs().trim();
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
 
         CustomEmbedBuilder embed = new CustomEmbedBuilder();
 

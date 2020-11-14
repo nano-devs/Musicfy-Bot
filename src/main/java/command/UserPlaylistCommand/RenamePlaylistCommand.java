@@ -40,8 +40,8 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        String oldName = event.getArgs().split(",")[0].trim();
-        String newName = event.getArgs().split(",")[1].trim();
+        String oldName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
+        String newName = event.getArgs().split(",")[1].trim().replace("'", "\\'");
 
         if (oldName.equals(newName))
         {

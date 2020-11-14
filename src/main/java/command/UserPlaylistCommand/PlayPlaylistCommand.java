@@ -56,27 +56,28 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table))
+        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There are no playlist with `" + event.getArgs().trim() + "` names.",
+                    "There are no playlist with `" + playlistName + "` names.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table);
+        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), playlistName, this.table);
 
         if (tracks.size() <= 0)
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There are no track in `" + event.getArgs().trim() + "` playlist.",
+                    "There are no track in `" + playlistName + "` playlist.",
                     true);
             event.reply(embed.build());
         }
@@ -103,9 +104,9 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             embed.setTitle("Success");
             embed.addField(
                     ":white_check_mark:",
-                    "Added " + addedSize + " track(s) to the queue.",
+                    "Add " + addedSize + " track(s) to the queue.",
                     true);
-            embed.setFooter("Only song with duration less than 15 minutes added to queue");
+            embed.setFooter("Only song with duration less than 1 hour added to queue");
             event.reply(embed.build());
         }
     }

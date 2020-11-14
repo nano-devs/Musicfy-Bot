@@ -55,8 +55,8 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        String oldName = event.getArgs().split(",")[0].trim();
-        String newName = event.getArgs().split(",")[1].trim();
+        String oldName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
+        String newName = event.getArgs().split(",")[1].trim().replace("'", "\\'");
 
         PlaylistModel db = new PlaylistModel();
 

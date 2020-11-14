@@ -46,19 +46,21 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please provide playlist name to delete.",
+                    "Please provide the name of the playlist you want to delete.",
                     true);
             event.reply(embed.build());
             return;
         }
 
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
         PlaylistModel db = new PlaylistModel();
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), event.getArgs().trim(), this.table))
+
+        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist `" + event.getArgs().trim() + "` not exist.",
+                    "`" + playlistName + "` playlist does not exist.",
                     true);
             event.reply(embed.build());
             return;
@@ -68,11 +70,11 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.deletePlaylistAndAllTrackFromPlaylistAsync(event.getAuthor().getIdLong(), event.getArgs().trim(), this.table);
+                db.deletePlaylistAndAllTrackFromPlaylistAsync(event.getAuthor().getIdLong(), playlistName, this.table);
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Playlist `" + event.getArgs().trim() + "` deleted.",
+                        "`" + playlistName + "` playlist deleted.",
                         true);
             }
             catch (SQLException e)
@@ -82,7 +84,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Playlist `" + event.getArgs().trim() + "` not deleted.",
+                        "`" + playlistName + "` playlist not deleted.",
                         true);
             }
 

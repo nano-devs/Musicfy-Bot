@@ -26,7 +26,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        String playlistName = event.getArgs().trim();
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
 
         EmbedBuilder embed = new EmbedBuilder();
         embed.setColor(event.getMember().getColor());
