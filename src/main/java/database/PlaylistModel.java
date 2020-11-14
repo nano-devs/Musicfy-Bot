@@ -124,7 +124,7 @@ public class PlaylistModel extends BaseModel
                 "SELECT " + table + "_PLAYLIST.NAME, COUNT(" + table + "_PLAYLIST_TRACK.URL) " +
                 "FROM " + table + "_PLAYLIST " +
                 "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST.ID = " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID " +
-                "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
+                "WHERE " + table + "_PLAYLIST." + table + "_ID = " + id + " " +
                 "GROUP BY USER_PLAYLIST.NAME";
 
         int countPlaylist = this.countPlaylist(id, table);
@@ -280,7 +280,7 @@ public class PlaylistModel extends BaseModel
                     "INSERT INTO " + table + "_PLAYLIST_TRACK (" + table + "_PLAYLIST_ID, URL, TITLE) VALUES " +
                     "(" + playlistId + ", '" + url[i] + "', '" + title[i] + "');\n";
         }
-
+        System.out.println(query);
         return this.executeUpdateQuery(query) > 0;
     }
 
