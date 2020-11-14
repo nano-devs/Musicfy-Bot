@@ -24,7 +24,7 @@ public class GuildHistoryModel extends BaseModel
     {
         String query =
                 "INSERT INTO GUILD_HISTORY (GUILD_ID, USER_ID, URL, TITLE) " +
-                "VALUES (" + guidId + ", " + userId + ", " + url + ", " + title + ")";
+                "VALUES (" + guidId + ", " + userId + ", ';'" + url + "';', '" + title + "')";
         return this.executeUpdateQuery(query) > 0;
     }
 
