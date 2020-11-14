@@ -5,6 +5,7 @@ import YouTubeSearchApi.entity.YoutubeVideo;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
+import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -64,8 +65,9 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 
         int userPlaylistTrackCount = db.countPlaylistTrack(
                 db.getPlaylistId(event.getAuthor().getIdLong(), playlistName));
+        GuildMusicManager manager = event.getClient().getSettingsFor(event.getGuild());
 
-        if (userPlaylistTrackCount >= this.maxTrack)
+        if (userPlaylistTrackCount >= manager.getMaxPlaylistTrackCount())
         {
             embed.setTitle("Failed");
             embed.addField(
