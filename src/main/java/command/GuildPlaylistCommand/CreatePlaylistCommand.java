@@ -49,7 +49,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give a name to playlist.",
+                    "Please specify a name for the playlist.",
                     true);
             event.reply(embed.build());
             return;
@@ -90,7 +90,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Playlist `" + playlistName + "` created.",
+                        "`" + playlistName + "` playlist is created.",
                         true);
             }
             catch (SQLException e)
