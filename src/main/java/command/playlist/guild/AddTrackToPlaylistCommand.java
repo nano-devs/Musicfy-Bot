@@ -37,7 +37,7 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(
