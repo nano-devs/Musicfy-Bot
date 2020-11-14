@@ -119,6 +119,7 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         }
 
         long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table);
+        video.setTitle(video.getTitle().replace("'", "\\'"));
 
         CompletableFuture.runAsync(() ->
         {

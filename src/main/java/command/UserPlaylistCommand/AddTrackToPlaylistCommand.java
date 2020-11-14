@@ -104,6 +104,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         }
         
         long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
+        video.setTitle(video.getTitle().replace("'", "\\'"));
 
         CompletableFuture.runAsync(() ->
         {
