@@ -2,7 +2,7 @@ package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Playlist;
-import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
@@ -25,8 +25,8 @@ public class ShowPlaylistCommand extends UserPlaylistBaseCommand
     {
         CustomEmbedBuilder embed = new CustomEmbedBuilder();
 
-        PlaylistModel db = new PlaylistModel();
-        ArrayList<Playlist> playlists = db.getAllPlaylist(event.getAuthor().getIdLong(), this.table);
+        UserPlaylistModel db = new UserPlaylistModel();
+        ArrayList<Playlist> playlists = db.getAllPlaylist(event.getAuthor().getIdLong());
 
         if (playlists == null || playlists.size() <= 0)
         {
