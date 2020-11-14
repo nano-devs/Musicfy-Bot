@@ -235,6 +235,7 @@ public class UserPlaylistModel extends BaseModel
      * @param playlistName Playlist name.
      * @return true if playlist deleted.
      */
+    @Deprecated
     public boolean deletePlaylistAndAllTrackFromPlaylistAsync(long userId, String playlistName) throws SQLException
     {
         String query =
