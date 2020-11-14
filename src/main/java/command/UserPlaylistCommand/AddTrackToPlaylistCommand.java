@@ -3,7 +3,7 @@ package command.UserPlaylistCommand;
 import YouTubeSearchApi.YoutubeClient;
 import YouTubeSearchApi.entity.YoutubeVideo;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
@@ -49,9 +49,9 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
         String url = event.getArgs().split(",")[1].trim();
 
-        PlaylistModel db = new PlaylistModel();
+        UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -63,7 +63,7 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
         }
 
         int userPlaylistTrackCount = db.countPlaylistTrack(
-                db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table);
+                db.getPlaylistId(event.getAuthor().getIdLong(), playlistName));
 
         if (userPlaylistTrackCount >= this.maxTrack)
         {
@@ -102,15 +102,15 @@ public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
             event.reply(embed.build());
             return;
         }
-        
-        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
+
+        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName);
         video.setTitle(video.getTitle().replace("'", "\\'"));
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle(), this.table);
+                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle());
 
                 embed.setTitle("Success");
                 embed.addField(
