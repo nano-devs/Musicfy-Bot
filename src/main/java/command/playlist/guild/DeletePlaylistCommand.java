@@ -1,4 +1,4 @@
-package command.GuildPlaylistCommand;
+package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
@@ -9,15 +9,14 @@ import service.music.HelpProcess;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
+public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
 {
-    public RenamePlaylistCommand()
+    public DeletePlaylistCommand()
     {
-        this.name = "rename_guild_playlist";
-        this.aliases = new String[]{"rgp"};
-        this.arguments = "<old playlist name> , <new playlist name>";
-        this.help = "Rename guild playlist. \n" +
-                    "Use coma (,) as separator for old and new playlist name.";
+        this.name = "delete_guild_playlist";
+        this.aliases = new String[]{"dgp"};
+        this.arguments = "<playlist name>";
+        this.help = "Delete existing guild playlist.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
@@ -31,7 +30,7 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
         embed.setColor(event.getMember().getColor());
         PremiumModel premium = new PremiumModel();
 
-        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
+        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -42,31 +41,28 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (event.getArgs().split(",").length != 2)
+        if (event.getArgs().trim().length() <= 0)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Invalid given arguments.\n" +
-                            "This command need 2 arguments: <old playlist name> , <new playlist name>.\n" +
-                            "Use coma (,) as separator for each arguments.",
+                    "Please provide the name of the playlist you want to delete.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        String oldName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
-        String newName = event.getArgs().split(",")[1].trim().replace("'", "\\'");
-
+        String playlistName = event.getArgs().trim().replace("'", "\\'");
         PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), oldName, this.table))
+        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist `" + oldName + "` not exist.",
+                    "`" + playlistName + "` playlist does not exist.",
                     true);
+            event.reply(embed.build());
             return;
         }
 
@@ -74,12 +70,11 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.renamePlaylist(event.getGuild().getIdLong(), oldName, newName, this.table);
-
+                db.deletePlaylistAndAllTrackFromPlaylistAsync(event.getAuthor().getIdLong(), playlistName, this.table);
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "Playlist renamed from `" + oldName + "` to `" + newName + "`.",
+                        "`" + playlistName + "` playlist deleted.",
                         true);
             }
             catch (SQLException e)
@@ -89,7 +84,7 @@ public class RenamePlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "Can't rename playlist.",
+                        "`" + playlistName + "` playlist not deleted.",
                         true);
             }
 

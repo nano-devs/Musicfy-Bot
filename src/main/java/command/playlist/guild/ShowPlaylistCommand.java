@@ -1,4 +1,4 @@
-package command.GuildPlaylistCommand;
+package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Playlist;

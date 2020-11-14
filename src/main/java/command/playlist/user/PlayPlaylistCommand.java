@@ -1,4 +1,4 @@
-package command.UserPlaylistCommand;
+package command.playlist.user;
 
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandEvent;

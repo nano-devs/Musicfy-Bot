@@ -1,7 +1,8 @@
-package command.UserPlaylistCommand;
+package command.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import command.playlist.user.UserPlaylistBaseCommand;
 import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
@@ -10,9 +11,9 @@ import service.music.HelpProcess;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
+public class SaveQueueToPlaylistCommand extends UserPlaylistBaseCommand
 {
-    public SaveQueueToPlaylist()
+    public SaveQueueToPlaylistCommand()
     {
         this.name = "save_queue_to_playlist";
         this.arguments = "<playlist name>";
@@ -20,7 +21,7 @@ public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
         this.help = "Add all tracks in queue to a new user playlist.\n";
         this.guildOnly = true;
         this.cooldown = 2;
-        this.category = new Category("User Playlist");
+        this.category = new Category("Music");
         this.help = HelpProcess.getHelp(this);
     }
 

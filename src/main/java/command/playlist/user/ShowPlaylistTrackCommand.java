@@ -1,8 +1,7 @@
-package command.UserPlaylistCommand;
+package command.playlist.user;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
-import database.PlaylistModel;
 import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;

@@ -1,17 +1,16 @@
-package command.GuildPlaylistCommand;
+package command.playlist.user;
 
 import YouTubeSearchApi.YoutubeClient;
 import YouTubeSearchApi.entity.YoutubeVideo;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
-import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import database.UserPlaylistModel;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
+public class AddTrackToPlaylistCommand extends UserPlaylistBaseCommand
 {
     private final YoutubeClient client;
 
@@ -19,34 +18,20 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
     {
         this.client = ytc;
 
-        this.name = "add_track_to_guild_playlist";
-        this.aliases = new String[]{"attgp"};
+        this.name = "add_track_to_my_playlist";
+        this.aliases = new String[]{"attmp"};
         this.arguments = "<playlist name>, <url>";
-        this.help = "Add a new track to guild playlist. \n" +
+        this.help = "Add a new track to user playlist. \n" +
                     "Use coma (,) as separator for each arguments.";
         this.cooldown = 2;
-        this.guildOnly = true;
-        this.category = new Category("Guild Playlist");
+        this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
-
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
-        {
-            embed.setTitle("Attention");
-            embed.addField(
-                    ":warning:",
-                    "You are not premium, you can't use this command.",
-                    true);
-            event.reply(embed.build());
-            return;
-        }
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
 
         if (event.getArgs().split(",").length != 2)
         {
@@ -63,10 +48,10 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
 
         String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
         String url = event.getArgs().split(",")[1].trim();
-        
-        PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        UserPlaylistModel db = new UserPlaylistModel();
+
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -77,15 +62,15 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        int guildPlaylistTrackCount = db.countPlaylistTrack(
-                db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table), this.table);
+        int userPlaylistTrackCount = db.countPlaylistTrack(
+                db.getPlaylistId(event.getAuthor().getIdLong(), playlistName));
 
-        if (guildPlaylistTrackCount >= this.maxTrack)
+        if (userPlaylistTrackCount >= this.maxTrack)
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Track for playlist has reached maximum limit.",
+                    "Track for playlist has reached the maximum limit.",
                     true);
             event.reply(embed.build());
             return;
@@ -118,14 +103,14 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table);
+        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName);
         video.setTitle(video.getTitle().replace("'", "\\'"));
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle(), this.table);
+                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle());
 
                 embed.setTitle("Success");
                 embed.addField(

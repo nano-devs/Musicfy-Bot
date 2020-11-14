@@ -1,4 +1,4 @@
-package command.GuildPlaylistCommand;
+package command.playlist.guild;
 
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandEvent;

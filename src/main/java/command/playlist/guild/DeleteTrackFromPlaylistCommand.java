@@ -1,4 +1,4 @@
-package command.GuildPlaylistCommand;
+package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.PlaylistModel;
@@ -9,17 +9,15 @@ import service.music.HelpProcess;
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
+public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
 {
-    private final int maxPlaylist = 5;
-
-    public CreatePlaylistCommand()
+    public DeleteTrackFromPlaylistCommand()
     {
-        this.name = "create_guild_playlist";
-        this.aliases = new String[]{"agp", "add_guild_playlist", "cgp"};
-        this.arguments = "<playlist name>";
-        this.help = "Create a new guild playlist. \n" +
-                    "The playlist name cannot be the same as the other guild's playlist names.";
+        this.name = "delete_track_from_guild_playlist";
+        this.aliases = new String[]{"dtfgp"};
+        this.arguments = "<playlist name>, <track index>";
+        this.help = "Delete existing track from guild playlist. \n" +
+                    "Use coma (,) as separator for each arguments.";
         this.cooldown = 2;
         this.guildOnly = true;
         this.category = new Category("Guild Playlist");
@@ -44,53 +42,60 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        if (event.getArgs().trim().length() == 0)
+        if (event.getArgs().split(",").length != 2)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please specify a name for the playlist.",
+                    "Invalid given arguments.\n" +
+                          "This command need 2 arguments: <playlist name>, <track index>.\n" +
+                          "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;
         }
+
+        String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
+        int index = Integer.parseInt(event.getArgs().split(",")[1].trim());
 
         PlaylistModel db = new PlaylistModel();
+        int playlistSize = db.countPlaylistTrack(db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table), this.table);
 
-        if (db.countPlaylist(event.getGuild().getIdLong(), this.table) >= this.maxPlaylist)
+        if (playlistSize <= 0)
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "You have reached the maximum limit for playlist allocated to each guild.",
+                    "`" + playlistName + "` playlist is empty, no track to delete.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        String playlistName = event.getArgs().trim().replace("'", "\\'");
-
-        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (index > (playlistSize))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "You already have playlist with the same name.",
+                    "`" + playlistName + "` playlist only have " + playlistSize + " track(s).",
                     true);
             event.reply(embed.build());
             return;
         }
+
+        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
+        long playlistTrackId = db.getPlaylistTrackId(playlistId, index, this.table);
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.createPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
+                db.deleteTrackFromPlaylistAsync(playlistTrackId, this.table);
 
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "`" + playlistName + "` playlist is created.",
+                        "Track deleted from `" + playlistName + "` playlist.",
                         true);
             }
             catch (SQLException e)
@@ -100,7 +105,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "There's already playlist with name `" + playlistName + "`.",
+                        "Can't delete track from `" + playlistName + "` playlist.",
                         true);
             }
 

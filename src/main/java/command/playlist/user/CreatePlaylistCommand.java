@@ -1,66 +1,64 @@
-package command.GuildPlaylistCommand;
+package command.playlist.user;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
-import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import database.UserPlaylistModel;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
-public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
+public class CreatePlaylistCommand extends UserPlaylistBaseCommand
 {
-    public DeletePlaylistCommand()
+    public CreatePlaylistCommand()
     {
-        this.name = "delete_guild_playlist";
-        this.aliases = new String[]{"dgp"};
+        this.name = "create_new_playlist";
+        this.aliases = new String[]{"cnp"};
         this.arguments = "<playlist name>";
-        this.help = "Delete existing guild playlist.";
+        this.help = "Create a new user playlist. \n" +
+                    "Playlist name can't be the same with your other playlist name.";
         this.cooldown = 2;
-        this.guildOnly = true;
-        this.category = new Category("Guild Playlist");
+        this.category = new Category("User Playlist");
         this.help = HelpProcess.getHelp(this);
     }
 
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
-        PremiumModel premium = new PremiumModel();
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (event.getArgs().trim().length() == 0)
         {
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "You are not premium, you can't use this command.",
+                    "Please specify a name for the playlist.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        if (event.getArgs().trim().length() <= 0)
+        UserPlaylistModel db = new UserPlaylistModel();
+
+        if (db.countPlaylist(event.getAuthor().getIdLong()) >= this.maxPlaylist)
         {
-            embed.setTitle("Attention");
+            embed.setTitle("Failed");
             embed.addField(
-                    ":warning:",
-                    "Please provide the name of the playlist you want to delete.",
+                    ":x:",
+                    "You have reached the maximum limit for playlist allocated to each user.",
                     true);
             event.reply(embed.build());
             return;
         }
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
-        PlaylistModel db = new PlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "`" + playlistName + "` playlist does not exist.",
+                    "You already have playlist with the same name.",
                     true);
             event.reply(embed.build());
             return;
@@ -70,11 +68,12 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.deletePlaylistAndAllTrackFromPlaylistAsync(event.getAuthor().getIdLong(), playlistName, this.table);
+                db.createPlaylist(event.getAuthor().getIdLong(), playlistName);
+
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
-                        "`" + playlistName + "` playlist deleted.",
+                        "`" + playlistName + "` playlist is created.",
                         true);
             }
             catch (SQLException e)
@@ -84,7 +83,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
                 embed.setTitle("Failed");
                 embed.addField(
                         ":x:",
-                        "`" + playlistName + "` playlist not deleted.",
+                        "There's already playlist with name `" + playlistName + "`.",
                         true);
             }
 
