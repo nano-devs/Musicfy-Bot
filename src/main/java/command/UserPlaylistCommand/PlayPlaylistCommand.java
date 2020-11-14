@@ -32,6 +32,18 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
+        VoiceChannel userVoiceChannel = event.getMember().getVoiceState().getChannel();
+        if (userVoiceChannel == null)
+        {
+            event.reply(":x: | You are not connected to any voice channel");
+            return;
+        }
+
+        if (event.getSelfMember().getVoiceState().getChannel() == null)
+        {
+            event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
+        }
+
         CustomEmbedBuilder embed = new CustomEmbedBuilder();
 
         if (event.getArgs().trim().length() <= 0)
@@ -70,18 +82,6 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         }
         else
         {
-            VoiceChannel userVoiceChannel = event.getMember().getVoiceState().getChannel();
-            if (userVoiceChannel == null)
-            {
-                event.reply(":x: | You are not connected to any voice channel");
-                return;
-            }
-
-            if (event.getSelfMember().getVoiceState().getChannel() == null)
-            {
-                event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
-            }
-
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
 
             if (musicManager.isInDjMode()) {
