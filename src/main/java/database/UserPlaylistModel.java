@@ -284,7 +284,7 @@ public class UserPlaylistModel extends BaseModel
                     "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES " +
                     "(" + playlistId + ", '" + url[i] + "', '" + title[i] + "');\n";
         }
-        System.out.println(query);
+
         return this.executeUpdateQuery(query) > 0;
     }
 
