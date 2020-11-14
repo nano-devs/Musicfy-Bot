@@ -18,7 +18,7 @@ public class InviteCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        String inviteLink = "https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot";
+        String inviteLink = "[invite link](https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot)";
         CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
         embedBuilder.setAuthor("Invite " + event.getSelfUser().getName(),
                 event.getAuthor().getEffectiveAvatarUrl(),
@@ -27,7 +27,6 @@ public class InviteCommand extends Command {
         embedBuilder.setFooter("Have a nice dayy~");
         embedBuilder.addField("Here is the invite link!", inviteLink, true);
         embedBuilder.setThumbnail(event.getSelfUser().getAvatarUrl());
-        embedBuilder.setColor(event.getMember().getColor());
         event.reply(embedBuilder.build());
     }
 }
