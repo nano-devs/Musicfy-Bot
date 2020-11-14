@@ -3,7 +3,7 @@ package command.UserPlaylistCommand;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
-import database.PlaylistModel;
+import database.UserPlaylistModel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
@@ -57,9 +57,9 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
         }
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
-        PlaylistModel db = new PlaylistModel();
+        UserPlaylistModel db = new UserPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -70,7 +70,7 @@ public class PlayPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), playlistName, this.table);
+        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getAuthor().getIdLong(), playlistName);
 
         if (tracks.size() <= 0)
         {
