@@ -1,7 +1,7 @@
 package command.UserPlaylistCommand;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
@@ -41,10 +41,38 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
         }
 
         String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
-        int index = Integer.parseInt(event.getArgs().split(",")[1].trim());
+        int index;
 
-        PlaylistModel db = new PlaylistModel();
-        int playlistSize = db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table), this.table);
+        try
+        {
+            index = Integer.parseInt(event.getArgs().split(",")[1].trim());
+        }
+        catch (NumberFormatException e)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "Invalid given arguments.\n" +
+                          "Parameter for <track index> is not a number.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
+        UserPlaylistModel db = new UserPlaylistModel();
+
+        if (db.isPlaylistNameExist(event.getAuthor().getIdLong(), playlistName) == false)
+        {
+            embed.setTitle("Failed");
+            embed.addField(
+                    ":x:",
+                    "`" + playlistName + "` playlist does not exist.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
+        int playlistSize = db.countPlaylistTrack(db.getPlaylistId(event.getAuthor().getIdLong(), playlistName));
 
         if (playlistSize <= 0)
         {
@@ -68,14 +96,14 @@ public class DeleteTrackFromPlaylistCommand extends UserPlaylistBaseCommand
             return;
         }
 
-        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
-        long playlistTrackId = db.getPlaylistTrackId(playlistId, index, this.table);
+        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName);
+        long playlistTrackId = db.getPlaylistTrackId(playlistId, index);
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.deleteTrackFromPlaylistAsync(playlistTrackId, this.table);
+                db.deleteTrackFromPlaylistAsync(playlistTrackId);
 
                 embed.setTitle("Success");
                 embed.addField(
