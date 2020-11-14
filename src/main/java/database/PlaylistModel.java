@@ -234,10 +234,11 @@ public class PlaylistModel extends BaseModel
     {
         String query =
                 "DELETE " + table + "_PLAYLIST, " + table + "_PLAYLIST_TRACK \n" +
-                        "FROM " + table + "_PLAYLIST_TRACK \n" +
-                        "JOIN " + table + "_PLAYLIST ON " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID = " + table + "_PLAYLIST.ID \n" +
-                        "WHERE " + table + "_PLAYLIST.NAME = '" + playlistName + "' " +
-                        "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " ";
+                "FROM " + table + "_PLAYLIST \n" +
+                "LEFT JOIN " + table + "_PLAYLIST_TRACK ON " + table + "_PLAYLIST_TRACK." + table + "_PLAYLIST_ID = " + table + "_PLAYLIST.ID \n" +
+                "WHERE " + table + "_PLAYLIST.NAME = '" + playlistName + "' " +
+                "AND " + table + "_PLAYLIST." + table + "_ID = " + id + " ";
+
         return this.executeUpdateQuery(query) > 0;
     }
 
