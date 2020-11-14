@@ -1,17 +1,13 @@
 package command.UserPlaylistCommand;
 
-import YouTubeSearchApi.YoutubeClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import database.PlaylistModel;
 import database.UserPlaylistModel;
 import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
@@ -115,13 +111,13 @@ public class SaveQueueToPlaylist extends UserPlaylistBaseCommand
             return;
         }
 
-        long playlitsId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName);
+        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName);
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.addTrackToPlaylist(playlitsId, url, title);
+                db.addTrackToPlaylist(playlistId, url, title);
 
                 embed.setTitle("Success");
                 embed.addField(
