@@ -11,6 +11,7 @@ import command.history.UserHistoryCommand;
 import command.music.*;
 import command.owner.ChangePresenceCommand;
 import command.owner.PremiumUserCommand;
+import listener.GuildEventListener;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -39,7 +40,7 @@ public class Main {
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
         String dblToken = System.getenv("DBL_TOKEN_2");
-        String prefix = "m$";
+        String prefix = "m$$$";
 
         // Initialize Dependencies
         ScheduledExecutorService exec = new ScheduledThreadPoolExecutor(coreThreadPoolSize);
@@ -125,7 +126,7 @@ public class Main {
         builder.addEventListeners(commandClient);
         builder.addEventListeners(nano.getWaiter());
         builder.addEventListeners(new MemberVoiceListener(nano, exec));
-//        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
+        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
 
         try {
             JDA jda = builder.build();
