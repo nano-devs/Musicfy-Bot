@@ -61,6 +61,7 @@ public class Main {
         commandClientBuilder.setActivity(Activity.listening("m$help"));
         commandClientBuilder.useHelpBuilder(false);
         commandClientBuilder.setGuildSettingsManager(nano);
+        commandClientBuilder.setScheduleExecutor(exec);
 
         // Add Command & Inject Dependencies.
         // Free Commands
