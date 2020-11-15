@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.CommandClient;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
@@ -84,5 +85,14 @@ public class GuildEventListener extends ListenerAdapter {
 
         System.out.println("Shutting down scheduled thread pool executor!");
         this.commandClient.getScheduleExecutor().shutdownNow();
+    }
+
+    @Override
+    public void onReady(@NotNull ReadyEvent event) {
+        super.onReady(event);
+
+        JDA jda = event.getJDA();
+
+        this.dblApi.setStats(jda.getGuilds().size());
     }
 }
