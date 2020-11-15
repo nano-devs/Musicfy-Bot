@@ -2,7 +2,9 @@ package listener;
 
 import com.jagrosh.jdautilities.command.CommandClient;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -10,12 +12,16 @@ import org.discordbots.api.client.DiscordBotListAPI;
 import org.jetbrains.annotations.NotNull;
 import service.music.CustomEmbedBuilder;
 
+import java.util.List;
+
 public class GuildEventListener extends ListenerAdapter {
 
     private DiscordBotListAPI dblApi;
+    private CommandClient commandClient;
 
     public GuildEventListener(DiscordBotListAPI api, CommandClient commandClient) {
         this.dblApi = api;
+        this.commandClient = commandClient;
     }
 
     @Override
@@ -56,6 +62,9 @@ public class GuildEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
+
+        super.onGuildLeave(event);
+
         JDA jda = event.getJDA();
 
         this.dblApi.setStats(jda.getGuilds().size());
@@ -67,7 +76,13 @@ public class GuildEventListener extends ListenerAdapter {
 //        User owner = jda.getUserById(this.commandClient.getOwnerId());
 //
 //        owner.openPrivateChannel().flatMap(channel -> channel.sendMessage(messageToOwner)).queue();
+    }
 
-        super.onGuildLeave(event);
+    @Override
+    public void onShutdown(@NotNull ShutdownEvent event) {
+        super.onShutdown(event);
+
+        System.out.println("Shutting down scheduled thread pool executor!");
+        this.commandClient.getScheduleExecutor().shutdownNow();
     }
 }

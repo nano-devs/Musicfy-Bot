@@ -10,7 +10,9 @@ import command.general.VoteCommand;
 import command.history.UserHistoryCommand;
 import command.music.*;
 import command.owner.ChangePresenceCommand;
+import command.owner.NotifyMaintenanceCommand;
 import command.owner.PremiumUserCommand;
+import command.owner.ShutdownCommand;
 import listener.GuildEventListener;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;
@@ -65,6 +67,8 @@ public class Main {
 
         // Add Command & Inject Dependencies.
         // Free Commands
+        commandClientBuilder.addCommand(new NotifyMaintenanceCommand());
+        commandClientBuilder.addCommand(new ShutdownCommand());
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
         commandClientBuilder.addCommand(new CustomPrefixCommand());
@@ -136,14 +140,14 @@ public class Main {
             e.printStackTrace();
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                System.out.println("Shutting down scheduled thread pool executor!");
-                exec.shutdown();
-                super.run();
-            }
-        });
+//        Runtime.getRuntime().addShutdownHook(new Thread() {
+//            @Override
+//            public void run() {
+////                System.out.println("Shutting down scheduled thread pool executor!");
+////                exec.shutdown();
+//                super.run();
+//            }
+//        });
     }
 
     private static void configureMemoryUsage(JDABuilder builder) {
