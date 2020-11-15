@@ -108,8 +108,7 @@ public class MusicService {
 
     public static CustomEmbedBuilder getEmbeddedVoteLink(ClassicUser classicUser, CommandEvent event) {
         String voteUrl = "";
-        String message = "[Vote]() & use **" + event.getClient().getPrefix() +
-                "claim** command to claim rewards :>\n" + voteUrl;
+        String message = "[Vote](https://top.gg/bot/473023109666963467) Muscify to claim rewards! :>\n" + voteUrl;
 
         CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
         embedBuilder.setTitle(":headphones: | Thank you for using " + event.getSelfUser().getName() + "!");
@@ -117,8 +116,8 @@ public class MusicService {
                 event.getAuthor().getEffectiveAvatarUrl(),
                 event.getAuthor().getEffectiveAvatarUrl());
         embedBuilder.addField("Daily Quota", String.valueOf(classicUser.getDailyQuota()), true);
-        embedBuilder.addField("Claimed Reward", String.valueOf(classicUser.getRecommendationQuota()), true);
-        embedBuilder.addField("Increase your stocks :chart_with_upwards_trend: ", message, false);
+        embedBuilder.addField("Vote Reward(s)", String.valueOf(classicUser.getRecommendationQuota()), true);
+        embedBuilder.addField(":chart_with_upwards_trend: Increase your stocks", message, false);
         embedBuilder.setFooter("Have a nice dayy~");
 
         return embedBuilder;
