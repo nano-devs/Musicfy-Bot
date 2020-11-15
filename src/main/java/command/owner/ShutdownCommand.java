@@ -14,11 +14,11 @@ public class ShutdownCommand extends Command {
     protected void execute(CommandEvent event) {
 
         System.out.println("Shutting down scheduled thread pool executor!");
-        event.getClient().getScheduleExecutor().shutdown();
+        event.getClient().getScheduleExecutor().shutdownNow();
 
         System.out.println("Shutting Down Command Client and JDA!");
         event.getClient().shutdown();
-        event.getJDA().shutdown();
+        event.getJDA().shutdownNow();
 
         System.out.println("Shut Down");
     }

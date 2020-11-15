@@ -2,18 +2,14 @@ package listener;
 
 import com.jagrosh.jdautilities.command.CommandClient;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.discordbots.api.client.DiscordBotListAPI;
 import org.jetbrains.annotations.NotNull;
 import service.music.CustomEmbedBuilder;
-
-import java.util.List;
 
 public class GuildEventListener extends ListenerAdapter {
 
@@ -77,14 +73,6 @@ public class GuildEventListener extends ListenerAdapter {
 //        User owner = jda.getUserById(this.commandClient.getOwnerId());
 //
 //        owner.openPrivateChannel().flatMap(channel -> channel.sendMessage(messageToOwner)).queue();
-    }
-
-    @Override
-    public void onShutdown(@NotNull ShutdownEvent event) {
-        super.onShutdown(event);
-
-        System.out.println("Shutting down scheduled thread pool executor!");
-        this.commandClient.getScheduleExecutor().shutdownNow();
     }
 
     @Override
