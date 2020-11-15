@@ -16,9 +16,9 @@ public class GuildModel extends BaseModel {
         this.executeUpdateQuery(query);
     }
 
-    public void createDefault(long id, String customPrefix) throws SQLException {
-        String query = "INSERT INTO GUILD (GUILD_ID, CUSTOM_PREFIX) " +
-                "VALUES (" + id + ", '" + customPrefix + "')";
+    public void createDefault(long id) throws SQLException {
+        String query = "INSERT INTO GUILD (GUILD_ID) " +
+                "VALUES (" + id + ")";
         this.executeUpdateQuery(query);
     }
 

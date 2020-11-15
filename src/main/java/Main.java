@@ -3,14 +3,17 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandClient;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import command.*;
-import command.UserPlaylistCommand.CreatePlaylistCommand;
 import command.general.CustomPrefixCommand;
 import command.general.HelpCommand;
 import command.general.InviteCommand;
 import command.general.VoteCommand;
 import command.history.UserHistoryCommand;
+import command.music.*;
 import command.owner.ChangePresenceCommand;
+import command.owner.NotifyMaintenanceCommand;
+import command.owner.PremiumUserCommand;
+import command.owner.ShutdownCommand;
+import listener.GuildEventListener;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -38,7 +41,7 @@ public class Main {
         int coreThreadPoolSize =  availableProcessors - 1 > 0 ? availableProcessors - 1 : 1;
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
-        String dblToken = System.getenv("DBL_TOKEN");
+        String dblToken = System.getenv("DBL_TOKEN_2");
         String prefix = "m$";
 
         // Initialize Dependencies
@@ -60,9 +63,12 @@ public class Main {
         commandClientBuilder.setActivity(Activity.listening("m$help"));
         commandClientBuilder.useHelpBuilder(false);
         commandClientBuilder.setGuildSettingsManager(nano);
+        commandClientBuilder.setScheduleExecutor(exec);
 
         // Add Command & Inject Dependencies.
         // Free Commands
+        commandClientBuilder.addCommand(new NotifyMaintenanceCommand());
+        commandClientBuilder.addCommand(new ShutdownCommand());
         commandClientBuilder.addCommand(new VoteCommand(nano));
         commandClientBuilder.addCommand(new InviteCommand());
         commandClientBuilder.addCommand(new CustomPrefixCommand());
@@ -83,28 +89,29 @@ public class Main {
         commandClientBuilder.addCommand(new ShuffleCommand(nano));
         commandClientBuilder.addCommand(new RecommendationCommand(nano, youtubeClient));
         commandClientBuilder.addCommand(new LyricCommand(nano));
+        commandClientBuilder.addCommand(new SaveQueueToPlaylistCommand());
         commandClientBuilder.addCommand(new PremiumUserCommand());
         commandClientBuilder.addCommand(new UserHistoryCommand());
-        commandClientBuilder.addCommand(new CreatePlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.RenamePlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeletePlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.AddTrackToPlaylistCommand(youtubeClient));
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.DeleteTrackFromPlaylistCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.ShowPlaylistTrackCommand());
-        commandClientBuilder.addCommand(new command.UserPlaylistCommand.PlayPlaylistCommand(nano));
+        commandClientBuilder.addCommand(new command.playlist.user.CreatePlaylistCommand());
+        commandClientBuilder.addCommand(new command.playlist.user.RenamePlaylistCommand());
+        commandClientBuilder.addCommand(new command.playlist.user.DeletePlaylistCommand());
+        commandClientBuilder.addCommand(new command.playlist.user.ShowPlaylistCommand());
+        commandClientBuilder.addCommand(new command.playlist.user.AddTrackToPlaylistCommand(youtubeClient));
+        commandClientBuilder.addCommand(new command.playlist.user.DeleteTrackFromPlaylistCommand());
+        commandClientBuilder.addCommand(new command.playlist.user.ShowPlaylistTrackCommand());
+        commandClientBuilder.addCommand(new command.playlist.user.PlayPlaylistCommand(nano));
 
         // Premium Guild Commands
 //        commandClientBuilder.addCommand(new PremiumGuildCommand());
 //        commandClientBuilder.addCommand(new GuildHistoryCommand(nano));
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.CreatePlaylistCommand());
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.RenamePlaylistCommand());
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeletePlaylistCommand());
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistCommand());
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.AddTrackToPlaylistCommand());
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.DeleteTrackFromPlaylistCommand());
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.ShowPlaylistTrackCommand());
-//        commandClientBuilder.addCommand(new command.GuildPlaylistCommand.PlayPlaylistCommand(nano));
+//        commandClientBuilder.addCommand(new command.playlist.guild.CreatePlaylistCommand());
+//        commandClientBuilder.addCommand(new command.playlist.guild.RenamePlaylistCommand());
+//        commandClientBuilder.addCommand(new command.playlist.guild.DeletePlaylistCommand());
+//        commandClientBuilder.addCommand(new command.playlist.guild.ShowPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.playlist.guild.AddTrackToPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.playlist.guild.DeleteTrackFromPlaylistCommand());
+//        commandClientBuilder.addCommand(new command.playlist.guild.ShowPlaylistTrackCommand());
+//        commandClientBuilder.addCommand(new command.playlist.guild.PlayPlaylistCommand(nano));
 
         // Owner's commands
         commandClientBuilder.addCommand(new ChangePresenceCommand());
@@ -124,7 +131,7 @@ public class Main {
         builder.addEventListeners(commandClient);
         builder.addEventListeners(nano.getWaiter());
         builder.addEventListeners(new MemberVoiceListener(nano, exec));
-//        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
+        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
 
         try {
             JDA jda = builder.build();
@@ -133,14 +140,14 @@ public class Main {
             e.printStackTrace();
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                System.out.println("Shutting down scheduled thread pool executor!");
-                exec.shutdown();
-                super.run();
-            }
-        });
+//        Runtime.getRuntime().addShutdownHook(new Thread() {
+//            @Override
+//            public void run() {
+////                System.out.println("Shutting down scheduled thread pool executor!");
+////                exec.shutdown();
+//                super.run();
+//            }
+//        });
     }
 
     private static void configureMemoryUsage(JDABuilder builder) {

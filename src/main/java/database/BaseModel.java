@@ -23,6 +23,7 @@ public abstract class BaseModel
         this.username = "root";
         this.password = "";
         this.url = "jdbc:mysql://localhost:3306/" + database;
+        this.url += "?allowMultiQueries=true";
     }
 
     /**
@@ -81,7 +82,7 @@ public abstract class BaseModel
         {
             if (!e.getMessage().contains("Unhandled user-defined exception condition"))
             {
-                throw new SQLException(e);
+                throw e;
             }
         }
         return -1;

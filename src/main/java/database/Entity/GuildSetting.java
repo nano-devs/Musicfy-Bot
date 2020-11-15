@@ -120,7 +120,7 @@ public class GuildSetting extends GuildModel {
         this.canLoadSetting = false;
 
         try {
-            this.createDefault(id, null);
+            this.createDefault(id);
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
