@@ -4,6 +4,8 @@
 
 # Using the Official Musicfy
 
+[![Discord Bots](https://top.gg/api/widget/473023109666963467.svg)](https://top.gg/bot/473023109666963467)
+
 **[Invite Musicfy Bot](https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot) to your server and enjoy all the features ^^**
 
 ### Features
