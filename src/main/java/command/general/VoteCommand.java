@@ -3,6 +3,7 @@ package command.general;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.impl.CommandClientImpl;
 import database.Entity.ClassicUser;
 import database.UserModel;
 import service.music.CustomEmbedBuilder;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 public class VoteCommand extends Command {
-
+    CommandClientImpl impl;
     NanoClient nanoClient;
 
     public VoteCommand(NanoClient nanoClient) {
@@ -40,6 +41,7 @@ public class VoteCommand extends Command {
         }
 
         if (classicUser == null) {
+            classicUser = new ClassicUser(event.getAuthor().getIdLong(), 1, 3);
             CompletableFuture.runAsync(() -> {
                 try {
                     userModel.create(event.getAuthor().getIdLong(), 3, 1);

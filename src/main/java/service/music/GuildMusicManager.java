@@ -171,6 +171,9 @@ public class GuildMusicManager extends GuildSetting implements GuildSettingsProv
     @Nullable
     @Override
     public Collection<String> getPrefixes() {
+        if (this.customPrefix == null) {
+            return null;
+        }
         prefixes.add(this.customPrefix);
         return prefixes;
     }
