@@ -38,7 +38,7 @@ public class Main {
         int coreThreadPoolSize =  availableProcessors - 1 > 0 ? availableProcessors - 1 : 1;
         String botToken = System.getenv("SAN_TOKEN");
         String ytToken = System.getenv("DEVELOPER_KEY");
-        String dblToken = System.getenv("DBL_TOKEN");
+        String dblToken = System.getenv("DBL_TOKEN_2");
         String prefix = "m$";
 
         // Initialize Dependencies

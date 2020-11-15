@@ -13,11 +13,9 @@ import service.music.CustomEmbedBuilder;
 public class GuildEventListener extends ListenerAdapter {
 
     private DiscordBotListAPI dblApi;
-    private CommandClient commandClient;
 
     public GuildEventListener(DiscordBotListAPI api, CommandClient commandClient) {
         this.dblApi = api;
-        this.commandClient = commandClient;
     }
 
     @Override
