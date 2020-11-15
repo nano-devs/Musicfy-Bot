@@ -14,13 +14,17 @@ import service.music.CustomEmbedBuilder;
 public class GuildEventListener extends ListenerAdapter {
 
     private DiscordBotListAPI dblApi;
+    private CommandClient commandClient;
 
     public GuildEventListener(DiscordBotListAPI api, CommandClient commandClient) {
         this.dblApi = api;
+        this.commandClient = commandClient;
     }
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
+        super.onGuildJoin(event);
+
         JDA jda = event.getJDA();
 
         this.dblApi.setStats(jda.getGuilds().size());
@@ -43,7 +47,9 @@ public class GuildEventListener extends ListenerAdapter {
         embedBuilder.addField("Links", links, false);
         embedBuilder.setFooter("Have a nice dayy~");
 
+        System.out.println("Joined " + event.getGuild().getName());
         defaultTextChannel.sendMessage(embedBuilder.build()).queue();
+
         // Notify owner. development purposes
 //        String messageToOwner = "Just left server " + event.getGuild().getName()
 //                + ". Total " + jda.getGuilds().size() + " guilds";
@@ -51,7 +57,6 @@ public class GuildEventListener extends ListenerAdapter {
 //        User owner = jda.getUserById(this.commandClient.getOwnerId());
 //
 //        owner.openPrivateChannel().flatMap(channel -> channel.sendMessage(messageToOwner)).queue();
-        super.onGuildJoin(event);
     }
 
     @Override

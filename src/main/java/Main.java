@@ -11,6 +11,7 @@ import command.general.InviteCommand;
 import command.general.VoteCommand;
 import command.history.UserHistoryCommand;
 import command.owner.ChangePresenceCommand;
+import listener.GuildEventListener;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -125,7 +126,7 @@ public class Main {
         builder.addEventListeners(commandClient);
         builder.addEventListeners(nano.getWaiter());
         builder.addEventListeners(new MemberVoiceListener(nano, exec));
-//        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
+        builder.addEventListeners(new GuildEventListener(dblApi, commandClient));
 
         try {
             JDA jda = builder.build();
