@@ -1,9 +1,9 @@
 package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.GuildPlaylistModel;
 import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -26,11 +26,10 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -53,9 +52,9 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         }
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
-        PlaylistModel db = new PlaylistModel();
+        GuildPlaylistModel db = new GuildPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -70,7 +69,7 @@ public class DeletePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.deletePlaylistAndAllTrackFromPlaylistAsync(event.getAuthor().getIdLong(), playlistName, this.table);
+                db.deletePlaylist(event.getGuild().getIdLong(), playlistName);
                 embed.setTitle("Success");
                 embed.addField(
                         ":white_check_mark:",
