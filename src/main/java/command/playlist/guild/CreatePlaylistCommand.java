@@ -1,9 +1,9 @@
 package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.GuildPlaylistModel;
 import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -11,8 +11,6 @@ import java.util.concurrent.CompletableFuture;
 
 public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
 {
-    private final int maxPlaylist = 5;
-
     public CreatePlaylistCommand()
     {
         this.name = "create_guild_playlist";
@@ -29,11 +27,10 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -55,9 +52,9 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        PlaylistModel db = new PlaylistModel();
+        GuildPlaylistModel db = new GuildPlaylistModel();
 
-        if (db.countPlaylist(event.getGuild().getIdLong(), this.table) >= this.maxPlaylist)
+        if (db.countPlaylist(event.getGuild().getIdLong()) >= this.maxPlaylist)
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -70,7 +67,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
 
-        if (!db.isPlaylistNameAvailable(event.getAuthor().getIdLong(), playlistName, this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -85,7 +82,7 @@ public class CreatePlaylistCommand extends GuildPlaylistBaseCommand
         {
             try
             {
-                db.createPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
+                db.createPlaylist(event.getGuild().getIdLong(), playlistName);
 
                 embed.setTitle("Success");
                 embed.addField(
