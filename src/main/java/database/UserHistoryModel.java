@@ -21,7 +21,7 @@ public class UserHistoryModel extends BaseModel
     {
         String query =
                 "INSERT INTO USER_HISTORY (USER_ID, URL, TITLE) " +
-                "VALUES (" + userId + ", '" + url + "', '" + title + "')";
+                "VALUES (" + userId + ", '" + url + "', '" + title.replace("'", "\\'") + "')";
         return this.executeUpdateQuery(query) > 0;
     }
 

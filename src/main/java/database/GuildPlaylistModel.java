@@ -29,7 +29,7 @@ public class GuildPlaylistModel extends BaseModel
         String query =
                 "SELECT COUNT(NAME) " +
                 "FROM GUILD_PLAYLIST " +
-                "WHERE NAME = '" + playlistName + "' " +
+                "WHERE NAME = '" + playlistName.replace("'", "\\'") + "' " +
                 "AND GUILD_ID = " + guildId;
 
         try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
@@ -60,7 +60,7 @@ public class GuildPlaylistModel extends BaseModel
     {
         String query =
                 "INSERT INTO GUILD_PLAYLIST (GUILD_ID, NAME) " +
-                "VALUES (" + guildId + ", '" + playlistName + "')";
+                "VALUES (" + guildId + ", '" + playlistName.replace("'", "\\'") + "')";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -77,7 +77,7 @@ public class GuildPlaylistModel extends BaseModel
                 "SELECT ID " +
                 "FROM GUILD_PLAYLIST " +
                 "WHERE GUILD_ID = " + guildId + " " +
-                "AND NAME = '" + playlistName + "'";
+                "AND NAME = '" + playlistName.replace("'", "\\'") + "'";
 
         try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
@@ -222,7 +222,7 @@ public class GuildPlaylistModel extends BaseModel
     {
         String query =
                 "INSERT INTO GUILD_PLAYLIST_TRACK (GUILD_PLAYLIST_ID, URL, TITLE) VALUES " +
-                "(" + playlistId + ", '" + url + "', '" + title + "')";
+                "(" + playlistId + ", '" + url + "', '" + title.replace("'", "\\'") + "')";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -267,7 +267,8 @@ public class GuildPlaylistModel extends BaseModel
                 "SELECT GUILD_PLAYLIST_TRACK.URL, GUILD_PLAYLIST_TRACK.TITLE \n" +
                 "FROM  GUILD_PLAYLIST_TRACK \n" +
                 "JOIN GUILD_PLAYLIST ON GUILD_PLAYLIST_TRACK.GUILD_PLAYLIST_ID = GUILD_PLAYLIST.ID \n" +
-                "WHERE GUILD_PLAYLIST.GUILD_ID = " + guildId + " AND GUILD_PLAYLIST.NAME = '" + playlistName + "'";
+                "WHERE GUILD_PLAYLIST.GUILD_ID = " + guildId + " AND GUILD_PLAYLIST.NAME = '" +
+                playlistName.replace("'", "\\'") + "'";
 
         ArrayList<Track> tracks = new ArrayList<>(this.maxTrackEachPlaylist);
 

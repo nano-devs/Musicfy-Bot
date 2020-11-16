@@ -29,7 +29,7 @@ public class UserPlaylistModel extends BaseModel
         String query =
                 "SELECT COUNT(NAME) " +
                 "FROM USER_PLAYLIST " +
-                "WHERE NAME = '" + playlistName + "' " +
+                "WHERE NAME = '" + playlistName.replace("'", "\\'") + "' " +
                 "AND USER_ID = " + userId;
 
         try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
@@ -60,7 +60,7 @@ public class UserPlaylistModel extends BaseModel
     {
         String query =
                 "INSERT INTO USER_PLAYLIST (USER_ID, NAME) " +
-                "VALUES (" + userId + ", '" + playlistName + "')";
+                "VALUES (" + userId + ", '" + playlistName.replace("'", "\\'") + "')";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -77,7 +77,7 @@ public class UserPlaylistModel extends BaseModel
                 "SELECT ID " +
                 "FROM USER_PLAYLIST " +
                 "WHERE USER_ID = " + userId + " " +
-                "AND NAME = '" + playlistName + "'";
+                "AND NAME = '" + playlistName.replace("'", "\\'") + "'";
 
         try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
@@ -193,9 +193,9 @@ public class UserPlaylistModel extends BaseModel
     {
         String query =
                 "UPDATE USER_PLAYLIST " +
-                "SET NAME = '" + newName + "' " +
+                "SET NAME = '" + newName.replace("'", "\\'") + "' " +
                 "WHERE USER_ID = " + userId +
-                " AND NAME = '" + oldName + "'";
+                " AND NAME = '" + oldName.replace("'", "\\'") + "'";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -210,7 +210,7 @@ public class UserPlaylistModel extends BaseModel
     {
         String query =
                 "DELETE FROM USER_PLAYLIST \n" +
-                "WHERE USER_PLAYLIST.NAME = '" + playlistName + "' " +
+                "WHERE USER_PLAYLIST.NAME = '" + playlistName.replace("'", "\\'") + "' " +
                 "AND USER_PLAYLIST.USER_ID = " + userId + ";";
 
         return this.executeUpdateQuery(query) > 0;
@@ -227,7 +227,7 @@ public class UserPlaylistModel extends BaseModel
     {
         String query =
                 "INSERT INTO USER_PLAYLIST_TRACK (USER_PLAYLIST_ID, URL, TITLE) VALUES " +
-                "(" + playlistId + ", '" + url + "', '" + title + "')";
+                "(" + playlistId + ", '" + url + "', '" + title.replace("'", "\\'") + "')";
 
         return this.executeUpdateQuery(query) > 0;
     }
@@ -246,7 +246,8 @@ public class UserPlaylistModel extends BaseModel
         int counter = 0;
         for (AudioTrack track : queue)
         {
-            query += "(" + playlistId + ", '" + track.getInfo().uri + "', '" + track.getInfo().title + "'),\n";
+            query += "(" + playlistId + ", '" + track.getInfo().uri + "', '"
+                    + track.getInfo().title.replace("'", "\\'") + "'),\n";
 
             counter += 1;
             if (counter >= addLimit)
@@ -271,7 +272,8 @@ public class UserPlaylistModel extends BaseModel
                 "SELECT USER_PLAYLIST_TRACK.URL, USER_PLAYLIST_TRACK.TITLE \n" +
                 "FROM  USER_PLAYLIST_TRACK \n" +
                 "JOIN USER_PLAYLIST ON USER_PLAYLIST_TRACK.USER_PLAYLIST_ID = USER_PLAYLIST.ID \n" +
-                "WHERE USER_PLAYLIST.USER_ID = " + userId + " AND USER_PLAYLIST.NAME = '" + playlistName + "'";
+                "WHERE USER_PLAYLIST.USER_ID = " + userId + " AND USER_PLAYLIST.NAME = '" +
+                        playlistName.replace("'", "\\'") + "'";
 
         ArrayList<Track> tracks = new ArrayList<>(this.maxTrackEachPlaylist);
 
