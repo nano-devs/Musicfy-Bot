@@ -2,9 +2,9 @@ package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Playlist;
-import database.PlaylistModel;
+import database.GuildPlaylistModel;
 import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.util.ArrayList;
@@ -25,8 +25,7 @@ public class ShowPlaylistCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         PremiumModel premium = new PremiumModel();
 
         if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
@@ -40,15 +39,15 @@ public class ShowPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        PlaylistModel db = new PlaylistModel();
-        ArrayList<Playlist> playlists = db.getAllPlaylist(event.getGuild().getIdLong(), this.table);
+        GuildPlaylistModel db = new GuildPlaylistModel();
+        ArrayList<Playlist> playlists = db.getAllPlaylist(event.getGuild().getIdLong());
 
         if (playlists == null || playlists.size() <= 0)
         {
             embed.setTitle("Empty");
             embed.addField(
                     ":x:",
-                    "Guild have no playlist.",
+                    "You don't have a playlist.",
                     true);
         }
         else

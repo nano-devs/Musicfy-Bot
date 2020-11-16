@@ -3,9 +3,10 @@ package command.playlist.guild;
 import YouTubeSearchApi.YoutubeClient;
 import YouTubeSearchApi.entity.YoutubeVideo;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.GuildPlaylistModel;
 import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
+import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -33,8 +34,7 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         PremiumModel premium = new PremiumModel();
 
         if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
@@ -64,9 +64,9 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
         String url = event.getArgs().split(",")[1].trim();
         
-        PlaylistModel db = new PlaylistModel();
+        GuildPlaylistModel db = new GuildPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), playlistName))
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -78,9 +78,10 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
         }
 
         int guildPlaylistTrackCount = db.countPlaylistTrack(
-                db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table), this.table);
+                db.getPlaylistId(event.getGuild().getIdLong(), playlistName));
+        GuildMusicManager manager = event.getClient().getSettingsFor(event.getGuild());
 
-        if (guildPlaylistTrackCount >= this.maxTrack)
+        if (guildPlaylistTrackCount >= manager.getMaxPlaylistTrackCount())
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -118,14 +119,14 @@ public class AddTrackToPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table);
+        long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName);
         video.setTitle(video.getTitle().replace("'", "\\'"));
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle(), this.table);
+                db.addTrackToPlaylist(playlistId, video.getUrl(), video.getTitle());
 
                 embed.setTitle("Success");
                 embed.addField(

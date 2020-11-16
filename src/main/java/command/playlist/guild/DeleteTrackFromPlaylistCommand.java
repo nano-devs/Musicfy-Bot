@@ -1,9 +1,9 @@
 package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
-import database.PlaylistModel;
+import database.GuildPlaylistModel;
 import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.sql.SQLException;
@@ -27,11 +27,10 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
     @Override
     protected void execute(CommandEvent event)
     {
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -56,10 +55,26 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
         }
 
         String playlistName = event.getArgs().split(",")[0].trim().replace("'", "\\'");
-        int index = Integer.parseInt(event.getArgs().split(",")[1].trim());
+        int index;
 
-        PlaylistModel db = new PlaylistModel();
-        int playlistSize = db.countPlaylistTrack(db.getPlaylistId(event.getGuild().getIdLong(), playlistName, this.table), this.table);
+        try
+        {
+            index = Integer.parseInt(event.getArgs().split(",")[1].trim());
+        }
+        catch (NumberFormatException e)
+        {
+            embed.setTitle("Attention");
+            embed.addField(
+                    ":warning:",
+                    "Invalid given arguments.\n" +
+                          "Parameter for <track index> is not a number.",
+                    true);
+            event.reply(embed.build());
+            return;
+        }
+
+        GuildPlaylistModel db = new GuildPlaylistModel();
+        int playlistSize = db.countPlaylistTrack(db.getPlaylistId(event.getGuild().getIdLong(), playlistName));
 
         if (playlistSize <= 0)
         {
@@ -83,14 +98,14 @@ public class DeleteTrackFromPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        long playlistId = db.getPlaylistId(event.getAuthor().getIdLong(), playlistName, this.table);
-        long playlistTrackId = db.getPlaylistTrackId(playlistId, index, this.table);
+        long playlistId = db.getPlaylistId(event.getGuild().getIdLong(), playlistName);
+        long playlistTrackId = db.getPlaylistTrackId(playlistId, index);
 
         CompletableFuture.runAsync(() ->
         {
             try
             {
-                db.deleteTrackFromPlaylistAsync(playlistTrackId, this.table);
+                db.deleteTrackFromPlaylistAsync(playlistTrackId);
 
                 embed.setTitle("Success");
                 embed.addField(
