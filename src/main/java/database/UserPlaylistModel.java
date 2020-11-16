@@ -32,8 +32,7 @@ public class UserPlaylistModel extends BaseModel
                 "WHERE NAME = '" + playlistName + "' " +
                 "AND USER_ID = " + userId;
 
-        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -80,7 +79,7 @@ public class UserPlaylistModel extends BaseModel
                 "WHERE USER_ID = " + userId + " " +
                 "AND NAME = '" + playlistName + "'";
 
-        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
+        try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -121,7 +120,7 @@ public class UserPlaylistModel extends BaseModel
 
         ArrayList<Playlist> playlists = new ArrayList<>(countPlaylist);
 
-        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
+        try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -131,9 +130,9 @@ public class UserPlaylistModel extends BaseModel
                     {
                         playlists.add(
                                 new Playlist(
-                                        0,
-                                        result.getString(1),
-                                        0,
+                                        0, 
+                                        result.getString(1), 
+                                        0, 
                                         result.getInt(2))
                         );
                     }
@@ -162,8 +161,8 @@ public class UserPlaylistModel extends BaseModel
 
         try (
                 Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
+                        this.url, 
+                        this.username, 
                         this.password)
         )
         {
@@ -276,7 +275,7 @@ public class UserPlaylistModel extends BaseModel
 
         ArrayList<Track> tracks = new ArrayList<>(this.maxTrackEachPlaylist);
 
-        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
+        try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -285,8 +284,8 @@ public class UserPlaylistModel extends BaseModel
                     while (result.next())
                     {
                         tracks.add(
-                                new Track(0,
-                                result.getString(2),
+                                new Track(0, 
+                                result.getString(2), 
                                 result.getString(1))
                         );
                     }
@@ -313,7 +312,7 @@ public class UserPlaylistModel extends BaseModel
                 "FROM USER_PLAYLIST_TRACK " +
                 "WHERE USER_PLAYLIST_ID = " + playlistId;
 
-        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
+        try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
@@ -331,42 +330,6 @@ public class UserPlaylistModel extends BaseModel
         return -1;
     }
 
-    public ArrayList<Track> getTrackListFromPlaylist(long playlistId)
-    {
-        String query =
-                "SELECT user_playlist.NAME, track.ID, track.TITLE, track.URL " +
-                "FROM user_playlist " +
-                "LEFT JOIN user_playlist_track ON user_playlist.ID = user_playlist_track.USER_PLAYLIST_ID " +
-                "LEFT JOIN track ON user_playlist_track.TRACK_ID = track.ID " +
-                "WHERE user_playlist.ID = " + playlistId;
-
-        ArrayList<Track> tracks = new ArrayList<>(this.maxTrackEachPlaylist);
-
-        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
-        {
-            try (PreparedStatement statement = connection.prepareStatement(query))
-            {
-                try (ResultSet result = statement.executeQuery())
-                {
-                    while (result.next())
-                    {
-                        tracks.add(
-                                new Track(result.getInt(2),
-                                        result.getString(3),
-                                        result.getString(4))
-                        );
-                    }
-                    return tracks;
-                }
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     /**
      * Get id from table user playlist track
      * @param playlistId Playlist id
@@ -380,7 +343,7 @@ public class UserPlaylistModel extends BaseModel
                 "FROM USER_PLAYLIST_TRACK " +
                 "WHERE USER_PLAYLIST_ID = " + playlistId + " ";
 
-        try (Connection connection = DriverManager.getConnection(this.url,this.username,this.password))
+        try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {
