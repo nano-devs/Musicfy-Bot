@@ -2,9 +2,9 @@ package command.playlist.guild;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
-import database.PlaylistModel;
+import database.GuildPlaylistModel;
 import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
+import service.music.CustomEmbedBuilder;
 import service.music.HelpProcess;
 
 import java.util.ArrayList;;
@@ -28,8 +28,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
     {
         String playlistName = event.getArgs().trim().replace("'", "\\'");
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         PremiumModel premium = new PremiumModel();
 
         if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
@@ -48,26 +47,26 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
             embed.setTitle("Attention");
             embed.addField(
                     ":warning:",
-                    "Please give playlist name.",
+                    "Please provide the name of the playlist.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        PlaylistModel db = new PlaylistModel();
+        GuildPlaylistModel db = new GuildPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "Playlist with name `" + playlistName + "` is not exist.",
+                    "`" + playlistName + "` playlist does not exist.",
                     true);
             event.reply(embed.build());
             return;
         }
 
-        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
+        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), playlistName);
 
         if (tracks.size() <= 0)
         {
@@ -79,7 +78,7 @@ public class ShowPlaylistTrackCommand extends GuildPlaylistBaseCommand
         }
         else
         {
-            embed.setTitle("Playlist `" + playlistName + "`");
+            embed.setTitle("`" + playlistName + "` playlist :notes:");
             StringBuilder sb = new StringBuilder();
             sb.append("You have " + tracks.size() + " track(s) in the playlist.\n");
 
