@@ -139,15 +139,6 @@ public class Main {
         } catch (LoginException e) {
             e.printStackTrace();
         }
-
-//        Runtime.getRuntime().addShutdownHook(new Thread() {
-//            @Override
-//            public void run() {
-////                System.out.println("Shutting down scheduled thread pool executor!");
-////                exec.shutdown();
-//                super.run();
-//            }
-//        });
     }
 
     private static void configureMemoryUsage(JDABuilder builder) {
