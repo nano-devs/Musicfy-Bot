@@ -33,8 +33,8 @@ public class RenamePlaylistCommand extends UserPlaylistBaseCommand
             embed.addField(
                     ":warning:",
                     "Invalid given arguments.\n" +
-                            "This command need 2 arguments: <old playlist name> , <new playlist name>.\n" +
-                            "Use coma (,) as separator for each arguments.",
+                          "This command need 2 arguments: <old playlist name> , <new playlist name>.\n" +
+                          "Use coma (,) as separator for each arguments.",
                     true);
             event.reply(embed.build());
             return;
