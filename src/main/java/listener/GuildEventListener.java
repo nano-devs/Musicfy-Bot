@@ -44,9 +44,11 @@ public class GuildEventListener extends ListenerAdapter {
         links += "[Patreon](https://www.patreon.com/musicfy)";
         embedBuilder.addField("Links", links, false);
         embedBuilder.setFooter("Have a nice dayy~");
-
-        defaultTextChannel.sendMessage(embedBuilder.build()).queue();
-        
+        try {
+            defaultTextChannel.sendMessage(embedBuilder.build()).queue();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         // Notify owner. development purposes
 //        String messageToOwner = "Just left server " + event.getGuild().getName()
 //                + ". Total " + jda.getGuilds().size() + " guilds";

@@ -21,7 +21,7 @@ public class UserHistoryModel extends BaseModel
     {
         String query =
                 "INSERT INTO USER_HISTORY (USER_ID, URL, TITLE) " +
-                "VALUES (" + userId + ", '" + url + "', '" + title + "')";
+                "VALUES (" + userId + ", '" + url + "', '" + title.replace("'", "\\'") + "')";
         return this.executeUpdateQuery(query) > 0;
     }
 
@@ -39,12 +39,7 @@ public class UserHistoryModel extends BaseModel
                 " GROUP BY DATE " +
                 "ORDER by DATE DESC ";
 
-        try (
-                Connection connection = DriverManager.getConnection(
-                        this.url,
-                        this.username,
-                        this.password)
-        )
+        try (Connection connection = DriverManager.getConnection(this.url, this.username, this.password))
         {
             try (PreparedStatement statement = connection.prepareStatement(query))
             {

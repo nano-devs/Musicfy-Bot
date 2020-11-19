@@ -46,7 +46,7 @@ public class LeaveCommand extends Command {
             }
         }
 
-        musicManager.player.stopTrack();
+        musicManager.player.destroy();
         musicManager.scheduler.getQueue().clear();
         nanoClient.getMusicManagers().remove(guild.getIdLong());
 

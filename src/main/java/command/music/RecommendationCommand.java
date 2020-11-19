@@ -6,6 +6,7 @@ import YouTubeSearchApi.exception.NoResultFoundException;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import database.Entity.ClassicUser;
 import database.UserModel;
 import service.music.*;
@@ -78,8 +79,13 @@ public class RecommendationCommand extends Command {
             }
         }
 
+        if (musicManager.player.getPlayingTrack() == null) {
+            event.reply(":x: | Play a `youtube` song first and try `m$recommend " + event.getArgs() + "` again :>");
+            return;
+        }
+
         String sourceName = musicManager.player.getPlayingTrack().getSourceManager().getSourceName();
-        if (musicManager.player.getPlayingTrack() == null && !sourceName.equals("youtube")) {
+        if (!sourceName.equals("youtube")) {
             event.reply(":x: | Play a `youtube` song first and try `m$recommend " + event.getArgs() + "` again :>");
             return;
         }

@@ -94,7 +94,7 @@ public class MusicService {
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
 
-        musicManager.player.stopTrack();
+        musicManager.player.destroy();
         musicManager.scheduler.getQueue().clear();
     }
 

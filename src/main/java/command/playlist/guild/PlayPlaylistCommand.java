@@ -3,10 +3,10 @@ package command.playlist.guild;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import database.Entity.Track;
-import database.PlaylistModel;
+import database.GuildPlaylistModel;
 import database.PremiumModel;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.MusicUtils;
@@ -46,11 +46,10 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
             event.getGuild().getAudioManager().openAudioConnection(userVoiceChannel);
         }
 
-        EmbedBuilder embed = new EmbedBuilder();
-        embed.setColor(event.getMember().getColor());
+        CustomEmbedBuilder embed = new CustomEmbedBuilder();
         PremiumModel premium = new PremiumModel();
 
-        if (premium.isPremium(event.getGuild().getIdLong(), this.table) == false)
+        if (!premium.isPremium(event.getGuild().getIdLong(), this.table))
         {
             embed.setTitle("Attention");
             embed.addField(
@@ -72,9 +71,9 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
         }
 
         String playlistName = event.getArgs().trim().replace("'", "\\'");
-        PlaylistModel db = new PlaylistModel();
+        GuildPlaylistModel db = new GuildPlaylistModel();
 
-        if (db.isPlaylistNameAvailable(event.getGuild().getIdLong(), playlistName, this.table))
+        if (!db.isPlaylistNameExist(event.getGuild().getIdLong(), playlistName))
         {
             embed.setTitle("Failed");
             embed.addField(
@@ -85,20 +84,20 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
             return;
         }
 
-        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), playlistName, this.table);
+        ArrayList<Track> tracks = db.getTrackListFromPlaylist(event.getGuild().getIdLong(), playlistName);
 
         if (tracks.size() <= 0)
         {
             embed.setTitle("Failed");
             embed.addField(
                     ":x:",
-                    "There's no track in playlist `" + playlistName + "`.",
+                    "There are no track in `" + playlistName + "` playlist.",
                     true);
-            event.reply(embed.build());
         }
         else
         {
             GuildMusicManager musicManager = this.nano.getGuildAudioPlayer(event.getGuild());
+
             if (musicManager.isInDjMode()) {
                 if (!MusicUtils.hasDjRole(event.getMember())) {
                     event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
@@ -107,9 +106,8 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
             }
 
             int addedSize = 0;
-            for (int i = 0; i < tracks.size(); i++)
-            {
-                this.nano.loadAndPlayUrl(musicManager, null, tracks.get(i).url, event.getMember());
+            for (Track track : tracks) {
+                this.nano.loadAndPlayUrl(musicManager, null, track.url, event.getMember());
                 addedSize += 1;
                 if (musicManager.isQueueFull()) {
                     break;
@@ -121,7 +119,7 @@ public class PlayPlaylistCommand extends GuildPlaylistBaseCommand
                     "Add " + addedSize + " track(s) to the queue.",
                     true);
             embed.setFooter("Only song with duration less than 1 hour added to queue");
-            event.reply(embed.build());
         }
+        event.reply(embed.build());
     }
 }

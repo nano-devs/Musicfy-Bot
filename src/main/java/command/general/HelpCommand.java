@@ -58,6 +58,12 @@ public class HelpCommand extends Command {
         embedBuilder.setDescription("Prefix: `" + commandClient.getPrefix() +
                 "` | Alternative prefix: `" + commandClient.getAltPrefix() + "` the bot." + customPrefix);
 
+        embedBuilder.addField("Helpful Links",
+                "[Invite Musicfy](https://discord.com/api/oauth2/authorize?client_id=473023109666963467&permissions=36793408&scope=bot) " +
+                        "- [Vote for Us!](https://top.gg/bot/473023109666963467/vote) " +
+                        "- [Support Server](https://discord.gg/Y8sB4ay)",
+                false);
+
         // Temporary memory
         Map<String, String> dictionary = new HashMap<>();
 

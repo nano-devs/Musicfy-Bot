@@ -139,20 +139,14 @@ public class Main {
         } catch (LoginException e) {
             e.printStackTrace();
         }
-
-//        Runtime.getRuntime().addShutdownHook(new Thread() {
-//            @Override
-//            public void run() {
-////                System.out.println("Shutting down scheduled thread pool executor!");
-////                exec.shutdown();
-//                super.run();
-//            }
-//        });
     }
 
     private static void configureMemoryUsage(JDABuilder builder) {
         // Disable cache for member activities (streaming/games/spotify)
         builder.disableCache(CacheFlag.ACTIVITY);
+        builder.disableCache(CacheFlag.CLIENT_STATUS);
+        builder.disableCache(CacheFlag.MEMBER_OVERRIDES);
+        builder.disableCache(CacheFlag.EMOTE);
 
         // Only cache members who are either in a voice channel or owner of the guild
         builder.setMemberCachePolicy(MemberCachePolicy.VOICE.or(MemberCachePolicy.OWNER));
@@ -160,8 +154,13 @@ public class Main {
         // Disable member chunking on startup
         builder.setChunkingFilter(ChunkingFilter.NONE);
 
-        // Disable presence updates and typing events
-        builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING);
+        // Disable presence updates and typing events and more Guild Events
+        builder.disableIntents(GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_TYPING,
+                GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_BANS,
+                GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_EMOJIS);
+
+        builder.disableIntents(GatewayIntent.DIRECT_MESSAGE_REACTIONS, GatewayIntent.DIRECT_MESSAGE_TYPING,
+                GatewayIntent.DIRECT_MESSAGE_REACTIONS);
 
         // Consider guilds with more than 50 members as "large".
         // Large guilds will only provide online members in their setup and thus reduce bandwidth if chunking is disabled.

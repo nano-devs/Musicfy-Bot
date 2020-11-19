@@ -61,7 +61,7 @@ public class YoutubeSearchCommand extends Command
         List<YoutubeVideo> videos = null;
         try
         {
-            videos = youtubeClient.search(keywords, this.maxVideoResult);
+            videos = youtubeClient.search(keywords, this.maxVideoResult, "en");
         }
         catch (IOException | NoResultFoundException e)
         {
