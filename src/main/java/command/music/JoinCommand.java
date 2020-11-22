@@ -39,6 +39,6 @@ public class JoinCommand extends Command {
             }
         }
         event.getGuild().getAudioManager().openAudioConnection(channel);
-        event.reply(":white_check_mark: | Connected to " + channel.getName());
+        event.reply(":white_check_mark: | Connected to :loud_sound: `" + channel.getName() + "`");
     }
 }
