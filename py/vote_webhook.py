@@ -109,6 +109,48 @@ def vote_post():
     
     return 'success', 200
 
+@app.route('/dbl/', methods = ['POST'])
+def vote_post_dbl():
+    
+    headers = dict(flask.request.headers)
+    # Invalid Authorization code
+    if headers["Authorization"] != VOTE_AUTH_TOKEN:
+        return 'error', 401
+
+    connection = mysql.connector.connect(user=user,
+                                     password=password,
+                                     host='127.0.0.1',
+                                     database='nano')
+    cursor = connection.cursor()
+    
+    data = flask.request.get_json(force=True)
+
+    user_id = data['id']
+
+    print("Upvote", data)
+    
+    # Vote history
+    cursor.execute(insert_vote_query.format(user_id, 0))
+    connection.commit()
+
+    # Check if user exist
+    cursor.execute(check_user_query.format(user_id))
+    cursor.fetchall()
+    
+    # If user not exist, create new.
+    if cursor.rowcount == 0:
+        print("user does not exist")
+        cursor.execute(create_user_query.format(user_id))
+        
+    cursor.execute(update_rewards_query.format(user_id))
+
+    connection.commit()
+    
+    cursor.close()
+    connection.close()
+    
+    return 'success', 200
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port="5000")
     print("End")
