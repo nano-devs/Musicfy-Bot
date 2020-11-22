@@ -1,16 +1,21 @@
 package listener;
 
 import client.NanoClient;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceDeafenEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 
 import java.util.concurrent.*;
+import java.util.regex.Pattern;
 
 public class MemberVoiceListener extends ListenerAdapter {
 
@@ -110,6 +115,25 @@ public class MemberVoiceListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+        // if self join voice channel
+        if (event.getMember().getId().equals(event.getGuild().getSelfMember().getId())) {
+            if (event.getGuild().getSelfMember().hasPermission(Permission.VOICE_DEAF_OTHERS)) {
+                event.getMember().deafen(true).queue();
+            }
+//            else {
+//                TextChannel textChannel = nanoClient.getGuildAudioPlayer(event.getGuild()).scheduler.textChannel;
+//
+//                CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+//                embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
+//                        "Please don't undeafen me! I work better by being deafened because: " +
+//                                "Less lag, more clear, better quality, and doesn't randomly disconnect",
+//                        true);
+//
+//                textChannel.sendMessage(embedBuilder.build()).queue();
+//            }
+            return;
+        }
+
         VoiceChannel clientVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
 
         // Ignore if bot event.
@@ -122,7 +146,7 @@ public class MemberVoiceListener extends ListenerAdapter {
             return;
         }
 
-        // Ignore join event to other voice channel.
+        // Ignore join event from other voice channel.
         if (!clientVoiceChannel.getId().equals(event.getChannelJoined().getId())) {
             return;
         }
@@ -135,6 +159,29 @@ public class MemberVoiceListener extends ListenerAdapter {
         }
 
         super.onGuildVoiceJoin(event);
+    }
+
+    @Override
+    public void onGuildVoiceDeafen(@NotNull GuildVoiceDeafenEvent event) {
+        super.onGuildVoiceDeafen(event);
+
+        // if other users try to undeafen bot.
+        if (!event.isDeafened() && event.getMember().getId().equals(event.getGuild().getSelfMember().getId())) {
+            if (event.getMember().hasPermission(Permission.VOICE_DEAF_OTHERS)) {
+                event.getGuild().getSelfMember().deafen(true).queue();
+            }
+//            else {
+//                TextChannel textChannel = nanoClient.getGuildAudioPlayer(event.getGuild()).scheduler.textChannel;
+//
+//                CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+//                embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
+//                        "Please don't undeafen me! I work better by being deafened because: " +
+//                                "Less lag, more clear, better quality, and doesn't randomly disconnect",
+//                        true);
+//
+//                textChannel.sendMessage(embedBuilder.build()).queue();
+//            }
+        }
     }
 
     private boolean isThereAnyMemberIn(VoiceChannel channel) {
