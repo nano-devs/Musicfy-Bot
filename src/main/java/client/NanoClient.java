@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.apache.http.client.config.RequestConfig;
 import org.jetbrains.annotations.Nullable;
 import service.music.*;
 
@@ -36,6 +37,8 @@ public class NanoClient implements GuildSettingsManager {
         this.playerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
+        this.playerManager.setHttpRequestConfigurator((config) ->
+                RequestConfig.copy(config).setConnectTimeout(10000).build());
 
         this.waiter = waiter;
     }
