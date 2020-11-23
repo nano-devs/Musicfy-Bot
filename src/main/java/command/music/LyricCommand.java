@@ -26,6 +26,7 @@ public class LyricCommand extends Command
         this.arguments = "<song-title>";
         this.help = "Get lyric for music.\n" +
                     "If `song-title` is empty, the title of the currently playing music will be used.\n";
+        this.aliases = new String[]{"lyrics"};
         this.guildOnly = true;
         this.cooldown = 2;
         this.category = new Category("Music");
