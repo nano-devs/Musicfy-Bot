@@ -43,15 +43,15 @@ public class JoinCommand extends Command {
         }
         event.getGuild().getAudioManager().openAudioConnection(channel);
 
-        if (!event.getSelfMember().hasPermission(Permission.VOICE_DEAF_OTHERS) &&
-            !event.getSelfMember().getVoiceState().isDeafened()) {
-            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
-            embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
-                    "Please don't undeafen me! I work better by being deafened because: " +
-                            "Less lag, more clear, better quality, and doesn't randomly disconnect",
-                    true);
-            event.reply(embedBuilder.build());
-        }
+//        if (!event.getSelfMember().hasPermission(Permission.VOICE_DEAF_OTHERS) &&
+//            !event.getSelfMember().getVoiceState().isDeafened()) {
+//            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+//            embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
+//                    "Please don't undeafen me! I work better by being deafened because: " +
+//                            "Less lag, more clear, better quality, and doesn't randomly disconnect",
+//                    true);
+//            event.reply(embedBuilder.build());
+//        }
 
         event.reply(":white_check_mark: | Connected to :loud_sound: `" + channel.getName() + "`");
     }

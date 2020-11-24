@@ -94,8 +94,9 @@ public class MusicService {
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
 
-        musicManager.player.destroy();
+        musicManager.scheduler.setInLoopState(false);
         musicManager.scheduler.getQueue().clear();
+        musicManager.player.destroy();
     }
 
     public boolean isMemberInVoiceState(Member member) {
