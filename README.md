@@ -49,8 +49,6 @@ Have a Musicfy and Smile :))
 
 If you need more help, feel free to contact us developers via dm or join the support server.
 
-#### ⚠ We will not provide any support whatsoever in selfhosting or building the bot by yourself
-
 ## Support Musicfy
 Thanks! We really appreciate any kind of support! Your vote alone is very valuable to us! 
 
