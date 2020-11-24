@@ -5,10 +5,15 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.lava.extensions.youtuberotator.YoutubeIpRotatorSetup;
+import com.sedmelluq.lava.extensions.youtuberotator.planner.NanoIpRoutePlanner;
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv6Block;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -18,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import service.music.*;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +45,14 @@ public class NanoClient implements GuildSettingsManager {
         AudioSourceManagers.registerLocalSource(playerManager);
         this.playerManager.setHttpRequestConfigurator((config) ->
                 RequestConfig.copy(config).setConnectTimeout(10000).build());
+
+        YoutubeAudioSourceManager youtubeSource = new YoutubeAudioSourceManager();
+
+        String ipv6Block = System.getenv("ipv6block") + "/64";
+        new YoutubeIpRotatorSetup(
+                new NanoIpRoutePlanner(Collections.singletonList(new Ipv6Block(ipv6Block)), true))
+                .forSource(youtubeSource)
+                .setup();
 
         this.waiter = waiter;
     }
