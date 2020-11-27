@@ -46,13 +46,14 @@ public class NanoClient implements GuildSettingsManager {
         this.playerManager.setHttpRequestConfigurator((config) ->
                 RequestConfig.copy(config).setConnectTimeout(10000).build());
 
-        YoutubeAudioSourceManager youtubeSource = new YoutubeAudioSourceManager();
-
-        String ipv6Block = System.getenv("ipv6block") + "/64";
-        new YoutubeIpRotatorSetup(
-                new NanoIpRoutePlanner(Collections.singletonList(new Ipv6Block(ipv6Block)), true))
-                .forSource(youtubeSource)
-                .setup();
+        if (System.getenv("ipv6") != null) {
+            String ipv6Block = System.getenv("ipv6block") + "/64";
+            System.out.println("Setup ipv6: " + ipv6Block);
+            new YoutubeIpRotatorSetup(
+                    new NanoIpRoutePlanner(Collections.singletonList(new Ipv6Block(ipv6Block)), true))
+                    .forManager(this.playerManager)
+                    .setup();
+        }
 
         this.waiter = waiter;
     }
