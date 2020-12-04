@@ -2,10 +2,10 @@ package client;
 
 import com.jagrosh.jdautilities.command.GuildSettingsManager;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.sedmelluq.discord.lavaplayer.player.AudioConfiguration;
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
@@ -41,19 +41,28 @@ public class NanoClient implements GuildSettingsManager {
         this.musicManagers = new HashMap<>();
 
         this.playerManager = new DefaultAudioPlayerManager();
+        this.playerManager.getConfiguration().setOpusEncodingQuality(AudioConfiguration.OPUS_QUALITY_MAX);
+        this.playerManager.getConfiguration().setResamplingQuality(AudioConfiguration.ResamplingQuality.HIGH);
+        this.playerManager.getConfiguration().setFilterHotSwapEnabled(true);
+
         AudioSourceManagers.registerRemoteSources(playerManager);
         AudioSourceManagers.registerLocalSource(playerManager);
+
         this.playerManager.setHttpRequestConfigurator((config) ->
                 RequestConfig.copy(config).setConnectTimeout(10000).build());
+
+        YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(true);
 
         if (System.getenv("ipv6") != null) {
             String ipv6Block = System.getenv("ipv6block") + "/64";
             System.out.println("Setup ipv6: " + ipv6Block);
             new YoutubeIpRotatorSetup(
                     new NanoIpRoutePlanner(Collections.singletonList(new Ipv6Block(ipv6Block)), true))
-                    .forManager(this.playerManager)
+                    .forSource(youtubeAudioSourceManager)
                     .setup();
         }
+        this.playerManager.registerSourceManager(youtubeAudioSourceManager);
+        playerManager.registerSourceManager(new YoutubeAudioSourceManager(true));
 
         this.waiter = waiter;
     }
