@@ -6,6 +6,8 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * This class schedules tracks for the audio player. It contains the queue of tracks.
  */
 public class TrackScheduler extends AudioEventAdapter {
+    private static final Logger log = LoggerFactory.getLogger(TrackScheduler.class);
     private final AudioPlayer player;
     private final BlockingQueue<AudioTrack> queue;
     private boolean inLoopState;
@@ -78,6 +81,8 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
+        log.info("onTrackEnd " + track.getIdentifier() + " " + endReason.name());
+
         // Reset vote skip
         skipVoteSet.clear();
 
@@ -96,21 +101,29 @@ public class TrackScheduler extends AudioEventAdapter {
 
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
+        log.info("onTrackStart " + track.getIdentifier());
+
         super.onTrackStart(player, track);
     }
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        super.onTrackException(player, track, exception);
+        log.info("onTrackException " + track.getIdentifier() +
+                " Message: " + exception.getMessage() +
+                " Caused by: " + exception.getCause());
 
         textChannel.sendMessage(":x: | " + exception.getMessage() +
                 ". Try request the song again, if it's still broke, please contact developers... :(").queue();
 
         exception.printStackTrace();
+
+        super.onTrackException(player, track, exception);
     }
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
+        log.info("onTrackStuck " + track.getIdentifier());
+
         super.onTrackStuck(player, track, thresholdMs);
     }
 }
