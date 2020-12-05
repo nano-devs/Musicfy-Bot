@@ -27,6 +27,9 @@ public class NowPlayCommand extends Command {
 
         if (musicManager.player.getPlayingTrack() == null) {
             event.replyError("Not playing anything");
+            if (event.getGuild().getAudioManager().getConnectedChannel() == null) {
+                nanoClient.getMusicManagers().remove(event.getGuild().getIdLong());
+            }
             return;
         }
         musicManager.announceNowPlaying(event);

@@ -55,7 +55,7 @@ public class MusicMessageListener extends ListenerAdapter {
 
         if (".play".equals(command[0]) && command.length == 2) {
             GuildMusicManager musicManager = getGuildAudioPlayer(event.getGuild());
-            if (musicService.joinUserVoiceChannel(event)) {
+            if (musicService.joinMemberVoiceChannel(event)) {
                 // Set default volume value
                 musicManager.player.setVolume(15);
                 musicService.loadAndPlay(playerManager, musicManager, event.getChannel(),

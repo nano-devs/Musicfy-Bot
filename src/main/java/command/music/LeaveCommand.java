@@ -4,6 +4,7 @@ import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
@@ -26,7 +27,16 @@ public class LeaveCommand extends Command {
     protected void execute(CommandEvent event) {
         Guild guild = event.getGuild();
 
-        if (event.getSelfMember().getVoiceState().getChannel() == null) {
+        VoiceChannel selfVoiceChannel = event.getSelfMember().getVoiceState().getChannel();
+        if (selfVoiceChannel == null) {
+            return;
+        }
+
+        if (event.getMember().getVoiceState().getChannel() == null) {
+            return;
+        }
+
+         if (!selfVoiceChannel.getId().equals(event.getMember().getVoiceState().getChannel().getId())) {
             return;
         }
 

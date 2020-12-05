@@ -48,7 +48,7 @@ public class VolumeCommand extends Command {
                 return;
             }
             musicManager.player.setVolume(volume);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             event.reply(":x: | Invalid volume number, command e.g. `" + event.getClient().getPrefix()
                     + "volume 25` to change volume to 25%");
             return;

@@ -25,9 +25,7 @@ public class ResumeCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        VoiceChannel userVoiceChannel = event.getMember().getVoiceState().getChannel();
-        if (userVoiceChannel == null) {
-            event.reply(":x: | You are not connected to any voice channel");
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
             return;
         }
 
