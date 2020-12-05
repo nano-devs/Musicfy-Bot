@@ -30,6 +30,10 @@ public class LeaveCommand extends Command {
             return;
         }
 
+        if (!nanoClient.getMusicService().isMemberConnectedToVoice(event.getMember())) {
+            return;
+        }
+
         AudioManager audioManager = guild.getAudioManager();
         audioManager.closeAudioConnection();
 
