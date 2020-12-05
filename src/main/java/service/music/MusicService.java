@@ -153,7 +153,7 @@ public class MusicService {
                 return selfVoiceChannel != null;
             }
             // Check user's voice channel.
-            else if (!selfVoiceChannel.getId().equals(event.getMember().getId()))
+            else if (!selfVoiceChannel.getId().equals(event.getMember().getVoiceState().getChannel().getId()))
             {
                 event.reply(":x: | You are not connected to my voice channel");
                 return false;
