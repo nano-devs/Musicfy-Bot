@@ -104,7 +104,6 @@ public class MemberVoiceListener extends ListenerAdapter {
         else {
             GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
             if (musicManager.isWaitingForUser()) {
-                System.out.println("RESUME & SET WAITING FALSE");
                 musicManager.setWaitingForUser(false);
                 musicManager.player.setPaused(false);
                 musicManager.getWaitingFuture().cancel(true);
@@ -170,17 +169,6 @@ public class MemberVoiceListener extends ListenerAdapter {
             if (event.getMember().hasPermission(Permission.VOICE_DEAF_OTHERS)) {
                 event.getGuild().getSelfMember().deafen(true).queue();
             }
-//            else {
-//                TextChannel textChannel = nanoClient.getGuildAudioPlayer(event.getGuild()).scheduler.textChannel;
-//
-//                CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
-//                embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
-//                        "Please don't undeafen me! I work better by being deafened because: " +
-//                                "Less lag, more clear, better quality, and doesn't randomly disconnect",
-//                        true);
-//
-//                textChannel.sendMessage(embedBuilder.build()).queue();
-//            }
         }
     }
 
