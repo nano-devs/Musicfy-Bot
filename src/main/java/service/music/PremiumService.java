@@ -1,10 +1,13 @@
 package service.music;
 
+import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import database.*;
 import io.donatebot.api.DBClient;
 import io.donatebot.api.Donation;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
@@ -12,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 public class PremiumService
 {
+    private static final Logger log = LoggerFactory.getLogger(PremiumService.class);
     private String apiKey;
     private String serverID;
 
@@ -61,6 +65,10 @@ public class PremiumService
             try
             {
                 userHistoryModel.addUserHistory(user.getIdLong(), url, title);
+            }
+            catch (MysqlDataTruncation e)
+            {
+                log.error(e.getMessage());
             }
             catch (SQLException e)
             {
