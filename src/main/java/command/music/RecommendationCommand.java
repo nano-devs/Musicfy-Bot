@@ -39,9 +39,7 @@ public class RecommendationCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        VoiceChannel channel = event.getMember().getVoiceState().getChannel();
-        if (channel == null) {
-            event.reply(":x: | You're not connected to any voice channel.");
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
             return;
         }
 

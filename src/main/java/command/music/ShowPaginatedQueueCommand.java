@@ -31,13 +31,12 @@ public class ShowPaginatedQueueCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
-
         // Ensure Voice
-        if (!nanoClient.getMusicService().isMemberInVoiceState(event.getMember())) {
-            event.reply("Are you sure you are in voice channel ?");
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
             return;
         }
+
+        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
         if (musicManager.player.getPlayingTrack() == null) {
             event.reply("Not playing anything");
             return;

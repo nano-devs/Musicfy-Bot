@@ -27,9 +27,7 @@ public class PlayCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        VoiceChannel channel = event.getMember().getVoiceState().getChannel();
-        if (channel == null) {
-            event.reply(":x: | You're not connected to any voice channel");
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
             return;
         }
 
@@ -63,7 +61,7 @@ public class PlayCommand extends Command {
 
         if (connectedChannel == null) {
             // if not connected to any voice channel, try to join user voice channel.
-            nanoClient.getMusicService().joinUserVoiceChannel(event);
+            nanoClient.getMusicService().joinMemberVoiceChannel(event);
         }
 
 

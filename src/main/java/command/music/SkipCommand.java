@@ -27,13 +27,11 @@ public class SkipCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
-
-        if (event.getMember().getVoiceState().getChannel() == null) {
-            event.reply(":x: | You are not connected to any voice channel");
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
             return;
         }
 
+        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
         // Check if player is currently playing audio
         if (musicManager.player.getPlayingTrack() == null) {
             event.getChannel().sendMessage(":x: | Not playing anything").queue();

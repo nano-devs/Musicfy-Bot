@@ -3,6 +3,7 @@ package command.music;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
 import service.music.MusicUtils;
@@ -24,12 +25,11 @@ public class RepeatCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
-        if (!nanoClient.getMusicService().isMemberInVoiceState(event.getMember())) {
-            event.reply("Are you sure you are in voice channel ?");
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
             return;
         }
 
+        GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
         if (musicManager.player.getPlayingTrack() == null) {
             event.reply(":x: | Not playing anything");
             return;

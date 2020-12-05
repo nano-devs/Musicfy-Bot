@@ -6,6 +6,7 @@ import YouTubeSearchApi.exception.NoResultFoundException;
 import client.NanoClient;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.CustomEmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -43,6 +44,11 @@ public class YoutubeSearchCommand extends Command
     @Override
     protected void execute(CommandEvent event)
     {
+        if (!this.nano.getMusicService().ensureVoiceState(event))
+        {
+            return;
+        }
+
         String keywords = event.getArgs();
         if (keywords.isEmpty()) {
             CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
@@ -116,14 +122,12 @@ public class YoutubeSearchCommand extends Command
         List<YoutubeVideo> finalVideos = videos;
         this.nano.getWaiter().waitForEvent(
                 GuildMessageReceivedEvent.class,
-                e -> e.getChannel().equals(event.getChannel())
-                        && e.getAuthor().getId().equals(event.getAuthor().getId())
-                ,
+                e -> e.getChannel().equals(event.getChannel())&&
+                        e.getAuthor().getId().equals(event.getAuthor().getId()),
                 e ->
                 {
-                    if (!this.nano.getMusicService().joinUserVoiceChannel(event))
+                    if (!this.nano.getMusicService().ensureVoiceState(event))
                     {
-                        event.reply(":x: | You are not connected to any voice channel.");
                         return;
                     }
 
@@ -158,8 +162,9 @@ public class YoutubeSearchCommand extends Command
                     this.nano.loadAndPlayUrl(musicManager, event.getTextChannel(),
                             finalVideos.get(entry).getUrl(), event.getMember());
                 },
-                10, TimeUnit.SECONDS, () ->
-                        msg.get().delete().queue()
+                10,
+                TimeUnit.SECONDS,
+                () -> msg.get().delete().queue()
         );
     }
 }
