@@ -39,10 +39,6 @@ public class RecommendationCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
-            return;
-        }
-
         // Ensure argument
         int requestNumber = -1;
         // if argument is empty
@@ -69,7 +65,13 @@ public class RecommendationCommand extends Command {
             }
         }
 
+
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
+            return;
+        }
+
         GuildMusicManager musicManager = this.nanoClient.getGuildAudioPlayer(event.getGuild());
+        musicManager.scheduler.textChannel = event.getTextChannel();
         if (musicManager.isInDjMode()) {
             if (!MusicUtils.hasDjRole(event.getMember())) {
                 event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());

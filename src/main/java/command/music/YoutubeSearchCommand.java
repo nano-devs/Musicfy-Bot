@@ -44,17 +44,18 @@ public class YoutubeSearchCommand extends Command
     @Override
     protected void execute(CommandEvent event)
     {
-        if (!this.nano.getMusicService().ensureVoiceState(event))
-        {
-            return;
-        }
-
         String keywords = event.getArgs();
-        if (keywords.isEmpty()) {
+        if (keywords.isEmpty())
+        {
             CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
             embedBuilder.addField(":x: | Invalid Arguments", "Example usage: "
                     + event.getClient().getPrefix() + this.name + " " + this.arguments, true);
             event.reply(embedBuilder.build());
+            return;
+        }
+
+        if (!this.nano.getMusicService().ensureVoiceState(event))
+        {
             return;
         }
 

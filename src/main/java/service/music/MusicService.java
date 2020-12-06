@@ -107,19 +107,6 @@ public class MusicService {
             return null;
         }
 
-        if (event.getGuild().getSelfMember().hasPermission(Permission.VOICE_DEAF_OTHERS)) {
-            event.getMember().deafen(true).queue();
-        }
-        else {
-            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
-            embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
-                    "Please don't undeafen me! I work better by being deafened because: " +
-                            "Less lag, more clear, better quality.",
-                    true);
-
-            event.reply(embedBuilder.build());
-        }
-
         return voiceChannel;
     }
 
@@ -158,18 +145,15 @@ public class MusicService {
             event.reply(":x: | You are not connected to any voice channel");
             return false;
         }
-        else
-        {
+        else {
             VoiceChannel selfVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
 
-            if (selfVoiceChannel == null)
-            {
+            if (selfVoiceChannel == null) {
                 selfVoiceChannel = this.joinMemberVoiceChannel(event);
                 return selfVoiceChannel != null;
             }
             // Check user's voice channel.
-            else if (!selfVoiceChannel.getId().equals(event.getMember().getVoiceState().getChannel().getId()))
-            {
+            else if (!selfVoiceChannel.getId().equals(event.getMember().getVoiceState().getChannel().getId())) {
                 event.reply(":x: | You are not connected to **my voice channel**");
                 return false;
             }
