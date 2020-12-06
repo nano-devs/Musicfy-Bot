@@ -29,12 +29,12 @@ public class MemberVoiceListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
-        VoiceChannel clientVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
-
         // Ignore if bot event.
         if (event.getMember().getUser().isBot()) {
             return;
         }
+
+        VoiceChannel clientVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
 
         // Ignore if not connected to any voice channel
         if (clientVoiceChannel == null) {
@@ -66,13 +66,13 @@ public class MemberVoiceListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceMove(@NotNull GuildVoiceMoveEvent event) {
-        VoiceChannel clientVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
-
         // Ignore if bot event.
         if (event.getMember().getUser().isBot() &&
                 !event.getMember().getId().equals(nanoClient.getJda().getSelfUser().getId())) {
             return;
         }
+
+        VoiceChannel clientVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
 
         // Ignore if not connected to any voice channel
         if (clientVoiceChannel == null) {
@@ -114,31 +114,12 @@ public class MemberVoiceListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
-        // if self join voice channel
-        if (event.getMember().getId().equals(event.getGuild().getSelfMember().getId())) {
-            if (event.getGuild().getSelfMember().hasPermission(Permission.VOICE_DEAF_OTHERS)) {
-                event.getMember().deafen(true).queue();
-            }
-            else {
-                TextChannel textChannel = nanoClient.getGuildAudioPlayer(event.getGuild()).scheduler.textChannel;
-
-                CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
-                embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
-                        "Please don't undeafen me! I work better by being deafened because: " +
-                                "Less lag, more clear, better quality.",
-                        true);
-
-                textChannel.sendMessage(embedBuilder.build()).queue();
-            }
-            return;
-        }
-
-        VoiceChannel clientVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
-
         // Ignore if bot event.
         if (event.getMember().getUser().isBot()) {
             return;
         }
+
+        VoiceChannel clientVoiceChannel = event.getGuild().getAudioManager().getConnectedChannel();
 
         // Ignore event, If client is not connected to any voice channel.
         if (clientVoiceChannel == null) {
