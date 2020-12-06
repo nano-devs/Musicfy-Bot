@@ -114,6 +114,28 @@ public class MemberVoiceListener extends ListenerAdapter {
 
     @Override
     public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent event) {
+        // If self join
+        if (event.getMember().getId().equals(event.getGuild().getSelfMember().getId())) {
+            if (event.getGuild().getSelfMember().hasPermission(Permission.VOICE_DEAF_OTHERS)) {
+                event.getMember().deafen(true).queue();
+            }
+            else {
+                TextChannel textChannel = nanoClient.getGuildAudioPlayer(event.getGuild()).scheduler.textChannel;
+
+                if (textChannel == null)
+                    return;
+
+                CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+                embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
+                        "Please don't undeafen me! I work better by being deafened because: " +
+                                "Less lag, more clear, better quality.",
+                        true);
+
+                textChannel.sendMessage(embedBuilder.build()).queue();
+            }
+            return;
+        }
+
         // Ignore if bot event.
         if (event.getMember().getUser().isBot()) {
             return;

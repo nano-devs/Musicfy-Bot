@@ -27,10 +27,6 @@ public class PlayUrlCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
-            return;
-        }
-
         String args = event.getArgs();
         String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
         UrlValidator urlValidator = new UrlValidator(schemes);
@@ -42,7 +38,12 @@ public class PlayUrlCommand extends Command {
             return;
         }
 
+        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
+            return;
+        }
+
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
+        musicManager.scheduler.textChannel = event.getTextChannel();
         if (musicManager.isInDjMode()) {
             if (!MusicUtils.hasDjRole(event.getMember())) {
                 event.reply(MusicUtils.getDjModeEmbeddedWarning(event.getMember()).build());
