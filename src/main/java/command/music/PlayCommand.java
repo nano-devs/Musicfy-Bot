@@ -55,16 +55,6 @@ public class PlayCommand extends Command {
             return;
         }
 
-        // check if client is connected to any voice channel
-        AudioManager guildAudioManager = event.getGuild().getAudioManager();
-        VoiceChannel connectedChannel = guildAudioManager.getConnectedChannel();
-
-        if (connectedChannel == null) {
-            // if not connected to any voice channel, try to join user voice channel.
-            nanoClient.getMusicService().joinMemberVoiceChannel(event);
-        }
-
-
         String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
         UrlValidator urlValidator = new UrlValidator(schemes);
 

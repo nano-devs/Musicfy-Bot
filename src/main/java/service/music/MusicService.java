@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import database.Entity.ClassicUser;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -105,6 +106,20 @@ public class MusicService {
             event.reply(embedBuilder.build());
             return null;
         }
+
+        if (event.getGuild().getSelfMember().hasPermission(Permission.VOICE_DEAF_OTHERS)) {
+            event.getMember().deafen(true).queue();
+        }
+        else {
+            CustomEmbedBuilder embedBuilder = new CustomEmbedBuilder();
+            embedBuilder.addField(":warning: Missing Permission: `Deafen Members`!",
+                    "Please don't undeafen me! I work better by being deafened because: " +
+                            "Less lag, more clear, better quality.",
+                    true);
+
+            event.reply(embedBuilder.build());
+        }
+
         return voiceChannel;
     }
 
