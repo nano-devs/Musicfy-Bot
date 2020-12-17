@@ -6,6 +6,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.Paginator;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
@@ -31,10 +32,15 @@ public class ShowPaginatedQueueCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        // Ensure Voice
-        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
+        VoiceChannel channel = event.getGuild().getAudioManager().getConnectedChannel();
+        if (channel == null) {
+            event.reply("Not playing anything");
             return;
         }
+        // Ensure Voice
+//        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
+//            return;
+//        }
 
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
         if (musicManager.player.getPlayingTrack() == null) {

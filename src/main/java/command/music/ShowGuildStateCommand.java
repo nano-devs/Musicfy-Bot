@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import service.music.CustomEmbedBuilder;
 import service.music.GuildMusicManager;
 import service.music.HelpProcess;
@@ -27,10 +28,15 @@ public class ShowGuildStateCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        // Ensure Voice
-        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
+        VoiceChannel channel = event.getGuild().getAudioManager().getConnectedChannel();
+        if (channel == null) {
+            event.reply("Not playing anything");
             return;
         }
+        // Ensure Voice
+//        if (!nanoClient.getMusicService().ensureVoiceState(event)) {
+//            return;
+//        }
 
         GuildMusicManager musicManager = nanoClient.getGuildAudioPlayer(event.getGuild());
         if (musicManager.player.getPlayingTrack() == null) {
