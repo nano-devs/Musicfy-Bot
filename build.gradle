@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     compile 'org.discordbots:DBL-Java-Library:2.0.1'
-    compile 'net.dv8tion:JDA:4.2.0_206'
+    compile 'net.dv8tion:JDA:4.2.0_222'
     compile 'com.jagrosh:jda-utilities:3.0.4'
     compile group: 'commons-validator', name: 'commons-validator', version: '1.4.0'
     compile 'joda-time:joda-time:2.10.6'
