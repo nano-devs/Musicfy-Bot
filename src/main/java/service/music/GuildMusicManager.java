@@ -2,6 +2,7 @@ package service.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.GuildSettingsProvider;
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.EqualizerFactory;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -9,6 +10,9 @@ import database.Entity.GuildSetting;
 import net.dv8tion.jda.api.entities.Member;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.internal.StringUtil;
+import service.music.filter.BassBoostFilter;
+import service.music.filter.FlatFilter;
+import service.music.filter.PianoFilter;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -38,6 +42,12 @@ public class GuildMusicManager extends GuildSetting implements GuildSettingsProv
 
     private final Set<String> prefixes;
 
+    private final BassBoostFilter bassBoostFilter;
+
+    private final PianoFilter pianoFilter;
+
+    private final FlatFilter flatFilter;
+
     /**
      * Creates a player and a track scheduler.
      * @param manager Audio player manager to use for creating the player.
@@ -50,6 +60,10 @@ public class GuildMusicManager extends GuildSetting implements GuildSettingsProv
         player.addListener(scheduler);
 
         prefixes = new HashSet<>();
+
+        bassBoostFilter = new BassBoostFilter();
+        pianoFilter = new PianoFilter();
+        flatFilter = new FlatFilter();
     }
 
     /**
@@ -166,6 +180,22 @@ public class GuildMusicManager extends GuildSetting implements GuildSettingsProv
 
     public boolean isQueueFull() {
         return this.scheduler.getQueue().size() >= this.maxQueueLength;
+    }
+
+    public void applyBassBoostFilter() {
+        this.player.setFilterFactory(bassBoostFilter.getEqualizer());
+    }
+
+    public void applyPianoFilter() {
+        this.player.setFilterFactory(pianoFilter.getEqualizer());
+    }
+
+    public void applyFlatFilter() {
+        this.player.setFilterFactory(flatFilter.getEqualizer());
+    }
+
+    public void clearFilter() {
+        this.player.setFilterFactory(null);
     }
 
     @Nullable
