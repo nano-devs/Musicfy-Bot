@@ -8,27 +8,26 @@ import java.util.Collections;
 
 public class BassBoostFilter {
 
-    private static final float[] BASS_BOOST = { 0.2f, 0.15f, 0.1f, 0.05f, 0.0f, -0.05f, -0.1f, -0.1f, -0.1f, -0.1f,
-            -0.1f, -0.1f, -0.1f, -0.1f, -0.1f };
+    private static final float[] BASS_BOOST = {
+            -0.075f, 0.125f, 0.125f, 0.1f, 0.1f,
+            0.05f, 0.075f, 0.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 0.125f, 0.15f, 0.05f
+    };
 
-    private final EqualizerFactory equalizer;
-    private final AudioPlayer player;
+    private EqualizerFactory equalizer;
 
-    public BassBoostFilter(AudioPlayer player) {
-        this.equalizer = new EqualizerFactory();
-        this.player = player;
-        this.player.setFilterFactory(equalizer);
+    public BassBoostFilter() {
+        equalizer = new EqualizerFactory();
+        apply(equalizer);
     }
 
-    public void applyHighBass(float diff) {
+    public static void apply(EqualizerFactory equalizer) {
         for (int i = 0; i < BASS_BOOST.length; i++) {
-            equalizer.setGain(i, BASS_BOOST[i] + diff);
+            equalizer.setGain(i, BASS_BOOST[i]);
         }
     }
 
-    public void applyLowBass(float diff) {
-        for (int i = 0; i < BASS_BOOST.length; i++) {
-            equalizer.setGain(i, -BASS_BOOST[i] + diff);
-        }
+    public EqualizerFactory getEqualizer() {
+        return equalizer;
     }
 }

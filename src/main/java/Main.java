@@ -9,10 +9,7 @@ import command.general.InviteCommand;
 import command.general.VoteCommand;
 import command.history.UserHistoryCommand;
 import command.music.*;
-import command.owner.ChangePresenceCommand;
-import command.owner.NotifyMaintenanceCommand;
-import command.owner.PremiumUserCommand;
-import command.owner.ShutdownCommand;
+import command.owner.*;
 import listener.GuildEventListener;
 import listener.MemberVoiceListener;
 import net.dv8tion.jda.api.JDA;
@@ -67,6 +64,11 @@ public class Main {
 
         // Add Command & Inject Dependencies.
         // Free Commands
+        commandClientBuilder.addCommand(new ApplyBassFilterCommand());
+        commandClientBuilder.addCommand(new ApplyPianoFilterCommand());
+        commandClientBuilder.addCommand(new ApplyFlatFilterCommand());
+        commandClientBuilder.addCommand(new ClearFilterCommand());
+
         commandClientBuilder.addCommand(new NotifyMaintenanceCommand());
         commandClientBuilder.addCommand(new ShutdownCommand());
         commandClientBuilder.addCommand(new VoteCommand(nano));

@@ -3,12 +3,12 @@ package command.owner;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import service.music.GuildMusicManager;
-import service.music.filter.BassBoostFilter;
+import service.music.filter.PianoFilter;
 
-public class ApplyBassFilterCommand extends Command {
+public class ApplyPianoFilterCommand extends Command {
 
-    public ApplyBassFilterCommand() {
-        this.name = "apply_bass";
+    public ApplyPianoFilterCommand() {
+        this.name = "apply_piano";
         this.category = new Category("Owner");
         this.ownerCommand = true;
     }
@@ -17,7 +17,7 @@ public class ApplyBassFilterCommand extends Command {
     protected void execute(CommandEvent event) {
         GuildMusicManager musicManager = event.getClient().getSettingsFor(event.getGuild());
 
-        musicManager.applyBassBoostFilter();
-        event.reply("Bass filter applied!");
+        musicManager.applyPianoFilter();
+        event.reply("Piano filter applied!");
     }
 }

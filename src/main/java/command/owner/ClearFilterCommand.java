@@ -3,21 +3,19 @@ package command.owner;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import service.music.GuildMusicManager;
-import service.music.filter.BassBoostFilter;
 
-public class ApplyBassFilterCommand extends Command {
+public class ClearFilterCommand extends Command {
 
-    public ApplyBassFilterCommand() {
-        this.name = "apply_bass";
+    public ClearFilterCommand() {
+        this.name = "clear_filter";
         this.category = new Category("Owner");
         this.ownerCommand = true;
     }
-
     @Override
     protected void execute(CommandEvent event) {
         GuildMusicManager musicManager = event.getClient().getSettingsFor(event.getGuild());
 
-        musicManager.applyBassBoostFilter();
-        event.reply("Bass filter applied!");
+        musicManager.clearFilter();
+        event.reply("Filter has been set to null!");
     }
 }
