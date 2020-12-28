@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.nico.NicoAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
@@ -51,18 +52,16 @@ public class NanoClient implements GuildSettingsManager {
         this.playerManager.setHttpRequestConfigurator((config) ->
                 RequestConfig.copy(config).setConnectTimeout(10000).build());
 
-        YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(true);
-
         if (System.getenv("ipv6") != null) {
+            YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(true);
             String ipv6Block = System.getenv("ipv6block") + "/64";
             System.out.println("Setup ipv6: " + ipv6Block);
             new YoutubeIpRotatorSetup(
                     new NanoIpRoutePlanner(Collections.singletonList(new Ipv6Block(ipv6Block)), true))
                     .forSource(youtubeAudioSourceManager)
                     .setup();
+            this.playerManager.registerSourceManager(youtubeAudioSourceManager);
         }
-        this.playerManager.registerSourceManager(youtubeAudioSourceManager);
-        playerManager.registerSourceManager(new YoutubeAudioSourceManager(true));
 
         this.waiter = waiter;
     }
