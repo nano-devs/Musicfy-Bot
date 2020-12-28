@@ -9,8 +9,9 @@ public class ApplyBassFilterCommand extends Command {
 
     public ApplyBassFilterCommand() {
         this.name = "apply_bass";
-        this.category = new Category("Owner");
-        this.ownerCommand = true;
+        this.category = new Category("Filter");
+        this.guildOnly = true;
+//        this.ownerCommand = true;
     }
 
     @Override

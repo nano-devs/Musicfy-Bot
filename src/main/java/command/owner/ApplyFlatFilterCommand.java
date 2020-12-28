@@ -8,8 +8,9 @@ public class ApplyFlatFilterCommand extends Command {
 
     public ApplyFlatFilterCommand() {
         this.name = "apply_flat";
-        this.category = new Category("Owner");
-        this.ownerCommand = true;
+        this.category = new Category("Filter");
+        this.guildOnly = true;
+//        this.ownerCommand = true;
     }
 
     @Override

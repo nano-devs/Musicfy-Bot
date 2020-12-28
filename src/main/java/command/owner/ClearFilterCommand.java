@@ -8,8 +8,9 @@ public class ClearFilterCommand extends Command {
 
     public ClearFilterCommand() {
         this.name = "clear_filter";
-        this.category = new Category("Owner");
-        this.ownerCommand = true;
+        this.category = new Category("Filter");
+        this.guildOnly = true;
+//        this.ownerCommand = true;
     }
     @Override
     protected void execute(CommandEvent event) {
